@@ -6,7 +6,7 @@ import { NavBarAgentAdminResposive } from '../components/HomeComponents/NavbarAg
 import { NavBarAgentAdmin } from '../components/HomeComponents/NavbarAgentAdmin';
 import { FaTrashAlt } from 'react-icons/fa'; 
 import { toast } from 'react-toastify'; 
-import bar from "../assets/1.png"
+import bar from "../assets/1.jpg"
 import wab from "../assets/2.png"
 import { ThemeContext } from "../App";
 import { useAuth } from '../Context';

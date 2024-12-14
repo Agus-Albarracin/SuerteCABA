@@ -1397,7 +1397,7 @@ const ButtonShowMore = styled.button`
   transition: color 0.3s ease, box-shadow 0.2s;
 
   &:hover {
-    background-color: red; 
+    background-color: #997300; 
     color: ${(props) => props.theme.navcolorhoverHome}; 
     box-shadow: 0 0 20px ${(props) => props.theme.navcolorhoverHome};
 
@@ -1410,11 +1410,11 @@ const IframeContainer = styled.div`
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.7); /* Fondo semi-transparente */
+  background: rgba(0, 0, 0, 0.7);
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1000; /* Asegúrate de que esté encima de otros elementos */
+  z-index: 1000; 
 `;
 
 // Estilo para el iframe

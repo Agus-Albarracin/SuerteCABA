@@ -7,7 +7,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import { MdExpandMore } from 'react-icons/md';
 import { NavBarAgentAdmin } from "../components/HomeComponents/NavbarAgentAdmin";
 import { NavBarAgentAdminResposive } from '../components/HomeComponents/NavbarAgentAdminResponsive';
-import bar from "../assets/1.png"
+import bar from "../assets/1.jpg"
 import wab from "../assets/2.png"
 import { ThemeContext } from "../App";
 import { useAuth } from '../Context';
@@ -713,7 +713,7 @@ const handleClear = () => {
   <div className="loader-overlay">
     <HashLoader
  
-      color="#ff0000" 
+      color="#997300" 
       loading={loading} 
       size={70}
       cssOverride={{
@@ -832,7 +832,7 @@ const handleClear = () => {
       {admins.length > 0 ? (
         admins.map((admin) => renderUserHierarchy(admin))
       ) : (
-        <PulseLoader color="#ff0000" margin={12}/>
+        <PulseLoader color="#997300" margin={12}/>
 
         
       )}
@@ -875,7 +875,7 @@ const handleClear = () => {
             {admins.length > 0 ? (
               admins.map((admin) => renderUserHierarchyMobile(admin))
             ) : (
-              <PulseLoader color="#ff0000" margin={12}/>
+              <PulseLoader color="#997300" margin={12}/>
             )}
           </div>
         </div>
@@ -979,7 +979,7 @@ const handleClear = () => {
       <div className="loader-overlay">
         <HashLoader
  
-          color="#ff0000" 
+          color="#997300" 
           loading={loading} 
           size={100} // Aumenta el tamaño a 150
           cssOverride={{

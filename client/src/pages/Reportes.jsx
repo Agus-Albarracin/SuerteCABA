@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect} from 'react';
 import axiosD from '../axiosDefault';
 import { toast } from 'react-toastify';
-import bar from "../assets/1.png"
+import bar from "../assets/1.jpg"
 import wab from "../assets/2.png"
 import { ThemeContext } from "../App";
 import {styled, keyframes} from 'styled-components';
@@ -145,7 +145,7 @@ const Section = styled.div`
 const SectionTitle = styled.h2`
   font-size: 1.5em;
   margin-bottom: 10px;
-  border-bottom: 2px solid red;
+  border-bottom: 2px solid rgb(153, 115, 0);
   padding-bottom: 5px;
 
   @media (max-width: 768px) {

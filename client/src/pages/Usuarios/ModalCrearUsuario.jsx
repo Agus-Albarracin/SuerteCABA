@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { NavBarAgentAdminResposive } from '../../components/HomeComponents/NavbarAgentAdminResponsive';
 import axiosD from "../../axiosDefault";
 import toast, { Toaster } from 'react-hot-toast';
-import bar from "../../assets/1.png";
+import bar from "../../assets/1.jpg";
 import wab from "../../assets/2.png";
 import { ThemeContext } from "../../App";
 import { useAuth } from '../../Context';

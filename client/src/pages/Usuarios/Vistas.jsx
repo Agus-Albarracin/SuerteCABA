@@ -10,7 +10,7 @@ import { NavBarAgentAdmin } from "../../components/HomeComponents/NavbarAgentAdm
 import { NavBarAgentAdminResposive } from "../../components/HomeComponents/NavbarAgentAdminResponsive";
 import { useNavigate } from "react-router-dom";
 import { ThemeContext } from "../../App";
-import bar from "../../assets/1.png"
+import bar from "../../assets/1.jpg"
 import wab from "../../assets/2.png"
 import { useSocket } from '../../ContextSocketio';
 import { useBalance } from '../../ContextBalance';
@@ -667,7 +667,7 @@ const IconLupa = styled(AiOutlineSearch)`
     margin-top: -40px;
     display: flex;
     margin-left: 370px;
- color: red; 
+ color: ${props => props.theme.bgtabicon};; 
  transition: background-color 0.6s ease, color 0.4s ease, transform 0.2s ease, box-shadow 0.8s ease;
  animation: ${sliderRight} 2s ease-out;
     @media (max-width: 768px) {
@@ -1038,7 +1038,7 @@ const DivPaginationButtonR = styled.div`
 
 const PageButton = styled.button`
   background-color: transparent; /* Sin fondo */
-  color: red; /* Color de texto rojo */
+  color: ${props => props.theme.bgtabicon};
   border: none;
   padding: 8px 12px;
   cursor: pointer;

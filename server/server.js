@@ -79,7 +79,7 @@ const dbName = process.env.DB_NAME;
 const host = process.env.DB_HOST;
 const port = process.env.DB_PORT;
 
-const uri = `mongodb://${username}:${password}@${host}:${port}/${dbName}?authSource=dbskary`;
+const uri = `mongodb://${username}:${password}@${host}:${port}/${dbName}?authSource=suerte24`;
 
 mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false, useCreateIndex: true })
   .then(() => console.log('Connected to MongoDB'))

@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect, useRef, useMemo } from 'react';
 import axiosD from '../axiosDefault';
-import bar from "../assets/1.png";
+import bar from "../assets/1.jpg";
 import wab from "../assets/2.png";
 import { ThemeContext } from "../App";
 import { styled } from 'styled-components';
@@ -981,7 +981,7 @@ const ChartWrapper = styled.div`
 
 
   p {
-    background-color: red;
+    background-color: #997300;
     color: white;
     padding: 10px;
     position: absolute;
@@ -1032,7 +1032,7 @@ const ChartWrapperR = styled.div`
 
 
     p {
-    background-color: red;
+    background-color: #997300;
     color: white;
     padding: 10px;
     position: absolute;
@@ -1090,7 +1090,7 @@ const ChartWrapperR2 = styled.div`
   
 
     p {
-    background-color: red;
+    background-color: #997300;
     color: white;
     padding: 10px;
     position: absolute;
@@ -1152,7 +1152,7 @@ const ChartWrapperR4 = styled.div`
 
 
     p {
-    background-color: red;
+    background-color: #997300;
     color: white;
     padding: 10px;
     position: absolute;
@@ -1203,7 +1203,7 @@ const DivMesDiffR = styled.div`
   padding: 25px;
   margin: 15%;
   border-radius: 8px; 
-  background-color: #f9f9f9;
+  background-color: #997300;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
 `;
 
@@ -1276,7 +1276,7 @@ const ButtonModalCrear = styled.button`
   display: flex;
   justify-content: center; 
   align-items: center; 
-  background-color: ${(props) => props.theme.primary};
+  background-color: ${(props) => props.theme.bgtabbutton};
   color: #fff;
   border: none;
   padding: 10px;
@@ -1337,7 +1337,7 @@ const ButtonModalDepositSuper = styled.button`
   display: flex;
   justify-content: center; 
   align-items: center; 
-  background-color: ${(props) => props.theme.primary};
+  background-color: ${(props) => props.theme.bgtabbutton};
   color: #fff;
   border: none;
   padding: 10px;
@@ -1364,7 +1364,7 @@ const ButtonModalDepositSuper = styled.button`
 
 const StyledUpCircle = styled(AiOutlineUpCircle)`
   font-size: 3rem; 
-  color: red; 
+  color: #997300; 
   cursor: pointer;
 
   &:hover {
@@ -1374,7 +1374,7 @@ const StyledUpCircle = styled(AiOutlineUpCircle)`
 
 const StyledDownCircle = styled(AiOutlineDownCircle)`
   font-size: 3rem; 
-  color: red; 
+  color: #997300; 
   cursor: pointer;
 
   &:hover {

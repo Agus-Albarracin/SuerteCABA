@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect, useRef } from 'react';
 import axiosD from '../axiosDefault';
-import bar from "../assets/1.png";
+import bar from "../assets/1.jpg";
 import wab from "../assets/2.png";
 import { ThemeContext } from "../App";
 import { styled } from 'styled-components';
