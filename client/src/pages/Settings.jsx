@@ -61,7 +61,7 @@ export function Settings() {
           if (response.data && Array.isArray(response.data.files)) {
             setImages(prevImages => [
               ...prevImages,
-              ...response.data.files.map(file => `https://skarybet.com/uploads/${file.filename}`)
+              ...response.data.files.map(file => `https://suerte24.bet/uploads/${file.filename}`)
             ]);
             toast.success('Imagen subida exitosamente!');
             setSelectedFile(null);  

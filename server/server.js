@@ -6,6 +6,7 @@ const path = require('path');
 const http = require('http');
 require('dotenv').config();
 
+
 const userRoutes = require('./routes/userRoutes');
 const { initializeSocket, getIo } = require('./Socket');
 
@@ -67,7 +68,7 @@ app.get('/api/images', (req, res) => {
     if (err) {
       return res.status(500).send('Unable to scan directory');
     }
-    const imagePaths = files.map(file => `https://skarybet.com/uploads/${file}`);
+    const imagePaths = files.map(file => `https://suerte24.bet/uploads/${file}`);
     res.json(imagePaths);
   });
 });

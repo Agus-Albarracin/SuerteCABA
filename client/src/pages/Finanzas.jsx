@@ -1203,7 +1203,7 @@ const DivMesDiffR = styled.div`
   padding: 25px;
   margin: 15%;
   border-radius: 8px; 
-  background-color: #997300;
+  background-color: #f9f9f9;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
 `;
 

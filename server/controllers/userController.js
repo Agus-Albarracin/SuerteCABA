@@ -574,7 +574,7 @@ const loginOffice = async (req, res, io) => {
     }
 
     if (user && user.rol === "Jugador") {
-      return res.status(400).json({ status: 'fail', error: 'Este acceso no esta permitido. Inicie sesión desde Skarybet.com' });
+      return res.status(400).json({ status: 'fail', error: 'Este acceso no esta permitido. Inicie sesión desde Suerte24.bet' });
     }
 
     if (user && user.activo === 0) {

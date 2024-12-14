@@ -10,8 +10,8 @@
     const [socket, setSocket] = useState(null);
 
     useEffect(() => {
-      const socketIo = io('https://skarybet.com', {
-      // const socketIo = io('http://localhost:3000', {
+      const socketIo = io('https://suerte24.bet', {
+      // const socketIo = io('http://localhost:3004', {
           transports: ['websocket'],
           // secure: true,
           rejectUnauthorized: false,
