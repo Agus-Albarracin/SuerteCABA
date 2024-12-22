@@ -126,7 +126,7 @@ export function SubNavbar({ categories, onCategoryClick }) {
       },
       {
         breakpoint: '768px',
-        numVisible: 2,
+        numVisible: 3,
         numScroll: 2
       },
       {
@@ -147,6 +147,7 @@ export function SubNavbar({ categories, onCategoryClick }) {
               responsiveOptions={responsiveOptions}
               className="custom-carousel"
               circular
+              showArrows={false} 
               autoplayInterval={2000}
               showIndicators={false}
               itemTemplate={(category) => {
@@ -220,12 +221,18 @@ export function SubNavbar({ categories, onCategoryClick }) {
     background-size: 100% 100%;
     animation: ${backgroundAnimation} 6s linear infinite;
 
+    .p-carousel-prev {
+  display: none;
+}
+
     .p-carousel-content{
     margin-top: 10px;
     max-height: 140px;
     overflow: hidden;
     border-radius: 15px;
-    background-color: ${(props) => props.theme.subnavbarCont};
+    // background-color: ${(props) => props.theme.subnavbarCont};
+    background-color: transparent;
+
     }
 
     .custom-carousel .p-carousel-item {
@@ -284,7 +291,7 @@ export function SubNavbar({ categories, onCategoryClick }) {
     }
 
         @media (max-width: 480px) {
-      width: 60px;
+      width: 75px;
           &:hover {
       transform: scale(1.0);
     }

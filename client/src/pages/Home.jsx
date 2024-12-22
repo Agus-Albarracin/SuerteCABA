@@ -25,6 +25,30 @@ import { AiFillHeart,  AiOutlineHeart, AiFillCloseCircle } from 'react-icons/ai'
 import { FaBasketballBall } from "react-icons/fa";
 import { FaGamepad, FaDice, FaRobot } from "react-icons/fa";
 import { GiConsoleController, GiPokerHand,  } from "react-icons/gi";
+import { FaFire, FaRegGem, FaClock, FaHeart } from 'react-icons/fa';
+
+//region ICON imports
+import iconArcade from "../assets/ICON-ARCADE.png"
+import iconCarta from "../assets/ICON-CARTA.png"
+import iconCasino from "../assets/ICON-CASINOENVIVO.png"
+import iconDeportivas from "../assets/ICON-DEPORTIVAS.png"
+import iconFavoritos from "../assets/ICON-FAVORITOS.png"
+import iconPopulares from "../assets/ICON-POPULARES.png"
+import iconRecientes from "../assets/ICON-RECIENTES.png"
+import iconTodos from "../assets/ICON-TODOS.png"
+import iconTragamonedas from "../assets/ICON-TRAGAMONEDAS.png"
+
+import iconFavoritosBlack from "../assets/ICON-FAVORITOS-BLACK.png"
+import iconPopularesBlack from "../assets/ICON-POPULARES-BLACK.png"
+import iconRecientesBlack from "../assets/ICON-RECIENTES-BLACK.png"
+import iconTodosBlack from "../assets/ICON-TODOS-BLACK.png"
+
+//region IMG imports
+
+import imgCarta from "../assets/IMG-CARTAS.png"
+import imgCasinoEnVivo  from "../assets/IMG-CASINOENVIVO.png"
+import imgDeportivas from "../assets/IMG-DEPORTIVAS.png"
+import imgTragamonedas from "../assets/IMG-TRAGAMONEDAS.png"
 
 //region RESPONSIVE
 
@@ -35,7 +59,7 @@ export function Home() {
   const [uniqueCategories, setUniqueCategories] = useState([]);
   const [selectedTitle, setSelectedTitle] = useState("");
   const [popularGames, setPopularGames] = useState([]);
-  const [gamesToShow, setGamesToShow] = useState(72); // Número inicial de juegos para mostrar
+  const [gamesToShow, setGamesToShow] = useState(18);
   const [recentGames, setRecentGames] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [favorites, setFavorites] = useState([]);
@@ -78,13 +102,7 @@ const categorySections = {
   section4: ['sport'],
   section5: ['card', 'video_poker']
 };
-const sectionIcons = {
-  section1: <FaGamepad />, // TRAGAMONEDAS
-  section2: <FaRobot /> , // TRAGAMONEDAS
-  section3: <FaDice />, // CASINO EN VIVO
-  section4: <FaBasketballBall />, // DEPORTIVAS
-  section5: <GiPokerHand /> // CARTAS
-};
+
 
 
 
@@ -303,7 +321,7 @@ setAllGames(filteredGames);
     setLoading(true); // Iniciar la carga
   
     // Incrementar el contador de juegos mostrados
-    setGamesToShow(prevGamesToShow => prevGamesToShow + 72);
+    setGamesToShow(prevGamesToShow => prevGamesToShow + 9);
   
     // Definición de categorías de las secciones
     const categorySections = {
@@ -359,7 +377,7 @@ setAllGames(filteredGames);
   }, [loading, allGames, selectedTitle, gameList]);
 
   useEffect(() => {
-    setGamesToShow(72);
+    setGamesToShow(18);
     setShowMoreButton(true)
   }, [selectedTitle]);
   // Log de actualización de gameList
@@ -469,28 +487,65 @@ setAllGames(filteredGames);
     handleMenuOptions(title);
   };
   // Renderizar los botones de categorías
-  const renderCategoryButtons = () => {
+  // const renderCategoryButtons = () => {
 
-    const sectionTitles = {
-      section1: 'TRAGAMONEDAS',
-      section2: 'ARCADE',
-      section3: 'CASINO EN VIVO',
-      section4: 'DEPORTIVAS',
-      section5: 'CARTAS'
-    };
+  //   const sectionTitles = {
+  //     section1: 'TRAGAMONEDAS',
+  //     section2: 'ARCADE',
+  //     section3: 'CASINO EN VIVO',
+  //     section4: 'DEPORTIVAS',
+  //     section5: 'CARTAS'
+  //   };
 
-    const smooth = () => {
-         // Desplazar la ventana de visualización hacia abajo
-   window.scrollBy({
-    top: 600, // Cantidad de píxeles a desplazar hacia abajo
-    left: 0,
-    behavior: 'smooth' // Desplazamiento suave
-  });
-    }
+  //   const smooth = () => {
+  //        // Desplazar la ventana de visualización hacia abajo
+  //  window.scrollBy({
+  //   top: 600, // Cantidad de píxeles a desplazar hacia abajo
+  //   left: 0,
+  //   behavior: 'smooth' // Desplazamiento suave
+  // });
+  //   }
     
-    return (
-      <CategoriesMenu className="categories-menu">
-        {Object.keys(categorySections).map((section) => (
+  //   return (
+  //     <CategoriesMenu className="categories-menu">
+  //       {Object.keys(categorySections).map((section) => (
+  //       <CategoriesButton
+  //         key={section}
+  //         onClick={() => {
+  //           handleMenuOptions(section);
+  //           filterGamesByCategory(section);
+  //           smooth();
+  //         }}
+  //       >
+  //            {sectionIcons[section]}
+  //           <div className="category-title">{sectionTitles[section]}</div>
+  //         </CategoriesButton>
+  //       ))}
+  //     </CategoriesMenu>
+  //   );
+  // };
+  // Renderizar los botones de categorías
+const renderCategoryButtons = () => {
+  const sectionTitles = {
+    section1: "TRAGAMONEDAS",
+    section2: "ARCADE",
+    section3: "CASINO EN VIVO",
+    section4: "DEPORTIVAS",
+    section5: "CARTAS",
+  };
+
+  const smooth = () => {
+    // Desplazar la ventana de visualización hacia abajo
+    window.scrollBy({
+      top: 600, // Cantidad de píxeles a desplazar hacia abajo
+      left: 0,
+      behavior: "smooth", // Desplazamiento suave
+    });
+  };
+
+  return (
+    <CategoriesMenu className="categories-menu">
+      {Object.keys(sectionTitles).map((section) => (
         <CategoriesButton
           key={section}
           onClick={() => {
@@ -499,13 +554,21 @@ setAllGames(filteredGames);
             smooth();
           }}
         >
-             {sectionIcons[section]}
-            <div className="category-title">{sectionTitles[section]}</div>
-          </CategoriesButton>
-        ))}
-      </CategoriesMenu>
-    );
-  };
+          <img
+            src={sectionIcons[section]}
+            alt={sectionTitles[section]}
+            style={{
+              width: "50px", // Ajusta el tamaño del icono
+              height: "50px",
+              objectFit: "contain",
+            }}
+          />
+          <div className="category-title">{sectionTitles[section]}</div>
+        </CategoriesButton>
+      ))}
+    </CategoriesMenu>
+  );
+};
 
   const renderRecentGames = () =>{
     if (!user) {
@@ -601,9 +664,7 @@ setAllGames(filteredGames);
     }
 
     const pattern = [
-      'small', 'large', 'small', 'large', 'small', 'large', 'small',
-      'small', 'small', 'large', 'small', 'large', 'small', 'large', 'small',
-      'small', 'small', 'small',
+      "large", "large", "large",
     ];
 
     const repeatedPattern = [];
@@ -738,13 +799,21 @@ setAllGames(filteredGames);
 
   //region RESPONSIVE 
 const [selectedCategory, setSelectedCategory] = useState("");
+
+const sectionIcons = {
+  section1: iconTragamonedas,
+  section2: iconArcade,
+  section3: iconCasino,
+  section4: iconDeportivas,
+  section5: iconCarta,
+};
+
 const sectionTitles = {
-  section0: '⭐ Categorías',
-  section1: '🎰 TRAGAMONEDAS',
-  section2: '🎮 ARCADE',
-  section3: '🤵🏻‍♂️CASINO EN VIVO',
-  section4: '🏀 DEPORTIVAS',
-  section5: '🃏 CARTAS'
+  section2: 'ARCADE',
+  section1: 'TRAGAMONEDAS',
+  section5: 'CARTAS',
+  section3: 'CASINO EN VIVO',
+  section4: 'DEPORTIVAS',
 };
 
 const handleCategoryChange = (event) => {
@@ -760,6 +829,59 @@ const handleCategoryChange = (event) => {
   }
 
 };
+
+//region SectionChange
+const handleSectionChange = (event) => {
+  const section = event.target.value;
+
+  // Ignorar sección "ARCADE" si está presente
+  if (sectionTitles[section] === "ARCADE") {
+    console.log("Sección ARCADE no se renderiza.");
+    return;
+  }
+
+  if (section === "section0") {
+    setSelectedCategory(section);
+    filterGamesByCategory(section);
+    return;
+  } else {
+    setSelectedCategory(section);
+    handleMenuOptions(section);
+    filterGamesByCategory(section);
+
+    // Renderiza imágenes según la sección
+    if (sectionImages[section]) {
+      renderImage(sectionImages[section]);
+    } else {
+      console.error("Sección no reconocida o no válida:", section);
+    }
+  }
+};
+
+const sectionImages = {
+  section1: imgTragamonedas,
+  section5: imgCarta,
+  section3: imgCasinoEnVivo,
+  section4: imgDeportivas,
+};
+
+// Define los íconos para cada tema
+const iconsLight = {
+  populares: iconPopulares,
+  recientes: iconRecientes,
+  favoritos: iconFavoritos,
+  todos: iconTodos,
+};
+
+const iconsDark = {
+  populares: iconPopularesBlack,
+  recientes: iconRecientesBlack,
+  favoritos: iconFavoritosBlack,
+  todos: iconTodosBlack,
+};
+
+// Selecciona los íconos según el tema
+const icons = theme === "dark" ? iconsLight : iconsDark;
 
 
   return (
@@ -848,13 +970,51 @@ const handleCategoryChange = (event) => {
           />
         </div>
       </DivButton>
+
+      <TitleContainer>
+      <GradientLine className="gradient-left" />
+      <TitleText>Secciones</TitleText>
+      <GradientLine className="gradient-right" />
+</TitleContainer>
+
+<CarouselContainerH>
+  {Object.entries(sectionTitles)
+    .filter(([, title]) => title !== "ARCADE") // Excluir ARCADE basado en el título
+    .map(([section, title]) => (
+      <CarouselItemH
+        key={section}
+        onClick={() => handleSectionChange({ target: { value: section } })}
+        isSelected={selectedCategory === section}
+      >
+        <img 
+          src={sectionImages[section]} 
+          alt={title} 
+          className="carousel-img" 
+        />
+      </CarouselItemH>
+    ))}
+</CarouselContainerH>
+
+<CarouselContainerH>
+  {Object.keys(sectionTitles).map((section) => (
+    <CarouselItemH
+      key={section}
+      onClick={() => handleSectionChange({ target: { value: section } })}
+      isSelected={selectedCategory === section}
+    >
+      {sectionTitles[section]}
+    </CarouselItemH>
+  ))}
+</CarouselContainerH>
+
     </Container>
   ) : (
     <ContainerR bgHome={bgHome}>
       
     <NavBarResponsive />
     <FullScreenCarousel />
-    <SubNavbarSelect categories={titles} onCategoryClick={handleTitlesClick} />
+
+    {/* <SubNavbarSelect categories={titles} onCategoryClick={handleTitlesClick} /> */}
     
     <div>
 
@@ -878,26 +1038,73 @@ const handleCategoryChange = (event) => {
   </div>
 
 
-
   <DivButtonTopR>
 
-      <SelectMenuR value={selectedCategory} onChange={handleCategoryChange}>
-        {Object.keys(sectionTitles).map((section) => (
-          <OptionR key={section} value={section}>
-            <MenuIconR>{sectionIcons[section]}</MenuIconR>
-            {sectionTitles[section]}
-          </OptionR>
-        ))}
-      </SelectMenuR>
 
-      <IconBarR value={selectedTitle} onChange={handleTitleChange}>
-          <IconItemR value="todos">🪟 Filtros</IconItemR>
-          <IconItemR value="populares">🔥 Populares</IconItemR>
-          <IconItemR value="Recientes">⌛ Recientes</IconItemR>
-          <IconItemR value="favoritos">❤️ Favoritos</IconItemR>
-          <IconItemR value="todos">🎰 Todos</IconItemR>
-      </IconBarR>
-  </DivButtonTopR>
+  {/* Carrusel para Títulos */}
+  <CarouselContainer>
+    <CarouselItem
+      onClick={() => handleTitleChange({ target: { value: "populares" } })}
+      isSelected={selectedTitle === "populares"}
+    >
+                  <img 
+    src={icons.populares} 
+    alt="Icono de Cartas" 
+    style={{
+      width: "50px", // Ajusta el tamaño de la imagen
+      height: "50px", 
+      objectFit: "contain"
+    }}
+  />
+
+    </CarouselItem>
+    <CarouselItem
+      onClick={() => handleTitleChange({ target: { value: "Recientes" } })}
+      isSelected={selectedTitle === "Recientes"}
+    >
+            <img 
+    src={icons.recientes} 
+    alt="Icono de Cartas" 
+    style={{
+      width: "50px", // Ajusta el tamaño de la imagen
+      height: "50px", 
+      objectFit: "contain"
+    }}
+  />
+      
+    </CarouselItem>
+    <CarouselItem
+      onClick={() => handleTitleChange({ target: { value: "favoritos" } })}
+      isSelected={selectedTitle === "favoritos"}
+    >
+      <img 
+    src={icons.favoritos} 
+    alt="Icono de Cartas" 
+    style={{
+      width: "50px", // Ajusta el tamaño de la imagen
+      height: "50px", 
+      objectFit: "contain"
+    }}
+  />
+    </CarouselItem>
+    <CarouselItem
+      onClick={() => handleTitleChange({ target: { value: "todos" } })}
+      isSelected={selectedTitle === "todos"}
+    >
+      <img 
+    src={icons.todos} 
+    alt="Icono de Cartas" 
+    style={{
+      width: "50px", // Ajusta el tamaño de la imagen
+      height: "50px", 
+      objectFit: "contain"
+    }}
+  />
+    </CarouselItem>
+  </CarouselContainer>
+</DivButtonTopR>
+
+
 
   <DivButtonCenterR>
         {selectedTitle === "Recientes" && renderRecentGames()}
@@ -911,6 +1118,14 @@ const handleCategoryChange = (event) => {
           value={searchTerm}
           onChange={handleSearchChange}
         />
+    <SubNavbar categories={titles} onCategoryClick={handleTitlesClick} />
+
+<TitleContainer>
+      <GradientLine className="gradient-left" />
+      <TitleText>Mejores juegos</TitleText>
+      <GradientLine className="gradient-right" />
+</TitleContainer>
+
     {gameList.length > 0 ? (
            <div className="game-list">
            {gameList && gameList.length > 0 ? renderGames() :
@@ -932,7 +1147,60 @@ const handleCategoryChange = (event) => {
   Ver más
 </LoadMoreButtonR>
 )}
-  </ContainerR>
+
+{/* Carrusel para Categorías */}
+
+<TitleContainer>
+      <GradientLine className="gradient-left" />
+      <TitleText>Secciones</TitleText>
+      <GradientLine className="gradient-right" />
+</TitleContainer>
+
+<CarouselContainer0>
+  {Object.entries(sectionTitles)
+    .filter(([, title]) => title !== "ARCADE") // Excluir ARCADE basado en el título
+    .map(([section, title]) => (
+      <CarouselItem0
+        key={section}
+        onClick={() => handleSectionChange({ target: { value: section } })}
+        isSelected={selectedCategory === section}
+      >
+        <img 
+          src={sectionImages[section]} 
+          alt={title} 
+          className="carousel-img" 
+        />
+      </CarouselItem0>
+    ))}
+</CarouselContainer0>
+
+
+<CarouselContainer1>
+  <div className="column">
+    {Object.keys(sectionTitles).slice(0, 3).map((section) => (
+      <CarouselItem1
+        key={section}
+        onClick={() => handleSectionChange({ target: { value: section } })}
+        isSelected={selectedCategory === section}
+      >
+        {sectionTitles[section]}
+      </CarouselItem1>
+    ))}
+  </div>
+  <div className="column">
+    {Object.keys(sectionTitles).slice(3).map((section) => (
+      <CarouselItem1
+        key={section}
+        onClick={() => handleSectionChange({ target: { value: section } })}
+        isSelected={selectedCategory === section}
+      >
+        {sectionTitles[section]}
+      </CarouselItem1>
+    ))}
+  </div>
+</CarouselContainer1>
+
+</ContainerR>
   )
 )
 }
@@ -952,7 +1220,6 @@ export const backgroundAnimation = keyframes`
 const CategoriesMenu = styled.div`
   display: flex;
   margin-top: 40px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
   justify-content: space-between;
   align-items: center;
   margin-left: 35px;
@@ -1007,7 +1274,7 @@ const CategoriesButton = styled.button`
   border-radius: 15px; 
   color: ${(props) => props.theme.iconcolorHome};
 
-   svg {
+   svg, img, img {
     width: 45px;
     height: 45px;
     margin-bottom: 4px;
@@ -1028,7 +1295,7 @@ const CategoriesButton = styled.button`
   }
 
   &:hover {
-  svg{
+  svg, img{
     transform: scale(1.2); 
     color: ${(props) => props.theme.iconcolorHomeHover};
   }
@@ -1054,7 +1321,7 @@ const CategoriesButton = styled.button`
     min-height: 100px; /* Reduce el tamaño mínimo */
     font-size: 15px;
 
-    svg {
+    svg, img {
       width: 35px; /* Ajusta el tamaño del ícono */
       height: 35px;
     }
@@ -1070,7 +1337,7 @@ const CategoriesButton = styled.button`
     min-height: 100px; /* Reduce el tamaño mínimo */
     font-size: 15px;
 
-    svg {
+    svg, img {
       width: 35px; /* Ajusta el tamaño del ícono */
       height: 35px;
     }
@@ -1087,7 +1354,7 @@ const CategoriesButton = styled.button`
     min-height: 100px; /* Reduce el tamaño mínimo */
     font-size: 15px;
 
-    svg {
+    svg, img {
       width: 25px; /* Ajusta el tamaño del ícono */
       height: 25px;
     }
@@ -1103,7 +1370,7 @@ const CategoriesButton = styled.button`
     min-height: 100px; /* Reduce el tamaño mínimo */
     font-size: 15px;
 
-    svg {
+    svg, img {
       width: 20px; /* Ajusta el tamaño del ícono */
       height: 20px;
     }
@@ -1118,7 +1385,7 @@ const CategoriesButton = styled.button`
     min-height: 40px; /* Reduce el tamaño mínimo */
     font-size: 15px;
 
-    svg {
+    svg, img {
       width: 15px; /* Ajusta el tamaño del ícono */
       height: 15px;
     }
@@ -1194,12 +1461,12 @@ const Container = styled.div`
 
   .game-list {
     display: grid;
-    grid-template-columns: repeat(9, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     gap: 15px;
     padding: 32px;
 
     .load-list {
-      grid-column: span 9; 
+      grid-column: span 3; 
       display: flex;
       justify-content: center;
       align-items: center;
@@ -1273,7 +1540,6 @@ const Container = styled.div`
   }
 
   .large {
-    grid-column: span 2;
     grid-row: span 2;
   }
 
@@ -1384,10 +1650,10 @@ const DivButton = styled.div`
 `;
 
 const ButtonShowMore = styled.button`
-  background: transparent;
   position: absolute;
+  background: #997300; 
   border: 2px solid ${(props) => props.theme.blackandwhite2};
-  color: ${(props) => props.theme.blackandwhite2}; 
+  color: ${(props) => props.theme.blackandwhite}; 
   font-size: 12px;
   padding: 10px;
   border-radius: 5px;
@@ -1397,10 +1663,8 @@ const ButtonShowMore = styled.button`
   transition: color 0.3s ease, box-shadow 0.2s;
 
   &:hover {
-    background-color: #997300; 
-    color: ${(props) => props.theme.navcolorhoverHome}; 
+  color: ${(props) => props.theme.blackandwhite2}; 
     box-shadow: 0 0 20px ${(props) => props.theme.navcolorhoverHome};
-
   }
 `;
 // Estilo para el contenedor del iframe
@@ -1444,48 +1708,6 @@ const CloseButton = styled.button`
 
 
 //region RESPONSIVE
-
-const SelectMenuR = styled.select`
-  background-color: ${(props) => props.theme.iconBgcolorHome};
-  border: 2px solid ${(props) => props.theme.iconcolorHome};
-  border-radius: 15px;
-  color: ${(props) => props.theme.iconcolorHome};
-  font-size: 16px;
-  padding: 10px;
-  cursor: pointer;
-  width: 30%;
-
-@media (max-width: 431px) {
-  width: 216px;
-}
-
-@media (max-width: 428px) {
-  width: 210px;
-}
-
-@media (max-width: 420px) {
-  width: 185px;
-}
-
- @media (max-width: 391px) {
-  width: 185px;
-}
-
- @media (max-width: 375px) {
-  width: 170px;
-}
-
-  @media (max-width: 361px) {
-  width: 170px;
-}
-
-@media (max-width: 321px) {
-  width: 155px;
-      font-size: 12px;
-    padding: 0px;
-}
-
-`;
 
 const SafariHelperContainer = styled.div`
   position: fixed;
@@ -1533,15 +1755,15 @@ const ContainerR = styled.div`
 
   .game-list {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     gap: 15px;
     padding-left:5px;
     padding-right:5px;
     margin-top: 6%;
-    margin-bottom: 20%;
+    margin-bottom: 4%;
 
     .load-list {
-      grid-column: span 4; 
+      grid-column: span 3; 
       display: flex;
       justify-content: center;
       align-items: center;
@@ -1654,7 +1876,7 @@ const ContainerR = styled.div`
 @media (max-width: 391px) {
   .game-list {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     gap: 15px;
     width: 100%;
     padding-left:5px;
@@ -1689,85 +1911,6 @@ const ContainerR = styled.div`
 `;
 
 
-//region CAMBIOS ACA
-const IconBarR = styled.select`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: ${(props) => props.theme.iconBgcolorHome};
-  border: 2px solid ${(props) => props.theme.iconcolorHome};
-  border-radius: 15px;
-  cursor: pointer;
-
-  color: ${(props) => props.theme.iconcolorHome};
-  svg {
-    margin-right: 10px;
-  }
-    font-size: 14px;
-    padding: 10px;
-    gap: 5px;
-
-@media (max-width: 431px) {
-  width: 195px;
-}
-
-@media (max-width: 428px) {
-  width: 195px;
-}
-
-
-@media (max-width: 420px) {
-  width: 207px;
-}
-     @media (max-width: 391px) {
-  width: 185px;
-}
-@media (max-width: 361px) {
-  width: 170px;
-}
-
-@media (max-width: 321px) {
-  width: 155px;
-      font-size: 12px;
-    padding: 10px;
-}
-`;
-
-const IconItemR = styled.option`
-display: flex;
-  justify-content: start;
-  text-items: start;
-  background-color: ${(props) => props.theme.iconBgcolorHome};
-  color: ${(props) => props.theme.iconcolorHome};
-  border-radius: 10px;
-    font-size: 16px;
-    padding: 10px;
-
-`;
-
-
-const OptionR = styled.option`
-  background-color: ${(props) => props.theme.iconBgcolorHome};
-  color: ${(props) => props.theme.iconcolorHome};
-  font-size: 14px;
-  padding: 10px;
-  cursor: pointer;
-
-  &:hover {
-    background-color: #3e4451;
-  }
-`;
-
-
-const MenuIconR = styled.span`
-  margin-right: 10px;
-`;
-
-const GameImageR = styled.img`
-  width: 100%;
-  height: auto;
-  border-radius: 10px;
-`;
 
 const NoGamesR = styled.div`
   color: white;
@@ -1790,7 +1933,7 @@ const LoadMoreButtonR = styled.button`
   color: ${(props) => props.theme.blackandwhite2}; 
   font-size: 12px;
   width: 120px;
-  margin: 20px 25% 30%;
+  margin: 20px 25% 5%;
   padding: 10px 20px;
   border-radius: 5px;
   cursor: pointer;
@@ -1798,27 +1941,23 @@ const LoadMoreButtonR = styled.button`
   transition: color 0.3s ease, box-shadow 0.2s;
 
   &:hover {
-    background-color: red; 
+    background-color: #997300; 
     color: ${(props) => props.theme.navcolorhoverHome}; 
     box-shadow: 0 0 20px ${(props) => props.theme.navcolorhoverHome};
   }
 
 @media (max-width: 926px) {
-  margin: 20px 43% 30%;
+  margin: 20px 43% 5%;
 }
 
   @media (max-width: 431px) {
-  margin: 20px 34% 30%;
+  margin: 20px 34% 5%;
   
 }
 
   @media (max-width: 428px) {
-  margin: 20px 34% 30%;
+  margin: 20px 34% 5%;
   
-}
-
-  @media (max-width: 420px) {
-  margin: 20px 30% 30%;
 }
 
 `;
@@ -1828,7 +1967,7 @@ const LoadMoreButtonR = styled.button`
 
 const DivButtonTopR = styled.div`
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   Width: 100%;
   margin-top: 10px;
   margin-bottom: 10px;
@@ -1840,6 +1979,7 @@ const DivButtonTopR = styled.div`
 //region INPUT
 export const InputSearchR = styled.input`
 margin-left: 5px;
+margin-bottom: 7%;
 background: transparent;
 width: 100%;
 color: ${(props) => props.theme.text};
@@ -1905,39 +2045,209 @@ export const backgroundAnimationR = keyframes`
 `;
 
 
-//region Contenedor de ICONS
-const IconGamesDivContainerR = styled.div`
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
-  justify-content: start;
-  align-items: center;
-  display: grid;
-  grid-template-columns: repeat(2, 1fr); /* 2 elementos por columna */
-  gap: 5px;
-  width: 90%;
+const CarouselContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  overflow-x: auto;
+  padding: 10px;
   justify-content: center;
-  margin: 0;
+  width: 100%;
+  scroll-behavior: smooth;
+
+  &::-webkit-scrollbar {
+    height: 5px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: ${(props) => props.theme.iconcolorHome};
+    border-radius: 10px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
 `;
 
-const RecentGameItemR = styled.div`
-  padding: 0;
-  border: none;
-  background: transparent;
+
+const CarouselItem = styled.div`
+  flex-shrink: 0;
+  background-color: transparent;
+  border-radius: 15px;
+  color: #997300;
+  font-size: 30px;
+  padding: 10px 10px;
   cursor: pointer;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  text-align: center;
+  white-space: nowrap;
+
+  ${(props) =>
+    props.isSelected &&
+    `
+    border-color: #ff9900;
+    font-weight: bold;
+  `}
+`;
+
+
+
+const CarouselContainer0 = styled.div`
   display: flex;
-  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center; 
+  padding: 15px;
+  background-color: transparent;
+  width: 100%;
+  height: auto; 
+  overflow-x: auto; 
+  scroll-behavior: smooth;
+
+  &::-webkit-scrollbar {
+    height: 5px; /* Barra de desplazamiento horizontal */
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: ${(props) => props.theme.iconcolorHome || "#ff9900"};
+    border-radius: 10px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .carousel-img {
+    width: 120px;
+    height: 220px;
+    border-radius: 10px;
+    margin-right: 15px; /* Espaciado entre las imágenes */
+    transition: transform 0.3s ease;
+  }
+`;
+
+const CarouselItem0 = styled.div`
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column; 
+  align-items: center; 
+  justify-content: center;
+  background-color: transparent;
+  border-radius: 15px;
+  color: #997300;
+  font-size: 20px;
+  padding: 10px;
+  cursor: pointer;
+`;
+
+
+//region Linea gradiante
+const TitleContainer = styled.div`
+  display: flex;
   align-items: center;
-  width: 120px; 
+  justify-content: center;
+  width: 100%;
+  margin: 20px 0;
+`;
+
+const GradientLine = styled.hr`
+  flex: 1;
+  height: 2px;
+  border: none;
+  background: ${(props) => props.theme.linedegrade};
+  margin: 0 10px;
+
+  &.gradient-right {
+    background: ${(props) => props.theme.linedegraderight};
+  }
+`;
+
+const TitleText = styled.span`
+  color: ${(props) => props.theme.newtext};
+  font-size: 18px;
+  font-weight: bold;
+  white-space: nowrap;
+`;
+
+
+const CarouselContainer1 = styled.div`
+  display: flex;
+  justify-content: space-between;  /* Alinea los dos contenedores */
+  padding: 15px;
+  background-color: transparent;
+  width: 100%;
+  margin-top: 10%;
+  margin-bottom: 20%;
+`;
+
+const CarouselItem1 = styled.div`
+  background-color: transparent;
+  border-radius: 15px;
+  color: #997300;
+  font-size: 20px;
+  padding: 10px 20px;
+  cursor: pointer;
+  text-align: flex-start;
+  white-space: nowrap;
+  transition: background-color 0.3s ease;
+  width: 100%;  /* Los ítems ocuparán el 100% del ancho del contenedor de columna */
+  margin-bottom: 15px;
+
+  /* Estilo para pantallas pequeñas */
+  @media (max-width: 768px) {
+    font-size: 18px;
+    padding: 8px 15px;
+  }
+`;
+
+
+const CarouselContainerH = styled.div`
+  display: flex;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  padding: 20px;
+  gap: 20px; /* Espaciado entre los elementos */
+    overflow-x: auto; 
+  scroll-behavior: smooth;
+
+  &::-webkit-scrollbar {
+    height: 5px; /* Barra de desplazamiento horizontal */
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: ${(props) => props.theme.iconcolorHome || "#ff9900"};
+    border-radius: 10px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .carousel-img {
+    width: 250px;
+    height: 500px;
+    border-radius: 10px;
+    margin-right: 15px; /* Espaciado entre las imágenes */
+    transition: transform 0.3s ease;
+  }
   
+  @media (min-width: 768px) {
+    justify-content: center;
+    padding: 40px;
+  }
+`;
+
+const CarouselItemH = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+  padding: 10px;
+  border-radius: 8px;
+  color: #997300;
+
 
   &:hover {
-    transform: scale(1.05);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  }
-
-  &:active {
-    transform: scale(0.95); 
+    transform: scale(1.05); /* Efecto de hover */
   }
 
 `;
-

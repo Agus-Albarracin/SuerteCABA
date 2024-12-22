@@ -66,7 +66,7 @@ export const Light ={
     bgcontainer:"#000000",
      
     navbarbgcolor:'#fff',
-    navbarbgcolor2:'#fff',
+    navbarbgcolor2:'#d9d9d9',
 
     iconcolorHome: '#000' ,
     iconcolorHomeHover: '#997300',
@@ -106,7 +106,12 @@ export const Light ={
     bgbox: '#cbcbcb',
     detailResponsable: "#B22222",
     detailReceptor: "#228B22",
-    detailA: "#FFA500"
+    detailA: "#FFA500",
+
+    linedegrade: "linear-gradient(270deg, #000 0%, rgba(235, 235, 211, 0) 100%)",
+    linedegraderight: "linear-gradient(90deg, #000 0%, rgba(235, 235, 211, 0) 100%)",
+    newtext: "#cc9900"
+
 }
 
 
@@ -218,6 +223,13 @@ export const Dark = {
 
     detailResponsable: "#B22222",
     detailReceptor: "#228B22",
-    detailA: "#FFA500"
+    detailA: "#FFA500",
+
+
+    linedegrade: "linear-gradient(270deg, #ffb800 0%, rgba(235, 235, 211, 0) 100%)",
+    linedegraderight: "linear-gradient(90deg, #ffb800 0%, rgba(235, 235, 211, 0) 100%)",
+    newtext: "#fff",
+
+
 
 }

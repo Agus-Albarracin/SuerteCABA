@@ -66,8 +66,8 @@ const getGamesList = async (req, res) => {
   const {} = req.body;
 
   const data = {
-    hall: 3204960,
-    key: '03261548',
+    hall: 3206118,
+    key: '0012025',
     cmd: 'gamesList',
     cdnUrl:"",
 
@@ -96,8 +96,8 @@ const openGame = async (req, res) => {
       return res.json({ status: 'fail', error: 'insufficient_balance' });
     }
     const data = {
-      cmd:"openGame",hall:"3204960",domain:"https://suerte24.bet",exitUrl:"https://suerte24.bet",
-      language:"en",continent:"eur",key:"03261548",login:login,gameId:gameId,
+      cmd:"openGame",hall:"3206118",domain:"https://suerte24.bet",exitUrl:"https://suerte24.bet",
+      language:"en",continent:"eur",key:"0012025",login:login,gameId:gameId,
       cdnUrl:"",
       demo:"0"
     };
