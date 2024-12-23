@@ -67,6 +67,9 @@ export function Home() {
   const [color, setColor] = useState("#FFFF00");
   const [allGames, setAllGames] = useState([]);
   const [gameList, setGameList] = useState([]);
+  const [gameListEscritorio, setGameListEscritorio] = useState([]);
+  const [isCategorySelected, setIsCategorySelected] = useState(false);
+
   const [popular, setPopular] = useState([]);
   const [titles, setTitles] = useState([]);
 
@@ -144,6 +147,7 @@ const filteredGames = getAllgames.reduce((acc, game) => {
 setAllGames(filteredGames);
           setTitles(shuffledTitles);
           setGameList(shuffleArray); // Inicialmente mostrar los primeros juegosToShow
+          setGameListEscritorio(shuffleArray)
         } else {
           console.error('Error fetching games list: Invalid data format');
         }
@@ -208,20 +212,36 @@ setAllGames(filteredGames);
       const selectedTitles = titlesToLoad.slice(0, 3);
   
       // Filtrar juegos que coinciden con los títulos seleccionados
-      let filteredGames = allGames.filter(game => 
+      const filteredGames = allGames.filter(game => 
         selectedTitles.some(title => game.title.toLowerCase().includes(title.toLowerCase()))
       );
   
       // Mostrar los títulos seleccionados en consola
       console.log("Títulos seleccionados:", selectedTitles);
   
-      // Actualizar el estado con los juegos filtrados
+      // Actualizar setGameList con los juegos filtrados
       setGameList(filteredGames);
+  
+      // Preparar lista específica de 24 juegos para setGameListEscritorio
+      let escritorioGames = [...filteredGames];
+      if (escritorioGames.length < 24) {
+        const additionalGames = allGames.filter(game => 
+          !escritorioGames.some(filteredGame => filteredGame.id === game.id)
+        );
+  
+        shuffleArray(additionalGames);
+        escritorioGames = escritorioGames.concat(additionalGames.slice(0, 24 - escritorioGames.length));
+      } else {
+        escritorioGames = escritorioGames.slice(0, 24);
+      }
+  
+      setGameListEscritorio(escritorioGames);
   
       // Establecer categorías únicas si es necesario
       setUniqueCategories(getUniqueCategories(filteredGames));
     }
   }, [allGames]);
+  
   
   
   
@@ -255,6 +275,8 @@ setAllGames(filteredGames);
     );
 
     setGameList(filteredGames); // Mostrar juegos filtrados
+    setGameListEscritorio(filteredGames); // Mostrar juegos filtrados
+
   };
 
 
@@ -340,6 +362,8 @@ setAllGames(filteredGames);
   
   
     setGameList(filteredGames.slice(0, gamesToShow)); // Mostrar juegos filtrados con el número actual
+    setGameListEscritorio(filteredGames.slice(0, gamesToShow)); // Mostrar juegos filtrados con el número actual
+
   };
   
 
@@ -456,6 +480,17 @@ setAllGames(filteredGames);
   
       return updatedGameList;
     });
+
+    setGameListEscritorio(prevGameList => {
+      const updatedGameList = [...prevGameList, ...filteredGames];
+  
+      // Verificar si se alcanzó el límite de juegos
+      if (updatedGameList.length >= allGames.length) {
+        setShowMoreButton(false); // Ocultar botón si no hay más juegos
+      }
+  
+      return updatedGameList;
+    });
   
     setLoading(false); // Finalizar la carga
   }, [loading, allGames, gameList]);
@@ -560,6 +595,8 @@ setAllGames(filteredGames);
     });
   
     setGameList(filteredGames.slice(0, gamesToShow)); // Mostrar juegos filtrados
+    setGameListEscritorio(filteredGames.slice(0, gamesToShow)); // Mostrar juegos filtrados
+
 
   } 
   
@@ -611,50 +648,52 @@ setAllGames(filteredGames);
   //   );
   // };
   // Renderizar los botones de categorías
-const renderCategoryButtons = () => {
-  const sectionTitles = {
-    section1: "TRAGAMONEDAS",
-    section2: "ARCADE",
-    section3: "CASINO EN VIVO",
-    section4: "DEPORTIVAS",
-    section5: "CARTAS",
-  };
-
-  const smooth = () => {
-    // Desplazar la ventana de visualización hacia abajo
-    window.scrollBy({
-      top: 600, // Cantidad de píxeles a desplazar hacia abajo
-      left: 0,
-      behavior: "smooth", // Desplazamiento suave
-    });
-  };
-
-  return (
-    <CategoriesMenu className="categories-menu">
-      {Object.keys(sectionTitles).map((section) => (
-        <CategoriesButton
-          key={section}
-          onClick={() => {
-            handleMenuOptions(section);
-            filterGamesByCategory(section);
-            smooth();
-          }}
-        >
-          <img
-            src={sectionIcons[section]}
-            alt={sectionTitles[section]}
-            style={{
-              width: "50px", // Ajusta el tamaño del icono
-              height: "50px",
-              objectFit: "contain",
+  const renderCategoryButtons = () => {
+    const sectionTitles = {
+      section1: "TRAGAMONEDAS",
+      section2: "ARCADE",
+      section3: "CASINO EN VIVO",
+      section4: "DEPORTIVAS",
+      section5: "CARTAS",
+    };
+  
+    const smooth = () => {
+      // Desplazar la ventana de visualización hacia abajo
+      window.scrollBy({
+        top: 600, // Cantidad de píxeles a desplazar hacia abajo
+        left: 0,
+        behavior: "smooth", // Desplazamiento suave
+      });
+    };
+  
+    return (
+      <CategoriesMenu className="categories-menu">
+        {Object.keys(sectionTitles).map((section) => (
+          <CategoriesButton
+            key={section}
+            onClick={() => {
+              handleMenuOptions(section);
+              filterGamesByCategory(section);
+              smooth();
+              setIsCategorySelected(true); // Establecer que una categoría fue seleccionada
             }}
-          />
-          <div className="category-title">{sectionTitles[section]}</div>
-        </CategoriesButton>
-      ))}
-    </CategoriesMenu>
-  );
-};
+          >
+            <img
+              src={sectionIcons[section]}
+              alt={sectionTitles[section]}
+              style={{
+                width: "50px", // Ajusta el tamaño del icono
+                height: "50px",
+                objectFit: "contain",
+              }}
+            />
+            <div className="category-title">{sectionTitles[section]}</div>
+          </CategoriesButton>
+        ))}
+      </CategoriesMenu>
+    );
+  };
+  
 
   const renderRecentGames = () =>{
     if (!user) {
@@ -740,55 +779,55 @@ const renderCategoryButtons = () => {
     </IconGamesDivContainer>
   ) };
   
-  // const renderGames = () => {
-  //   console.log(gameList)
-  //   if (gameList.length === 0) {
-  //     return (
-  //       <div className="load-list">
-  //         <p>No hay juegos que mostrar</p>
-  //       </div>
-  //     );
-  //   }
+  const renderGamesEscritorio = () => {
+    console.log(gameListEscritorio)
+    if (gameListEscritorio.length === 0) {
+      return (
+        <div className="load-list-escritorio">
+          <p>No hay juegos que mostrar</p>
+        </div>
+      );
+    }
 
-  //   const pattern = [
-  //     "large", "large", "large",
-  //   ];
+    const pattern = [
+      "large", "large", "large",
+    ];
 
-  //   const repeatedPattern = [];
-  //   let patternIndex = 0;
+    const repeatedPattern = [];
+    let patternIndex = 0;
 
-  //   for (let i = 0; i < gameList.length; i++) {
-  //     repeatedPattern.push(pattern[patternIndex]);
-  //     patternIndex = (patternIndex + 1) % pattern.length;
-  //   }
+    for (let i = 0; i < gameListEscritorio.length; i++) {
+      repeatedPattern.push(pattern[patternIndex]);
+      patternIndex = (patternIndex + 1) % pattern.length;
+    }
 
-  //   return gameList.map((game, index) => {
-  //     const isFavorite = favorites.some(fav => fav.id === game.id);
+    return gameListEscritorio.map((game, index) => {
+      const isFavorite = favorites.some(fav => fav.id === game.id);
 
-  //     return (
-  //       <div
-  //         key={game.id}
-  //         className={`game-item ${repeatedPattern[index]}`}
-  //         onClick={() => handleGameClick(game.id, game)}
-  //       >
-  //         {game.img ? (
-  //           <img src={game.img} alt={game.name} />
-  //         ) : (
-  //           <p>Imagen no disponible</p>
-  //         )}
-  //         <button
-  //           className={`favorite-button ${isFavorite ? 'favorited' : ''}`}
-  //           onClick={(e) => {
-  //             e.stopPropagation(); // Evita que el clic en el botón de corazón active el onClick del juego
-  //             handleFavoriteClick(game, index);
-  //           }}
-  //         >
-  //           {isFavorite ? <AiFillHeart size={24} color="red" /> : <AiOutlineHeart size={24} />}
-  //         </button>
-  //       </div>
-  //     );
-  //   });
-  // };
+      return (
+        <div
+          key={game.id}
+          className={`game-item-escritorio ${repeatedPattern[index]}`}
+          onClick={() => handleGameClick(game.id, game)}
+        >
+          {game.img ? (
+            <img src={game.img} alt={game.name} />
+          ) : (
+            <p>Imagen no disponible</p>
+          )}
+          <button
+            className={`favorite-button ${isFavorite ? 'favorited' : ''}`}
+            onClick={(e) => {
+              e.stopPropagation(); // Evita que el clic en el botón de corazón active el onClick del juego
+              handleFavoriteClick(game, index);
+            }}
+          >
+            {isFavorite ? <AiFillHeart size={24} color="red" /> : <AiOutlineHeart size={24} />}
+          </button>
+        </div>
+      );
+    });
+  };
 
    // Función para alternar pantalla completa en otros navegadores
   //region renderGames
@@ -883,6 +922,97 @@ const renderCategoryButtons = () => {
     });
   };
   
+
+  const [expandedGroups2, setExpandedGroups2] = useState({}); // Estado para rastrear grupos expandidos
+  const renderGames2 = () => {
+   console.log(gameList);
+ 
+   if (gameList.length === 0) {
+     return (
+       <div className="load-list">
+         <p>No hay juegos que mostrar</p>
+       </div>
+     );
+   }
+ 
+   // Agrupar los juegos por `title`
+   const groupedGames = gameList.reduce((acc, game) => {
+     if (!acc[game.title]) {
+       acc[game.title] = [];
+     }
+     acc[game.title].push(game);
+     return acc;
+   }, {});
+ 
+   // Manejar la expansión de los grupos
+   const handleToggleGroup = (title) => {
+     setExpandedGroups2((prev) => ({
+       ...prev,
+       [title]: !prev[title], // Alterna entre expandir/contraer
+     }));
+   };
+ 
+   // Función para formatear el título
+   const formatTitle = (title) => {
+     return title
+       .replace(/_/g, " ") // Reemplaza guiones bajos por espacios
+       .replace(/\b\w/g, (char) => char.toUpperCase()); // Capitaliza cada palabra
+   };
+ 
+   // Renderizar los grupos y los juegos
+   return Object.entries(groupedGames).map(([title, games]) => {
+     console.log("se muestra games", games);
+     const isExpanded = expandedGroups2[title] || false; // Verificar si el grupo está expandido
+ 
+     return (
+       <div key={title} className="game-group">
+         <div className="group-header">
+           <h2 className="game-title">{formatTitle(title)}</h2> {/* Formatear el título */}
+           <button
+             className="view-all-button"
+             onClick={() => handleToggleGroup(title)}
+           >
+             {isExpanded ? "Ver menos" : "Ver todo"}
+           </button>
+         </div>
+         <div className="games-row">
+           {(isExpanded ? games : games.slice(0, 6)).map((game, index) => {
+             const isFavorite = favorites.some((fav) => fav.id === game.id);
+ 
+             return (
+               <div
+                 key={game.id}
+                 className="game-item-escritorio2"
+                 onClick={() => handleGameClick(game.id, game)}
+               >
+                 {game.img ? (
+                   <img src={game.img} alt={game.name} />
+                 ) : (
+                   <p>Imagen no disponible</p>
+                 )}
+                 <button
+                   className={`favorite-button ${
+                     isFavorite ? "favorited" : ""
+                   }`}
+                   onClick={(e) => {
+                     e.stopPropagation(); // Evita que el clic en el botón de corazón active el onClick del juego
+                     handleFavoriteClick(game, index);
+                   }}
+                 >
+                   {isFavorite ? (
+                     <AiFillHeart size={24} color="red" />
+                   ) : (
+                     <AiOutlineHeart size={24} />
+                   )}
+                 </button>
+               </div>
+             );
+           })}
+         </div>
+       </div>
+     );
+   });
+ };
   
   
   
@@ -1113,13 +1243,75 @@ const icons = theme === "dark" ? iconsLight : iconsDark;
           value={searchTerm}
           onChange={handleSearchChange}
         />
-        <IconBar value={selectedTitle} onChange={handleTitleChange}>
+        {/* <IconBar value={selectedTitle} onChange={handleTitleChange}>
           <IconItem value="todos">🪟 Filtros</IconItem>
           <IconItem value="populares">🔥 Populares</IconItem>
           <IconItem value="Recientes">⌛ Recientes</IconItem>
           <IconItem value="favoritos">❤️ Favoritos</IconItem>
           <IconItem value="todos">🎰 Todos</IconItem>
-        </IconBar>
+        </IconBar> */}
+
+          {/* Carrusel para Títulos */}
+  <CarouselContainerEscritorio>
+    <CarouselItem
+      onClick={() => handleTitleChange({ target: { value: "populares" } })}
+      isSelected={selectedTitle === "populares"}
+    >
+                  <img 
+    src={icons.populares} 
+    alt="Icono de Cartas" 
+    style={{
+      width: "50px", // Ajusta el tamaño de la imagen
+      height: "50px", 
+      objectFit: "contain"
+    }}
+  />
+
+    </CarouselItem>
+    <CarouselItem
+      onClick={() => handleTitleChange({ target: { value: "Recientes" } })}
+      isSelected={selectedTitle === "Recientes"}
+    >
+            <img 
+    src={icons.recientes} 
+    alt="Icono de Cartas" 
+    style={{
+      width: "50px", // Ajusta el tamaño de la imagen
+      height: "50px", 
+      objectFit: "contain"
+    }}
+  />
+      
+    </CarouselItem>
+    <CarouselItem
+      onClick={() => handleTitleChange({ target: { value: "favoritos" } })}
+      isSelected={selectedTitle === "favoritos"}
+    >
+      <img 
+    src={icons.favoritos} 
+    alt="Icono de Cartas" 
+    style={{
+      width: "50px", // Ajusta el tamaño de la imagen
+      height: "50px", 
+      objectFit: "contain"
+    }}
+  />
+    </CarouselItem>
+    <CarouselItem
+      onClick={() => handleTitleChange({ target: { value: "todos" } })}
+      isSelected={selectedTitle === "todos"}
+    >
+      <img 
+    src={icons.todos} 
+    alt="Icono de Cartas" 
+    style={{
+      width: "50px", // Ajusta el tamaño de la imagen
+      height: "50px", 
+      objectFit: "contain"
+    }}
+  />
+    </CarouselItem>
+  </CarouselContainerEscritorio>
 
       </DivButtonTop>
       
@@ -1129,14 +1321,34 @@ const icons = theme === "dark" ? iconsLight : iconsDark;
       {selectedTitle === "favoritos" && favorites && renderFavoriteGames()}
       </DivButtonCenter>
 
-      <div className="game-list">
+      <TitleContainer>
+      <GradientLine className="gradient-left" />
+      <TitleText>Mejores juegos</TitleText>
+      <GradientLine className="gradient-right" />
+</TitleContainer>
+
+<div className={isCategorySelected ? "game-list-escritorio2" : "game-list-escritorio"}>
+  {gameList && gameList.length > 0 ? (
+    isCategorySelected ? (
+      renderGames2()
+    ) : (
+      renderGamesEscritorio()
+    )
+  ) : (
+    <div className="load-list">
+      <p>No hay juegos que mostrar</p>
+    </div>
+  )}
+</div>
+
+      {/* <div className="game-list-escritorio">
         
-        {gameList && gameList.length > 0 ? renderGames() :
+        {gameList && gameList.length > 0 ? renderGamesEscritorio() :
           <div className="load-list">
             <p>No hay juegos que mostrar</p>
           </div>
         }
-      </div>
+      </div> */}
 
       <DivButton>
       {showMoreButton && !loading && (
@@ -1641,6 +1853,138 @@ const Container = styled.div`
   background-attachment: fixed;
   overflow-x: hidden;
 
+  .game-list-escritorio2{
+  display: flex;
+  flex-direction: column;
+    gap: 15px;
+    padding: 32px;
+
+    .load-list {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+  }
+
+  .game-item-escritorio2 {
+  flex: 0 1 calc(15.333% - 15px);
+    background-color:transparent;
+    text-align: center;
+    border-radius: 10px;
+    overflow: hidden;
+    position: relative;
+    cursor: pointer;
+    transition: transform 0.2s ease-in-out;
+
+    &:hover {
+      transform: scale(0.9);
+    }
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.2s ease-in-out;
+    }
+
+    &:hover img {
+      transform: scale(1.2);
+    }
+
+     &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5); 
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      z-index: 1; 
+    }
+
+    &:hover::before {
+      opacity: 1;
+    }
+
+    button {
+      background: transparent;
+    }
+
+    .favorite-button {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      border: none;
+      border-radius: 15px;
+      cursor: pointer;
+      z-index: 2; 
+
+      svg {
+        color: red; 
+        font-size: 24px;
+      }
+    }
+  }
+
+  .game-list-escritorio {
+    display: flex;
+    flex-wrap: wrap; /* Permite que los juegos se ajusten en múltiples filas */
+    gap: 15px; /* Espacio entre los juegos */
+    padding: 32px;
+    justify-content: center; /* Centra los juegos horizontalmente */
+
+    .load-list-escritorio {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+    }
+  }
+
+  .game-item-escritorio {
+    flex: 0 1 calc(15.333% - 15px); /* Tres juegos por fila */
+    background-color: transparent;
+    text-align: center;
+    border-radius: 10px;
+    overflow: hidden;
+    position: relative;
+    cursor: pointer;
+    transition: transform 0.2s ease-in-out;
+
+    &:hover {
+      transform: scale(0.9);
+    }
+
+    img {
+      width: 100%;
+      height: auto;
+      object-fit: cover;
+      transition: transform 0.2s ease-in-out;
+    }
+
+    &:hover img {
+      transform: scale(1.1);
+    }
+
+    .favorite-button {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      z-index: 2;
+
+      svg {
+        font-size: 24px;
+        transition: color 0.3s ease;
+        color: red;
+      }
+    }
+  }
+
 .game-group {
   margin-bottom: 32px;
 }
@@ -1652,12 +1996,24 @@ const Container = styled.div`
 }
 
 .games-row {
-  display: flex; /* Uso de flexbox */
-  flex-wrap: wrap; /* Permite que los juegos se ajusten en múltiples filas */
+  display: flex;
+  flex-wrap: wrap; 
   gap: 10px;
-  overflow-x: auto; /* Barra de desplazamiento horizontal */
-  padding-bottom: 10px; /* Espacio para evitar que la barra de scroll toque los juegos */
-  scroll-behavior: smooth; /* Desplazamiento suave */
+  justify-content: space-between; 
+  overflow-x: auto; 
+  padding-bottom: 10px; 
+  scroll-behavior: smooth; 
+
+    &:after {
+    content: ""; 
+    flex: 1 1 auto; 
+  }
+
+  &:only-child,
+  &:only-child:after {
+    justify-content: center;
+  }
+
     &::-webkit-scrollbar {
     height: 10px;
   }
@@ -2253,6 +2609,31 @@ const CarouselContainer = styled.div`
   overflow-x: auto;
   padding: 10px;
   justify-content: center;
+  width: 100%;
+  scroll-behavior: smooth;
+
+  &::-webkit-scrollbar {
+    height: 5px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: ${(props) => props.theme.iconcolorHome};
+    border-radius: 10px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+`;
+
+const CarouselContainerEscritorio = styled.div`
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  overflow-x: auto;
+  padding: 10px;
+  justify-content: flex-end;
+  margin-right: 2%;
   width: 100%;
   scroll-behavior: smooth;
 
