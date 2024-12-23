@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useContext } from 'react';
 import styled from 'styled-components';
 import { v } from "../../styles/Variables";
-import blanco from '../../assets/skarybet-blanco.png';
-import negro from '../../assets/skarybet-negro.png';
+import blanco from '../../assets/logo-suerte.png';
+import negro from '../../assets/logo-suerte-black.png';
 import home1 from "../../assets/home1.png";
 import home2 from "../../assets/home2.png";
 import { useNavigate } from 'react-router-dom';

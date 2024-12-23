@@ -111,9 +111,21 @@ export function SubNavbar({ categories, onCategoryClick }) {
 
     const excludedCategories = ["pragmatic_live", "netent", "bingo", "roulette", "keno", "table_games"];
 
-    const filteredCategories = categories.filter(category => !excludedCategories.includes(category));
+    const filteredCategories = categories
+    .filter(category => !excludedCategories.includes(category))
+    .filter(category => imageMap[category.toLowerCase().replace(/\s+/g, '_')]);
       
     const responsiveOptions = [
+      {
+        breakpoint: '1300px',
+        numVisible: 6,
+        numScroll: 1
+      },
+      {
+        breakpoint: '1200px',
+        numVisible: 5,
+        numScroll: 1
+      },
       {
         breakpoint: '1024px',
         numVisible: 4,
@@ -142,7 +154,7 @@ export function SubNavbar({ categories, onCategoryClick }) {
           <CategoriesCarousel>
             <Carousel
               value={filteredCategories}
-              numVisible={4}
+              numVisible={7}
               numScroll={1}
               responsiveOptions={responsiveOptions}
               className="custom-carousel"
@@ -188,6 +200,7 @@ export function SubNavbar({ categories, onCategoryClick }) {
     align-items: center;
     padding: 0px 35px;
     color: ${(props) => props.theme.text};
+    margin-bottom: 2%;
 
     @media (max-width: 926px) {
     padding: 0px 5px;
@@ -271,11 +284,14 @@ export function SubNavbar({ categories, onCategoryClick }) {
   const CategoryItem = styled.div`
     cursor: pointer;
     text-align: center;
-    
+    padding: 10px;
+    border: 1px solid #997300;
+    border-radius: 10px;  
   `;
   
   const CategoryImage = styled.img`
     width: 100%;
+    max-width: 120px;
     object-fit: cover;
     transition: transform 0.3s ease;
     border-radius: 9px;

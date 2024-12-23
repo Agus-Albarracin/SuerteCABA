@@ -1660,9 +1660,9 @@ const CategoriesButton = styled.button`
   justify-content: center;
   align-items: center; 
   padding: 10px;
-  border: none;
+  border: 1px solid #997300;
   cursor: pointer;
-  background-color: ${(props) => props.theme.iconBgcolorHome};
+  background-color:transparent;
   min-width: 350px;
   min-height: 150px;
   border-radius: 15px; 
