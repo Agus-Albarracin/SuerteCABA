@@ -127,7 +127,7 @@ const categorySections = {
           const shuffledTitles = shuffleArray(response.data.gamesList.content.gameTitles);
 
 // IDs que se deben filtrar
-const excludedIds = [11675, 12559, 3000, 3001, 3002];
+const excludedIds = [11675, 12559];
 
 // Filtrar juegos con nombres duplicados, excluir ciertos IDs y mostrar juegos con "novomatic" en el título
 const filteredGames = getAllgames.reduce((acc, game) => {
@@ -165,40 +165,67 @@ setAllGames(filteredGames);
     fetchData();
   }, [ user, navigate]);
 
+  
+  //region Carga de Juego
 
-
+  //solo carga algunas categorias para despues LoadMore cargar mas categorias
+  
+  // useEffect(() => {
+  //   if (allGames.length > 0) {
+  //     // Barajar (mezclar) los juegos
+  //     const shuffledGames = shuffleArray(allGames);
+      
+  //     // Actualizar el estado con los juegos desordenados
+  //     setGameList(shuffledGames);
+  
+  //     // Establecer categorías únicas para los títulos
+  //     setUniqueCategories(getUniqueCategories(allGames));
+  //   }
+  // }, [allGames]);
   useEffect(() => {
     if (allGames.length > 0) {
-      // Ordenar allGames para que los títulos que contienen "pragmatic" y "pgsoft" estén primero
-      const prioritizedTitles = ['pragmatic'];
-      
-      const sortedGames = allGames.sort((a, b) => {
-        const aTitle = a.title.toLowerCase();
-        const bTitle = b.title.toLowerCase();
+      // Definición de títulos de los proveedores para section1
+      const titleSections = {
+        section1: [
+          'pragmatic', 'amatic', 'booming', 'aristocrat', 'firekirin', 'elkstudios', 
+          'novomatic', 'rubyplay', 'evolution', 'pgsoft'
+        ]
+      };
   
-        const isBPrioritized = prioritizedTitles.some(title => bTitle === title);
-        const isAPrioritized = prioritizedTitles.some(title => aTitle === title);
-  
-        if (isAPrioritized && isBPrioritized) {
-          return 0; // Mantener el orden original entre los juegos priorizados
+      // Función para mezclar el arreglo de títulos
+      const shuffleArray = (array) => {
+        for (let i = array.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [array[i], array[j]] = [array[j], array[i]]; // Intercambia los elementos
         }
+      };
   
-        if (isAPrioritized) {
-          return -1; // Mover los juegos priorizados al principio
-        }
+      // Mezclar los títulos de la section1
+      const titlesToLoad = [...titleSections['section1']]; // Copiar para evitar modificar el original
+      shuffleArray(titlesToLoad);
   
-        if (isBPrioritized) {
-          return 1; // Mover los juegos no priorizados después
-        }
+      // Seleccionar los primeros 3 títulos después de mezclarlos
+      const selectedTitles = titlesToLoad.slice(0, 3);
   
-        return 0; // Mantener el orden original para los no priorizados
-      });
+      // Filtrar juegos que coinciden con los títulos seleccionados
+      let filteredGames = allGames.filter(game => 
+        selectedTitles.some(title => game.title.toLowerCase().includes(title.toLowerCase()))
+      );
   
-      // Aplicar shuffleArray después de la ordenación
-      setGameList(shuffleArray(sortedGames.slice(0, gamesToShow)));
-      setUniqueCategories(getUniqueCategories(allGames));
+      // Mostrar los títulos seleccionados en consola
+      console.log("Títulos seleccionados:", selectedTitles);
+  
+      // Actualizar el estado con los juegos filtrados
+      setGameList(filteredGames);
+  
+      // Establecer categorías únicas si es necesario
+      setUniqueCategories(getUniqueCategories(filteredGames));
     }
   }, [allGames]);
+  
+  
+  
+
 
   useEffect(() => {
     const storedGames = JSON.parse(localStorage.getItem('recentGames')) || [];
@@ -227,7 +254,7 @@ setAllGames(filteredGames);
       game.name.toLowerCase().includes(value)
     );
 
-    setGameList(filteredGames.slice(0, gamesToShow)); // Mostrar juegos filtrados
+    setGameList(filteredGames); // Mostrar juegos filtrados
   };
 
 
@@ -316,57 +343,114 @@ setAllGames(filteredGames);
   };
   
 
+  // const loadMoreGames = useCallback(() => {
+  //   if (loading) return; // Evita cargar si ya está cargando
+  //   setLoading(true); // Iniciar la carga
+  
+  //   // Incrementar el contador de juegos mostrados
+  //   setGamesToShow(prevGamesToShow => prevGamesToShow + 9);
+  
+  //   // Definición de categorías de las secciones
+  //   const categorySections = {
+  //     section1: ['slots', 'otros'],
+  //     section2: ['arcade', 'fast_games'],
+  //     section3: ['live_dealers', 'lottery', 'roulette'],
+  //     section4: ['sport'],
+  //     section5: ['card', 'video_poker']
+  //   };
+  
+  //   // Etiquetas de proveedores
+  //   const providerLabels = [
+  //     "pragmatic", "amatic", "scientific_games", "fast_games", "live_dealers",
+  //     "fish", "novomatic", "aristocrat", "apollo", "vegas", "tomhorn",
+  //     "microgaming", "ainsworth", "quickspin", "yggdrasil", "netent",
+  //     "habanero", "igt", "igrosoft", "apex", "merkur", "wazdan", "egt",
+  //     "roulette", "bingo", "keno", "table_games", "kajot", "zitro", "rubyplay",
+  //     "playngo", "elkstudios", "firekirin", "platipus", "evolution", "pgsoft",
+  //     "playson", "altente", "booming", "galaxsys", "spribe", "pragmatic_play_live"
+  //   ];
+  
+  //   // Determinar si se filtra por un proveedor o por categorías
+  //   let filteredGames = [];
+  
+  //   if (providerLabels.includes(selectedTitle)) {
+  //     // Filtrar por el título del proveedor
+  //     filteredGames = allGames.filter(game => game.title === selectedTitle);
+  //   } else {
+  //     // Filtrar por categorías correspondientes al `selectedTitle`
+  //     const labelsToFilter = categorySections[selectedTitle] || [];
+  //     filteredGames = labelsToFilter.length > 0
+  //       ? allGames.filter(game => labelsToFilter.includes(game.categories))
+  //       : allGames;
+  //   }
+  
+  
+  //   // Actualizar la lista de juegos
+  //   setGameList(prevGameList => {
+  //     const moreGames = shuffleArray(filteredGames.slice(prevGameList.length, prevGameList.length + 72));
+  
+  
+  //     const updatedGameList = [...prevGameList, ...moreGames];
+  
+  //     // Verificar si se alcanzó el límite de juegos
+  //     if (updatedGameList.length >= filteredGames.length) {
+  //       setShowMoreButton(false); // Ocultar botón si no hay más juegos
+  //     }
+  
+  //     return updatedGameList;
+  //   });
+  
+  //   setLoading(false); // Finalizar la carga
+  // }, [loading, allGames, selectedTitle, gameList]);
   const loadMoreGames = useCallback(() => {
     if (loading) return; // Evita cargar si ya está cargando
     setLoading(true); // Iniciar la carga
   
-    // Incrementar el contador de juegos mostrados
-    setGamesToShow(prevGamesToShow => prevGamesToShow + 9);
-  
-    // Definición de categorías de las secciones
-    const categorySections = {
-      section1: ['slots', 'otros'],
-      section2: ['arcade', 'fast_games'],
-      section3: ['live_dealers', 'lottery', 'roulette'],
-      section4: ['sport'],
-      section5: ['card', 'video_poker']
-    };
-  
-    // Etiquetas de proveedores
-    const providerLabels = [
-      "pragmatic", "amatic", "scientific_games", "fast_games", "live_dealers",
-      "fish", "novomatic", "aristocrat", "apollo", "vegas", "tomhorn",
-      "microgaming", "ainsworth", "quickspin", "yggdrasil", "netent",
-      "habanero", "igt", "igrosoft", "apex", "merkur", "wazdan", "egt",
-      "roulette", "bingo", "keno", "table_games", "kajot", "zitro", "rubyplay",
-      "playngo", "elkstudios", "firekirin", "platipus", "evolution", "pgsoft",
-      "playson", "altente", "booming", "galaxsys", "spribe", "pragmatic_play_live"
+    // Definición de todos los títulos
+    const allTitles = [
+      'pragmatic', 'amatic', 'booming', 'sagaming', 'holi_bet', 'scientific_games', 'galaxsys', 'aviatrix', 'spribe', 
+      'aristocrat', 'firekirin', 'elkstudios', 'Pragmatic Play Live', 'zitro', 'playngo', 'microgaming', 'netent', 
+      'altente', 'playson', 'apollo', 'platipus', 'kajot', 'vegas', 'tomhorn', 'ainsworth', 'evolution', 'pgsoft', 
+      'quickspin', 'habanero', 'yggdrasil', 'novomatic', 'rubyplay', 'fish', 'live_dealers', 'fast_games', 'wazdan', 
+      'egt', 'roulette', 'bingo', 'keno', 'table_games', 'igt', 'igrosoft', 'apex', 'merkur'
     ];
   
-    // Determinar si se filtra por un proveedor o por categorías
-    let filteredGames = [];
+    // Obtener las secciones ya cargadas
+    const loadedTitles = new Set(gameList.map(game => game.title.toLowerCase()));
   
-    if (providerLabels.includes(selectedTitle)) {
-      // Filtrar por el título del proveedor
-      filteredGames = allGames.filter(game => game.title === selectedTitle);
-    } else {
-      // Filtrar por categorías correspondientes al `selectedTitle`
-      const labelsToFilter = categorySections[selectedTitle] || [];
-      filteredGames = labelsToFilter.length > 0
-        ? allGames.filter(game => labelsToFilter.includes(game.categories))
-        : allGames;
+    // Filtrar los títulos que aún no se han cargado
+    const remainingTitles = allTitles.filter(title => !loadedTitles.has(title.toLowerCase()));
+  
+    if (remainingTitles.length === 0) {
+      setShowMoreButton(false); // Si ya se han cargado todos los títulos, ocultar el botón
+      setLoading(false);
+      return;
     }
   
+    // Mezclar los títulos restantes aleatoriamente
+    const shuffleArray = (array) => {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]]; // Intercambia los elementos
+      }
+    };
+  
+    shuffleArray(remainingTitles);
+  
+    // Seleccionar los primeros 3 títulos restantes
+    const titlesToLoad = remainingTitles.slice(0, 3);
+  
+    // Filtrar los juegos de los títulos seleccionados
+    let filteredGames = allGames.filter(game =>
+      titlesToLoad.some(title => game.title.toLowerCase().includes(title.toLowerCase()))
+    );
   
     // Actualizar la lista de juegos
     setGameList(prevGameList => {
-      const moreGames = shuffleArray(filteredGames.slice(prevGameList.length, prevGameList.length + 72));
-  
-  
-      const updatedGameList = [...prevGameList, ...moreGames];
+      const updatedGameList = [...prevGameList, ...filteredGames];
   
       // Verificar si se alcanzó el límite de juegos
-      if (updatedGameList.length >= filteredGames.length) {
+      if (updatedGameList.length >= allGames.length) {
         setShowMoreButton(false); // Ocultar botón si no hay más juegos
       }
   
@@ -374,10 +458,12 @@ setAllGames(filteredGames);
     });
   
     setLoading(false); // Finalizar la carga
-  }, [loading, allGames, selectedTitle, gameList]);
+  }, [loading, allGames, gameList]);
+  
 
+  
   useEffect(() => {
-    setGamesToShow(18);
+    setGamesToShow(200);
     setShowMoreButton(true)
   }, [selectedTitle]);
   // Log de actualización de gameList
@@ -654,7 +740,62 @@ const renderCategoryButtons = () => {
     </IconGamesDivContainer>
   ) };
   
-  const renderGames = () => {
+  // const renderGames = () => {
+  //   console.log(gameList)
+  //   if (gameList.length === 0) {
+  //     return (
+  //       <div className="load-list">
+  //         <p>No hay juegos que mostrar</p>
+  //       </div>
+  //     );
+  //   }
+
+  //   const pattern = [
+  //     "large", "large", "large",
+  //   ];
+
+  //   const repeatedPattern = [];
+  //   let patternIndex = 0;
+
+  //   for (let i = 0; i < gameList.length; i++) {
+  //     repeatedPattern.push(pattern[patternIndex]);
+  //     patternIndex = (patternIndex + 1) % pattern.length;
+  //   }
+
+  //   return gameList.map((game, index) => {
+  //     const isFavorite = favorites.some(fav => fav.id === game.id);
+
+  //     return (
+  //       <div
+  //         key={game.id}
+  //         className={`game-item ${repeatedPattern[index]}`}
+  //         onClick={() => handleGameClick(game.id, game)}
+  //       >
+  //         {game.img ? (
+  //           <img src={game.img} alt={game.name} />
+  //         ) : (
+  //           <p>Imagen no disponible</p>
+  //         )}
+  //         <button
+  //           className={`favorite-button ${isFavorite ? 'favorited' : ''}`}
+  //           onClick={(e) => {
+  //             e.stopPropagation(); // Evita que el clic en el botón de corazón active el onClick del juego
+  //             handleFavoriteClick(game, index);
+  //           }}
+  //         >
+  //           {isFavorite ? <AiFillHeart size={24} color="red" /> : <AiOutlineHeart size={24} />}
+  //         </button>
+  //       </div>
+  //     );
+  //   });
+  // };
+
+   // Función para alternar pantalla completa en otros navegadores
+  //region renderGames
+   const [expandedGroups, setExpandedGroups] = useState({}); // Estado para rastrear grupos expandidos
+   const renderGames = () => {
+    console.log(gameList);
+  
     if (gameList.length === 0) {
       return (
         <div className="load-list">
@@ -662,48 +803,89 @@ const renderCategoryButtons = () => {
         </div>
       );
     }
-
-    const pattern = [
-      "large", "large", "large",
-    ];
-
-    const repeatedPattern = [];
-    let patternIndex = 0;
-
-    for (let i = 0; i < gameList.length; i++) {
-      repeatedPattern.push(pattern[patternIndex]);
-      patternIndex = (patternIndex + 1) % pattern.length;
-    }
-
-    return gameList.map((game, index) => {
-      const isFavorite = favorites.some(fav => fav.id === game.id);
-
+  
+    // Agrupar los juegos por `title`
+    const groupedGames = gameList.reduce((acc, game) => {
+      if (!acc[game.title]) {
+        acc[game.title] = [];
+      }
+      acc[game.title].push(game);
+      return acc;
+    }, {});
+  
+    // Manejar la expansión de los grupos
+    const handleToggleGroup = (title) => {
+      setExpandedGroups((prev) => ({
+        ...prev,
+        [title]: !prev[title], // Alterna entre expandir/contraer
+      }));
+    };
+  
+    // Función para formatear el título
+    const formatTitle = (title) => {
+      return title
+        .replace(/_/g, " ") // Reemplaza guiones bajos por espacios
+        .replace(/\b\w/g, (char) => char.toUpperCase()); // Capitaliza cada palabra
+    };
+  
+    // Renderizar los grupos y los juegos
+    return Object.entries(groupedGames).map(([title, games]) => {
+      console.log("se muestra games", games);
+      const isExpanded = expandedGroups[title] || false; // Verificar si el grupo está expandido
+  
       return (
-        <div
-          key={game.id}
-          className={`game-item ${repeatedPattern[index]}`}
-          onClick={() => handleGameClick(game.id, game)}
-        >
-          {game.img ? (
-            <img src={game.img} alt={game.name} />
-          ) : (
-            <p>Imagen no disponible</p>
-          )}
-          <button
-            className={`favorite-button ${isFavorite ? 'favorited' : ''}`}
-            onClick={(e) => {
-              e.stopPropagation(); // Evita que el clic en el botón de corazón active el onClick del juego
-              handleFavoriteClick(game, index);
-            }}
-          >
-            {isFavorite ? <AiFillHeart size={24} color="red" /> : <AiOutlineHeart size={24} />}
-          </button>
+        <div key={title} className="game-group">
+          <div className="group-header">
+            <h2 className="game-title">{formatTitle(title)}</h2> {/* Formatear el título */}
+            <button
+              className="view-all-button"
+              onClick={() => handleToggleGroup(title)}
+            >
+              {isExpanded ? "Ver menos" : "Ver todo"}
+            </button>
+          </div>
+          <div className="games-row">
+            {(isExpanded ? games : games.slice(0, 3)).map((game, index) => {
+              const isFavorite = favorites.some((fav) => fav.id === game.id);
+  
+              return (
+                <div
+                  key={game.id}
+                  className="game-item"
+                  onClick={() => handleGameClick(game.id, game)}
+                >
+                  {game.img ? (
+                    <img src={game.img} alt={game.name} />
+                  ) : (
+                    <p>Imagen no disponible</p>
+                  )}
+                  <button
+                    className={`favorite-button ${
+                      isFavorite ? "favorited" : ""
+                    }`}
+                    onClick={(e) => {
+                      e.stopPropagation(); // Evita que el clic en el botón de corazón active el onClick del juego
+                      handleFavoriteClick(game, index);
+                    }}
+                  >
+                    {isFavorite ? (
+                      <AiFillHeart size={24} color="red" />
+                    ) : (
+                      <AiOutlineHeart size={24} />
+                    )}
+                  </button>
+                </div>
+              );
+            })}
+          </div>
         </div>
       );
     });
   };
-
-   // Función para alternar pantalla completa en otros navegadores
+  
+  
+  
+  
    const toggleFullScreen = (isFull) => {
     const iframe = iframeRef.current;
 
@@ -958,7 +1140,7 @@ const icons = theme === "dark" ? iconsLight : iconsDark;
 
       <DivButton>
       {showMoreButton && !loading && (
-          <ButtonShowMore bgImage={bgHome} onClick={loadMoreGames}>Ver más</ButtonShowMore>
+          <ButtonShowMore bgImage={bgHome} onClick={loadMoreGames}>Otros Juegos</ButtonShowMore>
         )}
         <div className="pacmanDiv">
           <PacmanLoader
@@ -1144,7 +1326,7 @@ const icons = theme === "dark" ? iconsLight : iconsDark;
 </LoaderWrapperR>
 ) : showMoreButton && (
 <LoadMoreButtonR onClick={loadMoreGames}>
-  Ver más
+  Otros Juegos
 </LoadMoreButtonR>
 )}
 
@@ -1459,14 +1641,64 @@ const Container = styled.div`
   background-attachment: fixed;
   overflow-x: hidden;
 
+.game-group {
+  margin-bottom: 32px;
+}
+
+.game-title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.games-row {
+  display: flex; /* Uso de flexbox */
+  flex-wrap: wrap; /* Permite que los juegos se ajusten en múltiples filas */
+  gap: 10px;
+  overflow-x: auto; /* Barra de desplazamiento horizontal */
+  padding-bottom: 10px; /* Espacio para evitar que la barra de scroll toque los juegos */
+  scroll-behavior: smooth; /* Desplazamiento suave */
+    &::-webkit-scrollbar {
+    height: 10px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: ${(props) => props.theme.iconcolorHome};
+    border-radius: 10px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+}
+.group-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.view-all-button {
+  background-color: #997300;;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.view-all-button:hover {
+  background-color: #e6ac00;;
+}
+
+
   .game-list {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
+  display: flex;
+  flex-direction: column;
     gap: 15px;
     padding: 32px;
 
     .load-list {
-      grid-column: span 3; 
       display: flex;
       justify-content: center;
       align-items: center;
@@ -1474,6 +1706,7 @@ const Container = styled.div`
   }
 
   .game-item {
+  flex: 0 1 calc(33.333% - 15px);
     background-color:transparent;
     text-align: center;
     border-radius: 10px;
@@ -1534,14 +1767,7 @@ const Container = styled.div`
     }
   }
 
-  .small {
-    grid-column: span 1;
-    grid-row: span 1;
-  }
 
-  .large {
-    grid-row: span 2;
-  }
 
   @media (max-width: 480px) {
     padding: 0px;
@@ -1753,25 +1979,71 @@ const ContainerR = styled.div`
   max-width: 100%;
   overflow-x: hidden;
 
+  .game-group {
+  margin-bottom: 32px;
+}
+
+.game-title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.games-row {
+  display: flex; /* Juegos en línea horizontal */
+  gap: 15px; /* Espacio entre los juegos */
+  overflow-x: auto; /* Barra de desplazamiento horizontal */
+  padding-bottom: 10px; /* Espacio para evitar que la barra de scroll toque los juegos */
+  scroll-behavior: smooth; /* Desplazamiento suave */
+    &::-webkit-scrollbar {
+    height: 10px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: ${(props) => props.theme.iconcolorHome};
+    border-radius: 10px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+}
+.group-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.view-all-button {
+  background-color: #997300;;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.view-all-button:hover {
+  background-color: #e6ac00;;
+}
+
+
   .game-list {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
+  display: flex;
+  flex-direction: column;
     gap: 15px;
-    padding-left:5px;
-    padding-right:5px;
-    margin-top: 6%;
-    margin-bottom: 4%;
+    padding: 32px;
 
     .load-list {
-      grid-column: span 3; 
       display: flex;
       justify-content: center;
       align-items: center;
     }
   }
 
-
   .game-item {
+    flex: 0 0 auto; /* Evita que los juegos se reduzcan o expandan */
     background-color:transparent;
     text-align: center;
     border-radius: 10px;
@@ -1837,77 +2109,6 @@ const ContainerR = styled.div`
     grid-row: span 1;
   }
 
-@media (max-width: 431px) {
-  .game-list {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 15px;
-    width: 100%;
-    padding-left:5px;
-    padding-right:5px;
-    margin-top: 6%;
-}
-}
-
-@media (max-width: 428px) {
-  .game-list {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 15px;
-    width: 100%;
-    padding-left:5px;
-    padding-right:5px;
-    margin-top: 6%;
-}
-}
-
-@media (max-width: 420px) {
-  .game-list {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 15px;
-    width: 100%;
-    padding-left:5px;
-    padding-right:5px;
-    margin-top: 6%;
-}
-}
-
-@media (max-width: 391px) {
-  .game-list {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 15px;
-    width: 100%;
-    padding-left:5px;
-    padding-right:5px;
-    margin-top: 6%;
-}
-}
-
- @media (max-width: 375px) {
-   .game-list {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 15px;
-    width: 100%;
-    padding-left:5px;
-    padding-right:5px;
-    margin-top: 6%;
-}
-}
-
-@media (max-width: 361px) {
-  .game-list {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 15px;
-    width: 100%;
-    padding-left:5px;
-    padding-right:5px;
-    margin-top: 6%;
-}
-}
 `;
 
 
