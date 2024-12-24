@@ -1,6 +1,6 @@
 import styled from "styled-components";
-import logo from "../assets/logo-navbar.png";
-import logodark from "../assets/logo-navbardark.png";
+import logo from "../assets/icon-suerte.png";
+import logodark from "../assets/icon-suerte.png";
 import { v } from "../styles/Variables";
 import {
   AiOutlineRight,
@@ -181,10 +181,10 @@ const secondarylinksArray = [
       </button>}
 
       <div className="Logocontent">
+        <h2><em>SUERTE</em></h2>
         <div className="imgcontent">
           <img src={logoToUse} width="40px" />
         </div>
-        <h2>SKARYBET</h2>
       </div>
       {linksArray.map(({ icon, label, to, subLinks }) => (
         <div key={label}>

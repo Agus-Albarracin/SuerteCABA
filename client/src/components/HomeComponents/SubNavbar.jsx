@@ -195,12 +195,14 @@ export function SubNavbar({ categories, onCategoryClick }) {
 `;
   
   const SubNavContainer = styled.div`
+    background-color: #000;
     display: flex;
     flex-direction: column; 
     align-items: center;
     padding: 0px 35px;
     color: ${(props) => props.theme.text};
     margin-bottom: 2%;
+    margin-top: 2%;
 
     @media (max-width: 926px) {
     padding: 0px 5px;
@@ -254,7 +256,7 @@ export function SubNavbar({ categories, onCategoryClick }) {
       margin-top: 15px;
     }
       .pi{
-      color: ${(props) => props.theme.iconcolorHome};
+      color: #fff;
       }
       .p-carousel .p-carousel-content .p-carousel-prev, .p-carousel .p-carousel-content .p-carousel-next {
       top: -5px;
@@ -285,7 +287,6 @@ export function SubNavbar({ categories, onCategoryClick }) {
     cursor: pointer;
     text-align: center;
     padding: 10px;
-    border: 1px solid #997300;
     border-radius: 10px;  
   `;
   

@@ -6,6 +6,7 @@ import { CrearUsuario } from "../pages/Usuarios/CrearUsuario";
 import { Reportes } from "../pages/Reportes";
 import { Movimientos } from "../pages/Movimientos";
 import { useAuth } from "../Context";
+import { LoginHome} from "../components/HomeComponents/LoginHome"
 
 import  Vistas from "../pages/Usuarios/Vistas";
 

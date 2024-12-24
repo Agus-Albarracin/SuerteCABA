@@ -18,6 +18,8 @@ import { SidebarProvider, useSidebar } from './ContextSidebar';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
+import {LoginHome} from "./components/HomeComponents/LoginHome"
+
 export const ThemeContext = React.createContext(null);
 
 function App() {
@@ -78,7 +80,19 @@ function App() {
           >
             <Routes>
               {/* Ruta para Home */}
-              <Route path="/" element={<Home />} />
+              <Route path="/" element={<LoginHome />} />
+                {/* Ruta para LoginOffice */}
+  {!user || (user.rol !== "Super" && user.rol !== "Admin" && user.rol !== "Agente" && user.rol !== "Jugador") ? (
+    <Route path="/Admin" element={<LoginOffice />} />
+  ) : null}
+
+  {/* Rutas para el rol Jugador */}
+  {user && user.rol === "Jugador" ? (
+    <>
+      <Route path="/home" element={<Home />} />
+    </>
+  ) : null}
+  
               {/* Ruta para LoginOffice */}
               { !user || (user.rol !== "Super" && user.rol !== "Admin" && user.rol !== "Agente") ? (
                 <Route path="/Admin" element={<LoginOffice />} />

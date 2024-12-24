@@ -110,7 +110,8 @@ export const Light ={
 
     linedegrade: "linear-gradient(270deg, #000 0%, rgba(235, 235, 211, 0) 100%)",
     linedegraderight: "linear-gradient(90deg, #000 0%, rgba(235, 235, 211, 0) 100%)",
-    newtext: "#cc9900"
+    newtext: "#cc9900",
+    bordercolor: "#000"
 
 }
 
@@ -229,6 +230,7 @@ export const Dark = {
     linedegrade: "linear-gradient(270deg, #ffb800 0%, rgba(235, 235, 211, 0) 100%)",
     linedegraderight: "linear-gradient(90deg, #ffb800 0%, rgba(235, 235, 211, 0) 100%)",
     newtext: "#fff",
+    bordercolor: "#997300"
 
 
 

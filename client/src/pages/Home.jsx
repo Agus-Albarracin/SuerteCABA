@@ -681,11 +681,6 @@ setAllGames(filteredGames);
             <img
               src={sectionIcons[section]}
               alt={sectionTitles[section]}
-              style={{
-                width: "50px", // Ajusta el tamaño del icono
-                height: "50px",
-                objectFit: "contain",
-              }}
             />
             <div className="category-title">{sectionTitles[section]}</div>
           </CategoriesButton>
@@ -1616,179 +1611,106 @@ const CategoriesMenu = styled.div`
   margin-top: 40px;
   justify-content: space-between;
   align-items: center;
+  gap: 20px; /* Espacio uniforme entre los elementos */
   margin-left: 35px;
   margin-right: 40px;
-`;
-
-const IconBar = styled.select`
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  justify-content: center;
-  align-items: center;
-  background-color: ${(props) => props.theme.iconBgcolorHome};
-  border: 2px solid ${(props) => props.theme.iconcolorHome};
-  border-radius: 15px;
-  padding: 15px;
-  cursor: pointer;
-  font-size: 16px;
-  filter: drop-shadow(2px 8px 2px rgba(0, 0, 0, 0.5));
-
-
-  color: ${(props) => props.theme.iconcolorHome};
-  svg {
-    margin-right: 10px;
-  }
   
+  & > * { 
+    flex: 1; /* Todos los elementos hijos ocupan el mismo tamaño */
+    max-width: 350px; /* Límite para no exceder un tamaño máximo */
+  }
 `;
 
-const IconItem = styled.option`
-display: flex;
-  justify-content: start;
-  text-items: start;
-  font-size: 20px;
-  background-color: ${(props) => props.theme.iconBgcolorHome};
-  color: ${(props) => props.theme.iconcolorHome};
-  padding: 15px;
-  border-radius: 10px;
+// const IconBar = styled.select`
+//   display: flex;
+//   flex-wrap: wrap;
+//   gap: 10px;
+//   justify-content: center;
+//   align-items: center;
+//   background-color: ${(props) => props.theme.iconBgcolorHome};
+//   border: 2px solid ${(props) => props.theme.iconcolorHome};
+//   border-radius: 15px;
+//   padding: 15px;
+//   cursor: pointer;
+//   font-size: 16px;
+//   filter: drop-shadow(2px 8px 2px rgba(0, 0, 0, 0.5));
 
-`;
+
+//   color: ${(props) => props.theme.iconcolorHome};
+//   svg {
+//     margin-right: 10px;
+//   }
+  
+// `;
+
+// const IconItem = styled.option`
+// display: flex;
+//   justify-content: start;
+//   text-items: start;
+//   font-size: 20px;
+//   background-color: ${(props) => props.theme.iconBgcolorHome};
+//   color: ${(props) => props.theme.iconcolorHome};
+//   padding: 15px;
+//   border-radius: 10px;
+
+// `;
 
 const CategoriesButton = styled.button`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center; 
-  padding: 10px;
-  border: 1px solid #997300;
+  align-items: center;
+  padding: 2%;
+  gap: 10%;
   cursor: pointer;
-  background-color:transparent;
-  min-width: 350px;
-  min-height: 150px;
-  border-radius: 15px; 
+  background-color: #000;
+  width: 20vw; /* Relativo al ancho de la pantalla */
+  height: 15vw; /* Relativo al ancho de la pantalla */
+  border-radius: 1vw; /* Relativo al ancho de la pantalla */
   color: ${(props) => props.theme.iconcolorHome};
+  transition: all 0.3s ease;
+  max-width: 350px;
+  max-height: 350px;
 
-   svg, img, img {
-    width: 45px;
-    height: 45px;
-    margin-bottom: 4px;
+  svg, img {
+    width: 60%;
+    height: auto; /* Mantiene proporción */
+    margin-bottom: 5%;
     transition: transform 0.3s ease;
     filter: drop-shadow(2px 12px 2px rgba(0, 0, 0, 0.5));
-
-    }
+  }
 
   .category-title {
-    margin-top: 2px; 
-    font-size: 25px;
+    margin-top: 2%;
+    font-size: 0.9em; /* Relativo al tamaño de fuente base */
     font-weight: 600;
-    color: ${props => props.theme.text};
+    color: #fff;
     transition: transform 0.3s ease;
-        text-shadow: 4px 8px 12px rgba(0, 0, 0, 0.6);
-
-
+    text-shadow: 4px 8px 12px rgba(0, 0, 0, 0.6);
   }
 
   &:hover {
-  svg, img{
-    transform: scale(1.2); 
-    color: ${(props) => props.theme.iconcolorHomeHover};
-  }
+    svg, img {
+      transform: scale(1.2);
+      color: ${(props) => props.theme.iconcolorHomeHover};
+    }
 
-  .category-title {
-    transform: scale(1.05); 
-    color: ${(props) => props.theme.iconcolorHomeHover};
+    .category-title {
+      transform: scale(1.05);
+      color: ${(props) => props.theme.iconcolorHomeHover};
     }
   }
 
   &:focus {
-    outline: none; 
-    box-shadow: 0 0 0 4px rgba(0, 123, 255, 0.5); 
+    outline: none;
+    box-shadow: 0 0 0 4px rgba(0, 123, 255, 0.5);
   }
 
   &:active {
     transform: scale(0.95);
   }
-
-    @media (max-width: 1800px) {
-    flex-wrap: wrap;
-    min-width: 270px; /* Reduce el tamaño mínimo */
-    min-height: 100px; /* Reduce el tamaño mínimo */
-    font-size: 15px;
-
-    svg, img {
-      width: 35px; /* Ajusta el tamaño del ícono */
-      height: 35px;
-    }
-
-    .category-title {
-      font-size: 20px; /* Ajusta el tamaño de la fuente */
-    }
-  }
-
-      @media (max-width: 1600px) {
-    flex-wrap: wrap;
-    min-width: 200px; /* Reduce el tamaño mínimo */
-    min-height: 100px; /* Reduce el tamaño mínimo */
-    font-size: 15px;
-
-    svg, img {
-      width: 35px; /* Ajusta el tamaño del ícono */
-      height: 35px;
-    }
-
-    .category-title {
-      font-size: 20px; /* Ajusta el tamaño de la fuente */
-    }
-  }
-
-  
-  @media (max-width: 1200px) {
-    flex-wrap: wrap;
-    min-width: 150px; /* Reduce el tamaño mínimo */
-    min-height: 100px; /* Reduce el tamaño mínimo */
-    font-size: 15px;
-
-    svg, img {
-      width: 25px; /* Ajusta el tamaño del ícono */
-      height: 25px;
-    }
-
-    .category-title {
-      font-size: 12px; /* Ajusta el tamaño de la fuente */
-    }
-  }
-
-    @media (max-width: 800px) {
-    flex-wrap: wrap;
-    min-width: 120px; /* Reduce el tamaño mínimo */
-    min-height: 100px; /* Reduce el tamaño mínimo */
-    font-size: 15px;
-
-    svg, img {
-      width: 20px; /* Ajusta el tamaño del ícono */
-      height: 20px;
-    }
-
-    .category-title {
-      font-size: 10px; /* Ajusta el tamaño de la fuente */
-    }
-  }
-        @media (max-width: 700px) {
-    flex-wrap: wrap;
-    min-width: 80px; /* Reduce el tamaño mínimo */
-    min-height: 40px; /* Reduce el tamaño mínimo */
-    font-size: 15px;
-
-    svg, img {
-      width: 15px; /* Ajusta el tamaño del ícono */
-      height: 15px;
-    }
-
-    .category-title {
-      font-size: 4px; /* Ajusta el tamaño de la fuente */
-    }
-  }
 `;
+
 
 //region Contenedor de ICONS
 const IconGamesDivContainer = styled.div`

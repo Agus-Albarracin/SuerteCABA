@@ -827,7 +827,7 @@ const handleClear = () => {
 
   </TableContainer>
 
-  <TableContainerAA isResponsiveTable={isResponsiveTable} bgForEst={bgForEst}>
+  <TableContainerAA isResponsiveTable={isResponsiveTable}>
     <div>
       {admins.length > 0 ? (
         admins.map((admin) => renderUserHierarchy(admin))
@@ -1291,8 +1291,7 @@ const TableContainer = styled.div`
 `;
 
 const TableContainerAA = styled.div`
-  background: url("${(props) => props.bgForEst}") no-repeat center center; 
-  background-size: cover; 
+  background-color:${props => props.theme.bgtablecontainer};
   padding: 15px;
   overflow-x: auto;
   overflow-y: auto; 
@@ -1850,7 +1849,7 @@ const DivPagination = styled.div`
 
 const PageButton = styled.button`
   background-color: transparent; /* Sin fondo */
-  color: red;
+  color: #fff;
   border: none;
   padding: 1px 12px;
   cursor: pointer;
@@ -1860,7 +1859,7 @@ const PageButton = styled.button`
 
 
   &:hover {
-    color: darkred;
+    color:  #997300;
     transform: scale(1.1);
   }
 

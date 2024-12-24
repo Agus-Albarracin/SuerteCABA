@@ -10,13 +10,14 @@ import { BsCashCoin, BsFillBellFill, BsFillEnvelopeExclamationFill, BsFillGiftFi
 import ToggleTheme from '../buttontheme';
 import { ThemeContext } from "../../App";
 
-
+import { useNavigate } from 'react-router-dom';
 
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-export function NavBarOffice() {
+export function LoginHome() {
   const { setTheme, theme } = useContext(ThemeContext);
+  const navigate = useNavigate(); // Hook para redirigir
   const CambiarTheme = () => {
     setTheme((theme) => (theme === "dark" ? "light" : "dark"));
   };
@@ -24,7 +25,7 @@ export function NavBarOffice() {
   const logoToUse = theme === "light" ? negro : blanco;
 
 
-  const { user, loginOffice, logout } = useAuth();
+  const { user, login, logout } = useAuth();
   const [showLoginForm, setShowLoginForm] = useState(true);
   const [loginData, setLoginData] = useState({ login: '', password: ''});
 
@@ -35,9 +36,10 @@ export function NavBarOffice() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    loginOffice(loginData).then(() => {
+    login(loginData).then(() => {
       toast.success('Inicio de sesión exitoso');
       setShowLoginForm(false);
+      navigate('/home');
     }).catch((error) => {
       console.error('Login failed:', error);
       toast.error(`Error al inciar sesión, ${error}`); 
