@@ -65,7 +65,7 @@ export function NavBarOffice() {
 
       <div className="nav-center">
       <Logo><img src={logoToUse}  alt="logo"/></Logo>
-
+      <h2><em>ADMIN</em></h2>
         </div>
 
 

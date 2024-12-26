@@ -128,7 +128,7 @@ export function LoginHome() {
                   placeholder="Contraseña"
                   required
                 />
-                <button type="submit" className="auth-button">Iniciar sesión Office</button>
+                <button type="submit" className="auth-button">Iniciar sesión</button>
               </form>
             ) : ( <>LOS PERMISOS NO CORRESPONDEN EN ESTA SESIÓN</> )}
           </div>

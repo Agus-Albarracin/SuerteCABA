@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import logo from "../assets/icon-suerte.png";
+import logo from "../assets/icon-suerte-black.png";
 import logodark from "../assets/icon-suerte.png";
 import { v } from "../styles/Variables";
 import {
