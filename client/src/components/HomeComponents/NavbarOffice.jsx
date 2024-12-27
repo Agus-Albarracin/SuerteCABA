@@ -1,8 +1,8 @@
 import React, { useState, useContext } from 'react';
 import styled from 'styled-components';
 import { v } from "../../styles/Variables";
-import blanco from '../../assets/logo-suerte-white.png';
-import negro from '../../assets/logo-suerte-black.png';
+import blanco from '../../assets/logo-suerte-whitedorado.png';
+import negro from '../../assets/logo-suerte-blackdorado.png';
 
 import { useAuth } from '../../Context';
 import { FaUser, FaPowerOff, FaWhatsapp} from 'react-icons/fa';

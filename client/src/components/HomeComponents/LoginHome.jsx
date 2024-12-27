@@ -1,9 +1,9 @@
 import React, { useState, useContext } from 'react';
 import styled from 'styled-components';
 import { v } from "../../styles/Variables";
-import blanco from '../../assets/logo-suerte-white.png';
-import negro from '../../assets/logo-suerte-black.png';
-
+import blanco from '../../assets/logo-suerte-whitedorado.png';
+import negro from '../../assets/logo-suerte-blackdorado.png';
+import bgsuerte from '../../assets/bgsuerte.png';
 import { useAuth } from '../../Context';
 import { FaUser, FaPowerOff, FaWhatsapp} from 'react-icons/fa';
 import { BsCashCoin, BsFillBellFill, BsFillEnvelopeExclamationFill, BsFillGiftFill  } from "react-icons/bs";
@@ -134,6 +134,10 @@ export function LoginHome() {
           </div>
         )}
       </div>
+      <MyDiv>
+        <span><em>Este sitio es exclusivo para mayores de 18 años; al ingresar, confirmas que cumples con este requisito y
+         que utilizarás el contenido de manera responsable.</em></span>
+      </MyDiv>
     </NavContainer>
   );
 };
@@ -215,8 +219,10 @@ const NavContainer = styled.nav`
 
 
     .auth-button {
-      background: transparent;
-      color: ${(props) => props.theme.navcoloriconnoti}; 
+      background-image: url(${bgsuerte});
+      background-size: cover;
+      background-position: center;
+      color: #000; 
       cursor: pointer;
       font-size: ${(props) => props.theme.fontlg};
       display: flex;
@@ -260,6 +266,16 @@ const NavContainer = styled.nav`
     }
 
   }
+`;
+
+const MyDiv = styled.div`
+  display: flex;  
+  justify-content: center;  
+  align-items: center;  
+  text-align: center;  
+  margin-left: auto;
+  margin-right: auto;
+  width: 50%; 
 `;
 
 const UserInfoButton = styled.div`
