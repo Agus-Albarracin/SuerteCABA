@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { v } from "../../styles/Variables";
 import blanco from '../../assets/logo-suerte-whitedorado.png';
 import negro from '../../assets/logo-suerte-blackdorado.png';
+import bgsuerte from '../../assets/bgsuerte.png';
 
 import { useAuth } from '../../Context';
 import { FaUser, FaPowerOff, FaWhatsapp} from 'react-icons/fa';
@@ -213,8 +214,10 @@ const NavContainer = styled.nav`
 
 
     .auth-button {
-      background: transparent;
-      color: ${(props) => props.theme.navcoloriconnoti}; 
+      background-image: url(${bgsuerte});
+      background-size: cover;
+      background-position: center;
+      color: #000;
       cursor: pointer;
       font-size: ${(props) => props.theme.fontlg};
       display: flex;

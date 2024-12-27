@@ -7,6 +7,7 @@ import { useAuth } from '../../Context';
 import { ThemeContext } from "../../App";
 import blanco from '../../assets/logo-suerte-whitedorado.png';
 import negro from '../../assets/logo-suerte-blackdorado.png';
+
 import { MdMenu } from "react-icons/md";
 import { AiOutlineClose  } from "react-icons/ai";
 import axiosD from "../../axiosDefault";
