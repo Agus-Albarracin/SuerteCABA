@@ -1,6 +1,6 @@
 import styled, { keyframes } from 'styled-components';
 import React, { useState, useEffect, useContext, useCallback, useRef} from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import axiosD from '../axiosDefault';
 import { useAuth } from '../Context';
 import { NavBar } from '../components/HomeComponents/Navbar';
@@ -79,10 +79,11 @@ const [showMoreButton , setShowMoreButton ] = useState(true);
 
   const { setTheme, theme } = useContext(ThemeContext);
   const bgHome = theme === "light" ? home2 : home1;
-  const { user, setUser, logout } = useAuth();
+  const { user, setUser, logoutUsers } = useAuth();
   const navigate = useNavigate();
-  const [isResponsive, setIsResponsive] = useState(false);
+  const location = useLocation();
 
+  const [isResponsive, setIsResponsive] = useState(false);
 
 
   useEffect(() => {
@@ -104,13 +105,22 @@ const categorySections = {
   section5: ['card', 'video_poker']
 };
 
+useEffect(() => {
+  // Comprobamos si la página ya fue recargada usando localStorage
+  const hasReloaded = localStorage.getItem('hasReloaded');
 
+  if (!hasReloaded && location.pathname === '/home') {
+    // Si no se ha recargado, recargamos la página
+    window.location.reload();
+    localStorage.setItem('hasReloaded', 'true'); // Marcamos que la recarga ha ocurrido
+  }
+}, [location.pathname]); // Dependemos de la ruta
 
 
   useEffect(() => {
     if (user && (user.rol === 'Admin' || user.rol === 'Agente' || user.rol === "Super")) {
       toast.error("Los permisos son incorrectos.")
-      logout();
+      logoutUsers();
       navigate('/');
     }
 

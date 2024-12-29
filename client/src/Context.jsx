@@ -103,6 +103,7 @@ export const AuthProvider = ({ children }) => {
 
   const logoutUsers = () => {
     localStorage.removeItem('talgibravi-istazo');
+    localStorage.removeItem('hasReloaded');
     setUser(null);
     window.location.href = '/';
   };

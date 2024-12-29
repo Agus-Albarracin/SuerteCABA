@@ -87,11 +87,15 @@ function App() {
   ) : null}
 
   {/* Rutas para el rol Jugador */}
-  {user && user.rol === "Jugador" ? (
-    <>
-      <Route path="/home" element={<Home />} />
-    </>
-  ) : null}
+  {user ? (
+  user.rol === "Jugador" ? (
+    <Route path="/home" element={<Home />} /> // Si el usuario tiene el rol "Jugador", muestra la ruta de /home
+  ) : (
+    <Route path="*" element={<Redirect to="/" />} /> // Si el usuario no es "Jugador", redirige
+  )
+) : (
+  <Route path="*" element={<LoginHome />} /> // Si no hay usuario (no está autenticado), muestra el componente HomeLogin
+)}
   
               {/* Ruta para LoginOffice */}
               { !user || (user.rol !== "Super" && user.rol !== "Admin" && user.rol !== "Agente") ? (
