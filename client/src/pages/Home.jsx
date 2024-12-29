@@ -2010,6 +2010,12 @@ const CarouselItem0 = styled.div`
   color: #997300;
   font-size: 20px;
   cursor: pointer;
+  /* Agregar estilos para la imagen */
+  .carousel-img {
+    height: auto;  
+    object-fit: cover; 
+    border-radius: 10px;
+  }
 `;
 
 //region button subnavbarbutton
