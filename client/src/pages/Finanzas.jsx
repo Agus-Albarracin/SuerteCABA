@@ -864,7 +864,7 @@ const handleFinalAccept = () => {
               onSuccess={() => { }}
             />
           )}
-        </ChartWrapperR4>
+    </ChartWrapperR4>
 
 
     <ChartWrapperR2>
@@ -883,7 +883,7 @@ const handleFinalAccept = () => {
       </h3>
     </ChangeRectangle>
   </DivMesDiffR>
-</ChartWrapperR2>
+    </ChartWrapperR2>
       
        <ChartWrapperR>
     <p>Netwin Diario</p>

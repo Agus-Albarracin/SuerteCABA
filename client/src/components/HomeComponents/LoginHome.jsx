@@ -135,7 +135,7 @@ export function LoginHome() {
         )}
       </div>
       <MyDiv>
-        <span><em>Este sitio es exclusivo para mayores de 18 años; al ingresar, confirmas que cumples con este requisito y
+        <span><em>Este es un <strong>sitio exclusivo</strong> para mayores de 18 años; al ingresar, confirmas que cumples con este requisito y
          que utilizarás el contenido de manera responsable.</em></span>
       </MyDiv>
     </NavContainer>

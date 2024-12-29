@@ -5,7 +5,7 @@ import axiosD from '../axiosDefault';
 import { useAuth } from '../Context';
 import { NavBar } from '../components/HomeComponents/Navbar';
 import { SubNavbar } from '../components/HomeComponents/SubNavbar'
-import { SubNavbarSelect } from '../components/HomeComponents/SubNavbarSelect'
+import { SubNavbarButton } from '../components/HomeComponents/SubNavbarButton'
 
 import { FullScreenCarousel } from "../components/HomeComponents/Carousel";
 import { NavBarResponsive } from '../components/HomeComponents/NavbarResponsive';
@@ -18,14 +18,12 @@ import 'react-toastify/dist/ReactToastify.css';
 import PacmanLoader from "react-spinners/PacmanLoader";
 import home1 from "../assets/home1.png"
 import home2 from "../assets/home2.png"
+import bgsuerte from '../assets/bgsuerte.png';
+
 import { ThemeContext } from "../App";
 
 //icon import categories:
 import { AiFillHeart,  AiOutlineHeart, AiFillCloseCircle } from 'react-icons/ai';
-import { FaBasketballBall } from "react-icons/fa";
-import { FaGamepad, FaDice, FaRobot } from "react-icons/fa";
-import { GiConsoleController, GiPokerHand,  } from "react-icons/gi";
-import { FaFire, FaRegGem, FaClock, FaHeart } from 'react-icons/fa';
 
 //region ICON imports
 import iconArcade from "../assets/ICON-ARCADE.png"
@@ -89,7 +87,7 @@ const [showMoreButton , setShowMoreButton ] = useState(true);
 
   useEffect(() => {
     const handleResize = () => {
-      setIsResponsive(window.innerWidth <= 926);
+      setIsResponsive(window.innerWidth <= 480);
     };
 
     window.addEventListener("resize", handleResize);
@@ -170,33 +168,19 @@ setAllGames(filteredGames);
   }, [ user, navigate]);
 
   
-  //region Carga de Juego
+  //region Primera renderización de los juegos
 
-  //solo carga algunas categorias para despues LoadMore cargar mas categorias
-  
-  // useEffect(() => {
-  //   if (allGames.length > 0) {
-  //     // Barajar (mezclar) los juegos
-  //     const shuffledGames = shuffleArray(allGames);
-      
-  //     // Actualizar el estado con los juegos desordenados
-  //     setGameList(shuffledGames);
-  
-  //     // Establecer categorías únicas para los títulos
-  //     setUniqueCategories(getUniqueCategories(allGames));
-  //   }
-  // }, [allGames]);
   useEffect(() => {
     if (allGames.length > 0) {
-      // Definición de títulos de los proveedores para section1
-      const titleSections = {
-        section1: [
-          'pragmatic', 'amatic', 'booming', 'aristocrat', 'firekirin', 'elkstudios', 
-          'novomatic', 'rubyplay', 'evolution', 'pgsoft'
-        ]
-      };
+      // Separar los juegos de "pragmatic"
+      const pragmaticGames = allGames.filter((game) =>
+        game.label.toLowerCase() === "pragmatic"
+      );
   
-      // Función para mezclar el arreglo de títulos
+      // Mezclar el resto de los juegos (sin los de pragmatic)
+      const remainingGames = allGames.filter((game) => game.label.toLowerCase() !== "pragmatic");
+  
+      // Función para mezclar el arreglo de juegos restantes
       const shuffleArray = (array) => {
         for (let i = array.length - 1; i > 0; i--) {
           const j = Math.floor(Math.random() * (i + 1));
@@ -204,33 +188,25 @@ setAllGames(filteredGames);
         }
       };
   
-      // Mezclar los títulos de la section1
-      const titlesToLoad = [...titleSections['section1']]; // Copiar para evitar modificar el original
-      shuffleArray(titlesToLoad);
+      shuffleArray(remainingGames); // Mezclar los juegos restantes
   
-      // Seleccionar los primeros 3 títulos después de mezclarlos
-      const selectedTitles = titlesToLoad.slice(0, 3);
+      // Combinar los juegos de "pragmatic" al inicio de la lista
+      const filteredGames = [...pragmaticGames, ...remainingGames];
   
-      // Filtrar juegos que coinciden con los títulos seleccionados
-      const filteredGames = allGames.filter(game => 
-        selectedTitles.some(title => game.title.toLowerCase().includes(title.toLowerCase()))
-      );
-  
-      // Mostrar los títulos seleccionados en consola
-      console.log("Títulos seleccionados:", selectedTitles);
-  
-      // Actualizar setGameList con los juegos filtrados
+      // Actualizar setGameList con los juegos filtrados (siempre con los de pragmatic al principio)
       setGameList(filteredGames);
   
-      // Preparar lista específica de 24 juegos para setGameListEscritorio
+      // Para los juegos específicos de escritorio (24 juegos)
       let escritorioGames = [...filteredGames];
       if (escritorioGames.length < 24) {
-        const additionalGames = allGames.filter(game => 
-          !escritorioGames.some(filteredGame => filteredGame.id === game.id)
+        const additionalGames = allGames.filter(
+          (game) => !escritorioGames.some((filteredGame) => filteredGame.id === game.id)
         );
   
-        shuffleArray(additionalGames);
-        escritorioGames = escritorioGames.concat(additionalGames.slice(0, 24 - escritorioGames.length));
+        shuffleArray(additionalGames); // Mezclar los juegos adicionales
+        escritorioGames = escritorioGames.concat(
+          additionalGames.slice(0, 24 - escritorioGames.length)
+        );
       } else {
         escritorioGames = escritorioGames.slice(0, 24);
       }
@@ -241,8 +217,6 @@ setAllGames(filteredGames);
       setUniqueCategories(getUniqueCategories(filteredGames));
     }
   }, [allGames]);
-  
-  
   
   
 
@@ -265,19 +239,20 @@ setAllGames(filteredGames);
     }
     return shuffledArray;
   };
-
+  
   const handleSearchChange = (e) => {
     const value = e.target.value.toLowerCase();
     setSearchTerm(value);
-
-    const filteredGames = allGames.filter((game) =>
-      game.name.toLowerCase().includes(value)
-    );
-
+  
+    // Filtrar juegos por nombre y por la propiedad 'label' igual a "pragmatic"
+    const filteredGames = allGames
+      .filter((game) => game.name.toLowerCase().includes(value)) // Filtrado por nombre
+      .filter((game) => game.label === "pragmatic"); // Filtrar juegos con label: "pragmatic"
+  
     setGameList(filteredGames); // Mostrar juegos filtrados
     setGameListEscritorio(filteredGames); // Mostrar juegos filtrados
-
   };
+  
 
 
   const [gameUrl, setGameUrl] = useState('');
@@ -365,137 +340,7 @@ setAllGames(filteredGames);
     setGameListEscritorio(filteredGames.slice(0, gamesToShow)); // Mostrar juegos filtrados con el número actual
 
   };
-  
-
-  // const loadMoreGames = useCallback(() => {
-  //   if (loading) return; // Evita cargar si ya está cargando
-  //   setLoading(true); // Iniciar la carga
-  
-  //   // Incrementar el contador de juegos mostrados
-  //   setGamesToShow(prevGamesToShow => prevGamesToShow + 9);
-  
-  //   // Definición de categorías de las secciones
-  //   const categorySections = {
-  //     section1: ['slots', 'otros'],
-  //     section2: ['arcade', 'fast_games'],
-  //     section3: ['live_dealers', 'lottery', 'roulette'],
-  //     section4: ['sport'],
-  //     section5: ['card', 'video_poker']
-  //   };
-  
-  //   // Etiquetas de proveedores
-  //   const providerLabels = [
-  //     "pragmatic", "amatic", "scientific_games", "fast_games", "live_dealers",
-  //     "fish", "novomatic", "aristocrat", "apollo", "vegas", "tomhorn",
-  //     "microgaming", "ainsworth", "quickspin", "yggdrasil", "netent",
-  //     "habanero", "igt", "igrosoft", "apex", "merkur", "wazdan", "egt",
-  //     "roulette", "bingo", "keno", "table_games", "kajot", "zitro", "rubyplay",
-  //     "playngo", "elkstudios", "firekirin", "platipus", "evolution", "pgsoft",
-  //     "playson", "altente", "booming", "galaxsys", "spribe", "pragmatic_play_live"
-  //   ];
-  
-  //   // Determinar si se filtra por un proveedor o por categorías
-  //   let filteredGames = [];
-  
-  //   if (providerLabels.includes(selectedTitle)) {
-  //     // Filtrar por el título del proveedor
-  //     filteredGames = allGames.filter(game => game.title === selectedTitle);
-  //   } else {
-  //     // Filtrar por categorías correspondientes al `selectedTitle`
-  //     const labelsToFilter = categorySections[selectedTitle] || [];
-  //     filteredGames = labelsToFilter.length > 0
-  //       ? allGames.filter(game => labelsToFilter.includes(game.categories))
-  //       : allGames;
-  //   }
-  
-  
-  //   // Actualizar la lista de juegos
-  //   setGameList(prevGameList => {
-  //     const moreGames = shuffleArray(filteredGames.slice(prevGameList.length, prevGameList.length + 72));
-  
-  
-  //     const updatedGameList = [...prevGameList, ...moreGames];
-  
-  //     // Verificar si se alcanzó el límite de juegos
-  //     if (updatedGameList.length >= filteredGames.length) {
-  //       setShowMoreButton(false); // Ocultar botón si no hay más juegos
-  //     }
-  
-  //     return updatedGameList;
-  //   });
-  
-  //   setLoading(false); // Finalizar la carga
-  // }, [loading, allGames, selectedTitle, gameList]);
-  const loadMoreGames = useCallback(() => {
-    if (loading) return; // Evita cargar si ya está cargando
-    setLoading(true); // Iniciar la carga
-  
-    // Definición de todos los títulos
-    const allTitles = [
-      'pragmatic', 'amatic', 'booming', 'sagaming', 'holi_bet', 'scientific_games', 'galaxsys', 'aviatrix', 'spribe', 
-      'aristocrat', 'firekirin', 'elkstudios', 'Pragmatic Play Live', 'zitro', 'playngo', 'microgaming', 'netent', 
-      'altente', 'playson', 'apollo', 'platipus', 'kajot', 'vegas', 'tomhorn', 'ainsworth', 'evolution', 'pgsoft', 
-      'quickspin', 'habanero', 'yggdrasil', 'novomatic', 'rubyplay', 'fish', 'live_dealers', 'fast_games', 'wazdan', 
-      'egt', 'roulette', 'bingo', 'keno', 'table_games', 'igt', 'igrosoft', 'apex', 'merkur'
-    ];
-  
-    // Obtener las secciones ya cargadas
-    const loadedTitles = new Set(gameList.map(game => game.title.toLowerCase()));
-  
-    // Filtrar los títulos que aún no se han cargado
-    const remainingTitles = allTitles.filter(title => !loadedTitles.has(title.toLowerCase()));
-  
-    if (remainingTitles.length === 0) {
-      setShowMoreButton(false); // Si ya se han cargado todos los títulos, ocultar el botón
-      setLoading(false);
-      return;
-    }
-  
-    // Mezclar los títulos restantes aleatoriamente
-    const shuffleArray = (array) => {
-      for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]]; // Intercambia los elementos
-      }
-    };
-  
-    shuffleArray(remainingTitles);
-  
-    // Seleccionar los primeros 3 títulos restantes
-    const titlesToLoad = remainingTitles.slice(0, 3);
-  
-    // Filtrar los juegos de los títulos seleccionados
-    let filteredGames = allGames.filter(game =>
-      titlesToLoad.some(title => game.title.toLowerCase().includes(title.toLowerCase()))
-    );
-  
-    // Actualizar la lista de juegos
-    setGameList(prevGameList => {
-      const updatedGameList = [...prevGameList, ...filteredGames];
-  
-      // Verificar si se alcanzó el límite de juegos
-      if (updatedGameList.length >= allGames.length) {
-        setShowMoreButton(false); // Ocultar botón si no hay más juegos
-      }
-  
-      return updatedGameList;
-    });
-
-    setGameListEscritorio(prevGameList => {
-      const updatedGameList = [...prevGameList, ...filteredGames];
-  
-      // Verificar si se alcanzó el límite de juegos
-      if (updatedGameList.length >= allGames.length) {
-        setShowMoreButton(false); // Ocultar botón si no hay más juegos
-      }
-  
-      return updatedGameList;
-    });
-  
-    setLoading(false); // Finalizar la carga
-  }, [loading, allGames, gameList]);
-  
-
+   
   
   useEffect(() => {
     setGamesToShow(200);
@@ -596,8 +441,6 @@ setAllGames(filteredGames);
   
     setGameList(filteredGames.slice(0, gamesToShow)); // Mostrar juegos filtrados
     setGameListEscritorio(filteredGames.slice(0, gamesToShow)); // Mostrar juegos filtrados
-
-
   } 
   
   const handleTitleChange = (event) => {
@@ -609,44 +452,7 @@ setAllGames(filteredGames);
     setSelectedTitle(title);
     handleMenuOptions(title);
   };
-  // Renderizar los botones de categorías
-  // const renderCategoryButtons = () => {
 
-  //   const sectionTitles = {
-  //     section1: 'TRAGAMONEDAS',
-  //     section2: 'ARCADE',
-  //     section3: 'CASINO EN VIVO',
-  //     section4: 'DEPORTIVAS',
-  //     section5: 'CARTAS'
-  //   };
-
-  //   const smooth = () => {
-  //        // Desplazar la ventana de visualización hacia abajo
-  //  window.scrollBy({
-  //   top: 600, // Cantidad de píxeles a desplazar hacia abajo
-  //   left: 0,
-  //   behavior: 'smooth' // Desplazamiento suave
-  // });
-  //   }
-    
-  //   return (
-  //     <CategoriesMenu className="categories-menu">
-  //       {Object.keys(categorySections).map((section) => (
-  //       <CategoriesButton
-  //         key={section}
-  //         onClick={() => {
-  //           handleMenuOptions(section);
-  //           filterGamesByCategory(section);
-  //           smooth();
-  //         }}
-  //       >
-  //            {sectionIcons[section]}
-  //           <div className="category-title">{sectionTitles[section]}</div>
-  //         </CategoriesButton>
-  //       ))}
-  //     </CategoriesMenu>
-  //   );
-  // };
   // Renderizar los botones de categorías
   const renderCategoryButtons = () => {
     const sectionTitles = {
@@ -688,7 +494,6 @@ setAllGames(filteredGames);
       </CategoriesMenu>
     );
   };
-  
 
   const renderRecentGames = () =>{
     if (!user) {
@@ -773,63 +578,12 @@ setAllGames(filteredGames);
       )}
     </IconGamesDivContainer>
   ) };
+
   
-  const renderGamesEscritorio = () => {
-    console.log(gameListEscritorio)
-    if (gameListEscritorio.length === 0) {
-      return (
-        <div className="load-list-escritorio">
-          <p>No hay juegos que mostrar</p>
-        </div>
-      );
-    }
-
-    const pattern = [
-      "large", "large", "large",
-    ];
-
-    const repeatedPattern = [];
-    let patternIndex = 0;
-
-    for (let i = 0; i < gameListEscritorio.length; i++) {
-      repeatedPattern.push(pattern[patternIndex]);
-      patternIndex = (patternIndex + 1) % pattern.length;
-    }
-
-    return gameListEscritorio.map((game, index) => {
-      const isFavorite = favorites.some(fav => fav.id === game.id);
-
-      return (
-        <div
-          key={game.id}
-          className={`game-item-escritorio ${repeatedPattern[index]}`}
-          onClick={() => handleGameClick(game.id, game)}
-        >
-          {game.img ? (
-            <img src={game.img} alt={game.name} />
-          ) : (
-            <p>Imagen no disponible</p>
-          )}
-          <button
-            className={`favorite-button ${isFavorite ? 'favorited' : ''}`}
-            onClick={(e) => {
-              e.stopPropagation(); // Evita que el clic en el botón de corazón active el onClick del juego
-              handleFavoriteClick(game, index);
-            }}
-          >
-            {isFavorite ? <AiFillHeart size={24} color="red" /> : <AiOutlineHeart size={24} />}
-          </button>
-        </div>
-      );
-    });
-  };
-
-   // Función para alternar pantalla completa en otros navegadores
+  // Función para alternar pantalla completa en otros navegadores
   //region renderGames
-   const [expandedGroups, setExpandedGroups] = useState({}); // Estado para rastrear grupos expandidos
-   const renderGames = () => {
-    console.log(gameList);
-  
+  const [visibleGames, setVisibleGames] = useState(15); // Inicia mostrando 15 juegos
+  const renderGames = () => {
     if (gameList.length === 0) {
       return (
         <div className="load-list">
@@ -838,180 +592,129 @@ setAllGames(filteredGames);
       );
     }
   
-    // Agrupar los juegos por `title`
-    const groupedGames = gameList.reduce((acc, game) => {
-      if (!acc[game.title]) {
-        acc[game.title] = [];
-      }
-      acc[game.title].push(game);
-      return acc;
-    }, {});
+    // Tomar los juegos visibles basados en el estado
+    const gamesToShow = gameList.slice(0, visibleGames);
   
-    // Manejar la expansión de los grupos
-    const handleToggleGroup = (title) => {
-      setExpandedGroups((prev) => ({
-        ...prev,
-        [title]: !prev[title], // Alterna entre expandir/contraer
-      }));
-    };
+    return (
+      <>
+        <GameListResponsivo>
+          {gamesToShow.map((game, index) => {
+            const isFavorite = favorites.some((fav) => fav.id === game.id);
   
-    // Función para formatear el título
-    const formatTitle = (title) => {
-      return title
-        .replace(/_/g, " ") // Reemplaza guiones bajos por espacios
-        .replace(/\b\w/g, (char) => char.toUpperCase()); // Capitaliza cada palabra
-    };
-  
-    // Renderizar los grupos y los juegos
-    return Object.entries(groupedGames).map(([title, games]) => {
-      console.log("se muestra games", games);
-      const isExpanded = expandedGroups[title] || false; // Verificar si el grupo está expandido
-  
-      return (
-        <div key={title} className="game-group">
-          <div className="group-header">
-            <h2 className="game-title">{formatTitle(title)}</h2> {/* Formatear el título */}
-            <button
-              className="view-all-button"
-              onClick={() => handleToggleGroup(title)}
-            >
-              {isExpanded ? "Ver menos" : "Ver todo"}
-            </button>
-          </div>
-          <div className="games-row">
-            {(isExpanded ? games : games.slice(0, 3)).map((game, index) => {
-              const isFavorite = favorites.some((fav) => fav.id === game.id);
-  
-              return (
-                <div
-                  key={game.id}
-                  className="game-item"
-                  onClick={() => handleGameClick(game.id, game)}
+            return (
+              <GameItem
+                key={game.id}
+                onClick={() => handleGameClick(game.id, game)}
+              >
+                {game.img ? (
+                  <img src={game.img} alt={game.name} />
+                ) : (
+                  <p>Imagen no disponible</p>
+                )}
+                <button
+                  className={`favorite-button ${isFavorite ? "favorited" : ""}`}
+                  onClick={(e) => {
+                    e.stopPropagation(); // Evita que el clic en el botón de corazón active el onClick del juego
+                    handleFavoriteClick(game, index);
+                  }}
                 >
-                  {game.img ? (
-                    <img src={game.img} alt={game.name} />
+                  {isFavorite ? (
+                    <AiFillHeart size={24} color="red" />
                   ) : (
-                    <p>Imagen no disponible</p>
+                    <AiOutlineHeart size={24} />
                   )}
-                  <button
-                    className={`favorite-button ${
-                      isFavorite ? "favorited" : ""
-                    }`}
-                    onClick={(e) => {
-                      e.stopPropagation(); // Evita que el clic en el botón de corazón active el onClick del juego
-                      handleFavoriteClick(game, index);
-                    }}
-                  >
-                    {isFavorite ? (
-                      <AiFillHeart size={24} color="red" />
-                    ) : (
-                      <AiOutlineHeart size={24} />
-                    )}
-                  </button>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      );
-    });
+                </button>
+              </GameItem>
+            );
+          })}
+        </GameListResponsivo>
+  
+        {/* Botones para cargar y quitar juegos */}
+        <ButtonContainer>
+          {visibleGames < gameList.length && (
+            <LoadMoreButton onClick={() => setVisibleGames(visibleGames + 15)}>
+              Ver más
+            </LoadMoreButton>
+          )}
+          {visibleGames > 15 && (
+            <LoadLessButton onClick={() => setVisibleGames(visibleGames - 15)}>
+              Ver menos
+            </LoadLessButton>
+          )}
+        </ButtonContainer>
+      </>
+    );
   };
   
+  
 
-  const [expandedGroups2, setExpandedGroups2] = useState({}); // Estado para rastrear grupos expandidos
-  const renderGames2 = () => {
-   console.log(gameList);
- 
-   if (gameList.length === 0) {
-     return (
-       <div className="load-list">
-         <p>No hay juegos que mostrar</p>
-       </div>
-     );
-   }
- 
-   // Agrupar los juegos por `title`
-   const groupedGames = gameList.reduce((acc, game) => {
-     if (!acc[game.title]) {
-       acc[game.title] = [];
-     }
-     acc[game.title].push(game);
-     return acc;
-   }, {});
- 
-   // Manejar la expansión de los grupos
-   const handleToggleGroup = (title) => {
-     setExpandedGroups2((prev) => ({
-       ...prev,
-       [title]: !prev[title], // Alterna entre expandir/contraer
-     }));
-   };
- 
-   // Función para formatear el título
-   const formatTitle = (title) => {
-     return title
-       .replace(/_/g, " ") // Reemplaza guiones bajos por espacios
-       .replace(/\b\w/g, (char) => char.toUpperCase()); // Capitaliza cada palabra
-   };
- 
-   // Renderizar los grupos y los juegos
-   return Object.entries(groupedGames).map(([title, games]) => {
-     console.log("se muestra games", games);
-     const isExpanded = expandedGroups2[title] || false; // Verificar si el grupo está expandido
- 
-     return (
-       <div key={title} className="game-group">
-         <div className="group-header">
-           <h2 className="game-title">{formatTitle(title)}</h2> {/* Formatear el título */}
-           <button
-             className="view-all-button"
-             onClick={() => handleToggleGroup(title)}
-           >
-             {isExpanded ? "Ver menos" : "Ver todo"}
-           </button>
-         </div>
-         <div className="games-row">
-           {(isExpanded ? games : games.slice(0, 6)).map((game, index) => {
-             const isFavorite = favorites.some((fav) => fav.id === game.id);
- 
-             return (
-               <div
-                 key={game.id}
-                 className="game-item-escritorio2"
-                 onClick={() => handleGameClick(game.id, game)}
-               >
-                 {game.img ? (
-                   <img src={game.img} alt={game.name} />
-                 ) : (
-                   <p>Imagen no disponible</p>
-                 )}
-                 <button
-                   className={`favorite-button ${
-                     isFavorite ? "favorited" : ""
-                   }`}
-                   onClick={(e) => {
-                     e.stopPropagation(); // Evita que el clic en el botón de corazón active el onClick del juego
-                     handleFavoriteClick(game, index);
-                   }}
-                 >
-                   {isFavorite ? (
-                     <AiFillHeart size={24} color="red" />
-                   ) : (
-                     <AiOutlineHeart size={24} />
-                   )}
-                 </button>
-               </div>
-             );
-           })}
-         </div>
-       </div>
-     );
-   });
- };
+  const [visibleGamesE, setVisibleGamesE] = useState(18); // Inicia mostrando 15 juegos
+  const renderGamesEscritorio = () => {
+    if (gameList.length === 0) {
+      return (
+        <div className="load-list">
+          <p>No hay juegos que mostrar</p>
+        </div>
+      );
+    }
+  
+    // Tomar los juegos visibles basados en el estado
+    const gamesToShow = gameList.slice(0, visibleGamesE);
+  
+    return (
+      <>
+        <GameListEscritorio>
+          {gamesToShow.map((game, index) => {
+            const isFavorite = favorites.some((fav) => fav.id === game.id);
+  
+            return (
+              <GameItemEscritorio
+                key={game.id}
+                onClick={() => handleGameClick(game.id, game)}
+              >
+                {game.img ? (
+                  <img src={game.img} alt={game.name} />
+                ) : (
+                  <p>Imagen no disponible</p>
+                )}
+                <button
+                  className={`favorite-button ${isFavorite ? "favorited" : ""}`}
+                  onClick={(e) => {
+                    e.stopPropagation(); // Evita que el clic en el botón de corazón active el onClick del juego
+                    handleFavoriteClick(game, index);
+                  }}
+                >
+                  {isFavorite ? (
+                    <AiFillHeart size={24} color="red" />
+                  ) : (
+                    <AiOutlineHeart size={24} />
+                  )}
+                </button>
+              </GameItemEscritorio>
+            );
+          })}
+        </GameListEscritorio>
+  
+        {/* Botones para cargar y quitar juegos */}
+        <ButtonContainer>
+          {visibleGamesE < gameList.length && (
+            <LoadMoreButton onClick={() => setVisibleGamesE(visibleGamesE + 18)}>
+              Ver más
+            </LoadMoreButton>
+          )}
+          {visibleGamesE > 18 && (
+            <LoadLessButton onClick={() => setVisibleGamesE(visibleGamesE - 18)}>
+              Ver menos
+            </LoadLessButton>
+          )}
+        </ButtonContainer>
+      </>
+    );
+  };
   
   
   
-   const toggleFullScreen = (isFull) => {
+  const toggleFullScreen = (isFull) => {
     const iframe = iframeRef.current;
 
     if (!iframe) return;
@@ -1050,7 +753,7 @@ setAllGames(filteredGames);
     }
   };
 
-  // Sincronizar la altura de la ventana para iOS
+// Sincronizar la altura de la ventana para iOS
   const syncWindowHeight = () => {
     if (window.pageYOffset !== 0) {
       localStorage.pageScroll = Math.round(window.pageYOffset);
@@ -1075,7 +778,8 @@ setAllGames(filteredGames);
     }, 100);
   };
 
-  // Efecto para gestionar la pantalla completa en iOS y otros navegadores
+
+// Efecto para gestionar la pantalla completa en iOS y otros navegadores
   useEffect(() => {
     const ua = window.navigator.userAgent;
     const iOS = !!ua.match(/iPad/i) || !!ua.match(/iPhone/i);
@@ -1104,7 +808,8 @@ setAllGames(filteredGames);
     };
   }, [isGameOpen]);
 
-  //region RESPONSIVE 
+
+//region RESPONSIVE 
 const [selectedCategory, setSelectedCategory] = useState("");
 
 const sectionIcons = {
@@ -1118,7 +823,6 @@ const sectionIcons = {
 const sectionTitles = {
   section2: 'ARCADE',
   section1: 'TRAGAMONEDAS',
-  section5: 'CARTAS',
   section3: 'CASINO EN VIVO',
   section4: 'DEPORTIVAS',
 };
@@ -1137,13 +841,11 @@ const handleCategoryChange = (event) => {
 
 };
 
-//region SectionChange
 const handleSectionChange = (event) => {
   const section = event.target.value;
 
-  // Ignorar sección "ARCADE" si está presente
-  if (sectionTitles[section] === "ARCADE") {
-    console.log("Sección ARCADE no se renderiza.");
+  // Ignorar secciones "ARCADE" y "CARTAS" basado en el título
+  if (sectionTitles[section] === "ARCADE" || sectionTitles[section] === "CARTAS") {
     return;
   }
 
@@ -1159,11 +861,34 @@ const handleSectionChange = (event) => {
     // Renderiza imágenes según la sección
     if (sectionImages[section]) {
       renderImage(sectionImages[section]);
-    } else {
-      console.error("Sección no reconocida o no válida:", section);
     }
   }
 };
+
+const handleSectionChangeTitle = (event) => {
+  const section = event.target.value;
+
+  // Ignorar secciones "ARCADE" y "CARTAS" basado en el título
+  if (sectionTitles[section] === "CARTAS") {
+    return;
+  }
+
+  if (section === "section0") {
+    setSelectedCategory(section);
+    filterGamesByCategory(section);
+    return;
+  } else {
+    setSelectedCategory(section);
+    handleMenuOptions(section);
+    filterGamesByCategory(section);
+
+    // Renderiza imágenes según la sección
+    if (sectionImages[section]) {
+      renderImage(sectionImages[section]);
+    }
+  }
+};
+
 
 const sectionImages = {
   section1: imgTragamonedas,
@@ -1191,7 +916,15 @@ const iconsDark = {
 const icons = theme === "dark" ? iconsLight : iconsDark;
 
 
-  return (
+//region function button
+const [showSubNavbar, setShowSubNavbar] = useState(false);
+
+const toggleSubNavbar = () => {
+  setShowSubNavbar(!showSubNavbar);
+};
+
+
+return (
 
     !isResponsive ? (
       <Container bgImage={bgHome}>
@@ -1200,14 +933,7 @@ const icons = theme === "dark" ? iconsLight : iconsDark;
       <FullScreenCarousel />
       <div>
 
-      {/* {isGameOpen && (
-        <IframeContainer>
-          <StyledIframe src={gameUrl} ref={iframeRef}/>
-          <CloseButton onClick={handleCloseGame}><AiFillCloseCircle /></CloseButton>
-        </IframeContainer>
-      )} */}
-
-{isGameOpen && (
+    {isGameOpen && (
         <IframeContainer>
           <StyledIframe src={gameUrl} ref={iframeRef} allow="fullscreen"/>
           <CloseButton onClick={() =>{
@@ -1216,20 +942,34 @@ const icons = theme === "dark" ? iconsLight : iconsDark;
             <AiFillCloseCircle />
           </CloseButton>
 
-          {isFullScreenIOS && (
-  <SafariHelperContainer className={`safarihelper-bg ${isFullScreenIOS ? 'active' : ''}`}>
-    <div id="safarihelper" />
-  </SafariHelperContainer>
-)}
-        </IframeContainer>
+      { isFullScreenIOS && (
+     <SafariHelperContainer className={`safarihelper-bg ${isFullScreenIOS ? 'active' : ''}`}>
+     <div id="safarihelper" />
+     </SafariHelperContainer>
       )}
+        </IframeContainer>
+    )}
+
     </div>
 
 
-      {showCategoriesMenu && renderCategoryButtons()}
-      
-      <SubNavbar categories={titles} onCategoryClick={handleTitlesClick} />
+    {showCategoriesMenu && renderCategoryButtons()}     
+    <TitleContainer>
+      <GradientLine className="gradient-left" />
+      <TitleText>Selecciona proveedores</TitleText>
+      <GradientLine className="gradient-right" />
+      </TitleContainer>
 
+      <SubNavbar categories={titles} onCategoryClick={handleTitlesClick} />
+{showSubNavbar && (
+    <SubNavbarButton categories={titles} onCategoryClick={handleTitlesClick} />
+  )}
+
+<DivToggleButton> 
+    <ToggleButton onClick={toggleSubNavbar}>
+        {showSubNavbar ? "Ocultar" : "Ver todos"}
+      </ToggleButton>
+    </DivToggleButton>
 
       <DivButtonTop>
         <InputSearch
@@ -1238,30 +978,23 @@ const icons = theme === "dark" ? iconsLight : iconsDark;
           value={searchTerm}
           onChange={handleSearchChange}
         />
-        {/* <IconBar value={selectedTitle} onChange={handleTitleChange}>
-          <IconItem value="todos">🪟 Filtros</IconItem>
-          <IconItem value="populares">🔥 Populares</IconItem>
-          <IconItem value="Recientes">⌛ Recientes</IconItem>
-          <IconItem value="favoritos">❤️ Favoritos</IconItem>
-          <IconItem value="todos">🎰 Todos</IconItem>
-        </IconBar> */}
 
-          {/* Carrusel para Títulos */}
-  <CarouselContainerEscritorio>
-    <CarouselItem
-      onClick={() => handleTitleChange({ target: { value: "populares" } })}
-      isSelected={selectedTitle === "populares"}
-    >
-                  <img 
-    src={icons.populares} 
-    alt="Icono de Cartas" 
-    style={{
-      width: "50px", // Ajusta el tamaño de la imagen
-      height: "50px", 
-      objectFit: "contain"
-    }}
-  />
-
+    
+      <CarouselContainerEscritorio>
+        <CarouselItem
+          onClick={() => handleTitleChange({ target: { value: "populares" } })}
+          isSelected={selectedTitle === "populares"}
+        >
+                      <img 
+        src={icons.populares} 
+        alt="Icono de Cartas" 
+        style={{
+          width: "50px", // Ajusta el tamaño de la imagen
+          height: "50px", 
+          objectFit: "contain"
+        }}
+      />
+    
     </CarouselItem>
     <CarouselItem
       onClick={() => handleTitleChange({ target: { value: "Recientes" } })}
@@ -1320,35 +1053,13 @@ const icons = theme === "dark" ? iconsLight : iconsDark;
       <GradientLine className="gradient-left" />
       <TitleText>Mejores juegos</TitleText>
       <GradientLine className="gradient-right" />
-</TitleContainer>
+      </TitleContainer>
 
-<div className={isCategorySelected ? "game-list-escritorio2" : "game-list-escritorio"}>
-  {gameList && gameList.length > 0 ? (
-    isCategorySelected ? (
-      renderGames2()
-    ) : (
-      renderGamesEscritorio()
-    )
-  ) : (
-    <div className="load-list">
-      <p>No hay juegos que mostrar</p>
-    </div>
-  )}
-</div>
 
-      {/* <div className="game-list-escritorio">
-        
-        {gameList && gameList.length > 0 ? renderGamesEscritorio() :
-          <div className="load-list">
-            <p>No hay juegos que mostrar</p>
-          </div>
-        }
-      </div> */}
+    {gameList && gameList.length > 0 ? renderGamesEscritorio() : <div className="load-list"><p>No hay juegos que mostrar</p></div>}
+
 
       <DivButton>
-      {showMoreButton && !loading && (
-          <ButtonShowMore bgImage={bgHome} onClick={loadMoreGames}>Otros Juegos</ButtonShowMore>
-        )}
         <div className="pacmanDiv">
           <PacmanLoader
             color={color}
@@ -1368,7 +1079,7 @@ const icons = theme === "dark" ? iconsLight : iconsDark;
 
 <CarouselContainerH>
   {Object.entries(sectionTitles)
-    .filter(([, title]) => title !== "ARCADE") // Excluir ARCADE basado en el título
+    .filter(([, title]) => title !== "ARCADE" && title !== "CARTAS") // Excluir ARCADE y CARTAS basado en el título
     .map(([section, title]) => (
       <CarouselItemH
         key={section}
@@ -1388,7 +1099,7 @@ const icons = theme === "dark" ? iconsLight : iconsDark;
   {Object.keys(sectionTitles).map((section) => (
     <CarouselItemH
       key={section}
-      onClick={() => handleSectionChange({ target: { value: section } })}
+      onClick={() => handleSectionChangeTitle({ target: { value: section } })}
       isSelected={selectedCategory === section}
     >
       {sectionTitles[section]}
@@ -1500,42 +1211,56 @@ const icons = theme === "dark" ? iconsLight : iconsDark;
         {selectedTitle === "populares" && popular && renderPopularesGames()}
         {selectedTitle === "favoritos" && favorites && renderFavoriteGames()}
   </DivButtonCenterR>
+      
 
-      <InputSearchR
-          type="text"
-          placeholder="Buscar juego por nombre..."
-          value={searchTerm}
-          onChange={handleSearchChange}
-        />
+
+      <TitleContainer>
+      <GradientLine className="gradient-left" />
+      <TitleText>Selecciona proveedores</TitleText>
+      <GradientLine className="gradient-right" />
+      </TitleContainer>
+
     <SubNavbar categories={titles} onCategoryClick={handleTitlesClick} />
+
+    {showSubNavbar && (
+        <SubNavbarButton categories={titles} onCategoryClick={handleTitlesClick} />
+      )}
+    
+    <DivToggleButton> 
+    <ToggleButton onClick={toggleSubNavbar}>
+        {showSubNavbar ? "Ocultar" : "Ver todos"}
+      </ToggleButton>
+    </DivToggleButton>
+
+
+
+
 
 <TitleContainer>
       <GradientLine className="gradient-left" />
       <TitleText>Mejores juegos</TitleText>
       <GradientLine className="gradient-right" />
 </TitleContainer>
+<DivButtonTopR>
+      <InputSearchR
+          type="text"
+          placeholder="Buscar juego por nombre..."
+          value={searchTerm}
+          onChange={handleSearchChange}
+        />
+      </DivButtonTopR>
 
-    {gameList.length > 0 ? (
-           <div className="game-list">
-           {gameList && gameList.length > 0 ? renderGames() :
-             <div className="load-list">
-               <p>No hay juegos que mostrar</p>
-             </div>
-           }
-         </div>
-    ) : (
-      <NoGamesR>No se encontraron juegos</NoGamesR>
-    )}
+{gameList && gameList.length > 0 ? renderGames() : <div className="load-list"><p>No hay juegos que mostrar</p></div>}
+
 
 {loading ? (
-<LoaderWrapperR>
-  <PacmanLoader color={color} loading={loading} size={25} />
-</LoaderWrapperR>
-) : showMoreButton && (
-<LoadMoreButtonR onClick={loadMoreGames}>
-  Otros Juegos
-</LoadMoreButtonR>
-)}
+  <LoaderWrapperR>
+    <PacmanLoader color={color} loading={loading} size={25} />
+  </LoaderWrapperR>
+) : showMoreButton ? (
+  //agregar un botón u otro componente cuando sea necesario
+  null
+) : null}
 
 {/* Carrusel para Categorías */}
 
@@ -1547,7 +1272,7 @@ const icons = theme === "dark" ? iconsLight : iconsDark;
 
 <CarouselContainer0>
   {Object.entries(sectionTitles)
-    .filter(([, title]) => title !== "ARCADE") // Excluir ARCADE basado en el título
+    .filter(([, title]) => title !== "ARCADE" && title !== "CARTAS") // Excluir ARCADE y CARTAS basado en el título
     .map(([section, title]) => (
       <CarouselItem0
         key={section}
@@ -1563,13 +1288,13 @@ const icons = theme === "dark" ? iconsLight : iconsDark;
     ))}
 </CarouselContainer0>
 
-
 <CarouselContainer1>
   <div className="column">
-    {Object.keys(sectionTitles).slice(0, 3).map((section) => (
+    {Object.keys(sectionTitles).slice(0, 2)
+    .map((section) => (
       <CarouselItem1
         key={section}
-        onClick={() => handleSectionChange({ target: { value: section } })}
+        onClick={() => handleSectionChangeTitle({ target: { value: section } })}
         isSelected={selectedCategory === section}
       >
         {sectionTitles[section]}
@@ -1577,10 +1302,10 @@ const icons = theme === "dark" ? iconsLight : iconsDark;
     ))}
   </div>
   <div className="column">
-    {Object.keys(sectionTitles).slice(3).map((section) => (
+    {Object.keys(sectionTitles).slice(2).map((section) => (
       <CarouselItem1
         key={section}
-        onClick={() => handleSectionChange({ target: { value: section } })}
+        onClick={() => handleSectionChangeTitle({ target: { value: section } })}
         isSelected={selectedCategory === section}
       >
         {sectionTitles[section]}
@@ -1593,84 +1318,180 @@ const icons = theme === "dark" ? iconsLight : iconsDark;
   )
 )
 }
-//region Animaciones
-export const backgroundAnimation = keyframes`
-0% {
-  background-position: 0% 0%;
-}
-50% {
-  background-position: 100% 0%;
-}
-100% {
-  background-position: 0% 100%;
-}
+
+
+
+//region ..:: :: E :: ::...
+export const Container = styled.div`
+    height: auto;
+  max-width: 100%;
+  background: url(${(props) => props.bgImage}) no-repeat;
+  background-size: cover; 
+  background-attachment: fixed;
+  overflow-x: hidden;
 `;
-//CATEGORIES
-const CategoriesMenu = styled.div`
+
+
+// Estilo para el contenedor del iframe
+const IframeContainer = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
   display: flex;
-  margin-top: 40px;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
-  gap: 20px; /* Espacio uniforme entre los elementos */
-  margin-left: 35px;
-  margin-right: 40px;
-  
-  & > * { 
-    flex: 1; /* Todos los elementos hijos ocupan el mismo tamaño */
-    max-width: 350px; /* Límite para no exceder un tamaño máximo */
+  z-index: 1000; 
+`;
+const StyledIframe = styled.iframe`
+  width: 100%;
+  height: 100%;
+  border: none;
+  background: white;
+`;
+const CloseButton = styled.button`
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 60px; /* Tamaño del ícono */
+  color: white;
+  z-index: 9998 !important;
+  transition: color 0.3s;
+
+  &:hover {
+    color: red; /* Color al pasar el ratón sobre el ícono */
+  }
+`;
+const SafariHelperContainer = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: var(--window-inner-height, 100vh); /* Altura dinámica */
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 9997;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.5s linear, visibility 0.5s linear;
+
+  &.active {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  #safarihelper {
+    position: fixed;
+    top: 10px;
+    right: 40px;
+    height: 304px;
+    width: 90px;
+    background-repeat: no-repeat;
+    background-position: 0 -310px;
+    z-index: 7777;
+  }
+
+  &.disable-scroll {
+    overflow: hidden;
   }
 `;
 
-// const IconBar = styled.select`
-//   display: flex;
-//   flex-wrap: wrap;
-//   gap: 10px;
-//   justify-content: center;
-//   align-items: center;
-//   background-color: ${(props) => props.theme.iconBgcolorHome};
-//   border: 2px solid ${(props) => props.theme.iconcolorHome};
-//   border-radius: 15px;
-//   padding: 15px;
-//   cursor: pointer;
-//   font-size: 16px;
-//   filter: drop-shadow(2px 8px 2px rgba(0, 0, 0, 0.5));
+const DivButtonTop = styled.div`
+  display: flex;
+  flex-direction: row;
+  margin-top: 10px;
+  margin-left: 35px;
+  margin-bottom: 10px;
+  gap: 17px;
+  align-items: center;
+`;
+
+export const InputSearch = styled.input`
+background: transparent;
+color: ${(props) => props.theme.text};
+border-radius: 15px;
+background-size: 100% 100%;
+padding: 15px;
+border: 2px solid  ${(props) => props.theme.text};
+filter: drop-shadow(2px 8px 2px rgba(0, 0, 0, 0.5));
+
+width: 40%;
+  &:focus {
+    outline: none;
+  }
+`;
+
+export const DivButtonCenter = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin: 20px 0;
+`;
+
+export const DivButton = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 20px 0;
+
+  .pacmanDiv {
+    margin-top: 20px;
+  }
+`;
+
+export const ButtonShowMore = styled.button`
+  background-image: url(${bgsuerte});
+  background-size: cover;
+  background-position: center;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  color: black;
+  cursor: pointer;
+  font-size: 18px;
+`;
 
 
-//   color: ${(props) => props.theme.iconcolorHome};
-//   svg {
-//     margin-right: 10px;
-//   }
-  
-// `;
+//region RenderCategories
+export const CategoriesMenu = styled.div`
+    display: flex;
+  justify-content: space-between; /* Distribuye los botones uniformemente */
+  align-items: center;
+  width: 100%; /* Asegura que ocupe el ancho completo */
+  padding: 2%; /* Espaciado alrededor */
+  gap: 1vw; /* Espaciado entre los botones */
+  overflow-x: auto; /* Permite scroll horizontal si es necesario */
 
-// const IconItem = styled.option`
-// display: flex;
-//   justify-content: start;
-//   text-items: start;
-//   font-size: 20px;
-//   background-color: ${(props) => props.theme.iconBgcolorHome};
-//   color: ${(props) => props.theme.iconcolorHome};
-//   padding: 15px;
-//   border-radius: 10px;
+  /* Evita que los botones se envuelvan */
+  flex-wrap: nowrap; 
 
-// `;
+  /* Opcional: estilos para el scrollbar */
+  &::-webkit-scrollbar {
+    display: none; /* Oculta scrollbar en navegadores webkit */
+  }
+`;
 
 const CategoriesButton = styled.button`
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
   padding: 2%;
-  gap: 10%;
+  gap: 1%;
   cursor: pointer;
   background-color: #000;
-  width: 20vw; /* Relativo al ancho de la pantalla */
+  width: 30vw; /* Relativo al ancho de la pantalla */
   height: 15vw; /* Relativo al ancho de la pantalla */
   border-radius: 1vw; /* Relativo al ancho de la pantalla */
   color: ${(props) => props.theme.iconcolorHome};
   transition: all 0.3s ease;
-  max-width: 350px;
-  max-height: 350px;
 
   svg, img {
     width: 60%;
@@ -1681,8 +1502,7 @@ const CategoriesButton = styled.button`
   }
 
   .category-title {
-    margin-top: 2%;
-    font-size: 0.9em; /* Relativo al tamaño de fuente base */
+    font-size: 0.8em; /* Relativo al tamaño de fuente base */
     font-weight: 600;
     color: #fff;
     transition: transform 0.3s ease;
@@ -1711,6 +1531,197 @@ const CategoriesButton = styled.button`
   }
 `;
 
+//region Vista Juegos
+export const GameListEscritorio = styled.div`
+  display: grid;
+  grid-template-columns: repeat(6, 1fr); /* 6 columnas */
+  grid-template-rows: repeat(4, auto); /* 4 filas automáticas */
+  gap: 20px; /* Espaciado entre los elementos */
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+  .load-list {
+    grid-column: span 6; /* Ocupa todo el ancho disponible si no hay juegos */
+    text-align: center;
+    color: #777;
+    font-size: 1.2rem;
+  }
+
+  > div {
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    overflow: hidden; /* Asegura que el contenido no se salga del contenedor */
+  }
+`;
+
+
+
+
+
+export const GameGroup = styled.div`
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+`;
+
+export const GroupHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  padding: 0 10px;
+`;
+
+export const GameTitle = styled.h2`
+  font-size: 1.5rem;
+  color: #333;
+  margin: 0;
+`;
+
+export const ViewAllButton = styled.button`
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 5px 10px;
+  cursor: pointer;
+  font-size: 1rem;
+
+  &:hover {
+    background-color: #0056b3;
+  }
+`;
+
+export const GameRows = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: space-between;
+
+  & > div {
+    flex: 1 1 calc(33.33% - 10px); /* 3 columnas */
+    max-width: calc(33.33% - 10px);
+    box-sizing: border-box;
+  }
+`;
+
+
+
+export const GameItemEscritorio = styled.div`
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-radius: 10px;
+  overflow: hidden;
+  cursor: pointer;
+  padding: 5px;
+
+  /* Estilos para la imagen del juego */
+  img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    transition: transform 0.2s ease-in-out;
+  }
+
+  /* Efecto hover en la imagen */
+  &:hover img {
+    transform: scale(1.1);
+  }
+
+  /* Estilos para el botón de favorito */
+  .favorite-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    z-index: 2;
+
+    svg {
+      font-size: 24px;
+      transition: color 0.3s ease;
+      color: red;
+    }
+  }
+
+  /* Estilo para el texto debajo de la imagen */
+  p {
+    font-size: 0.9rem;
+    color: #666;
+    text-align: center;
+    margin-top: 10px;
+  }
+`;
+
+//region Flyers
+const CarouselContainerH = styled.div`
+  display: flex;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  justify-content: center;
+  padding: 20px;
+  gap: 5px; /* Espaciado entre los elementos */
+    overflow-x: auto; 
+  scroll-behavior: smooth;
+
+  &::-webkit-scrollbar {
+    height: 5px; /* Barra de desplazamiento horizontal */
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: ${(props) => props.theme.iconcolorHome || "#ff9900"};
+    border-radius: 10px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .carousel-img {
+    width: 250px;
+    height: 500px;
+    border-radius: 10px;
+    margin-right: 15px; /* Espaciado entre las imágenes */
+    transition: transform 0.3s ease;
+  }
+
+`;
+
+const CarouselItemH = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+  padding: 10px;
+  border-radius: 8px;
+  color: #997300;
+
+
+  &:hover {
+    transform: scale(1.05); /* Efecto de hover */
+  }
+
+`;
+
+//region ..:: :: R :: ::..
+
+// Carousel Card Cont
+
+export const ContainerR = styled.div`
+   flex-direction: column;
+  background-image: url(${(props) => props.bgHome});
+  background-size: cover;
+  background-attachment: fixed;
+  height: auto;
+  max-width: 100%;
+  overflow-x: hidden;
+`;
 
 //region Contenedor de ICONS
 const IconGamesDivContainer = styled.div`
@@ -1729,800 +1740,15 @@ const IconGamesDivContainer = styled.div`
 
 `;
 
-const RecentGameItem = styled.div`
-  padding: 0;
-  border: none;
-  background: transparent;
-  cursor: pointer;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+export const DivButtonTopR = styled.div`
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 170px; 
-
-  &:hover {
-    transform: scale(1.05);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  }
-
-  &:active {
-    transform: scale(0.95); 
-  }
-`;
-
-// Estilos para la imagen del juego
-const GameImage = styled.img`
-  width: 100px;
-  height: auto;
-  border-radius: 8px; 
-`;
-
-const GameName = styled.p`
-  margin-top: 5px;
-  font-size: 14px;
-  font-weight: 600;
-  color: ${props => props.theme.text}
-  text-align: center;
-`;
-
-//region Container
-
-const Container = styled.div`
-  height: auto;
-  max-width: 100%;
-  background: url(${(props) => props.bgImage}) no-repeat;
-  background-size: cover; 
-  background-attachment: fixed;
-  overflow-x: hidden;
-
-  .game-list-escritorio2{
-  display: flex;
-  flex-direction: column;
-    gap: 15px;
-    padding: 32px;
-
-    .load-list {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-  }
-
-  .game-item-escritorio2 {
-  flex: 0 1 calc(15.333% - 15px);
-    background-color:transparent;
-    text-align: center;
-    border-radius: 10px;
-    overflow: hidden;
-    position: relative;
-    cursor: pointer;
-    transition: transform 0.2s ease-in-out;
-
-    &:hover {
-      transform: scale(0.9);
-    }
-
-    img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      transition: transform 0.2s ease-in-out;
-    }
-
-    &:hover img {
-      transform: scale(1.2);
-    }
-
-     &::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.5); 
-      opacity: 0;
-      transition: opacity 0.3s ease;
-      z-index: 1; 
-    }
-
-    &:hover::before {
-      opacity: 1;
-    }
-
-    button {
-      background: transparent;
-    }
-
-    .favorite-button {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      border: none;
-      border-radius: 15px;
-      cursor: pointer;
-      z-index: 2; 
-
-      svg {
-        color: red; 
-        font-size: 24px;
-      }
-    }
-  }
-
-  .game-list-escritorio {
-    display: flex;
-    flex-wrap: wrap; /* Permite que los juegos se ajusten en múltiples filas */
-    gap: 15px; /* Espacio entre los juegos */
-    padding: 32px;
-    justify-content: center; /* Centra los juegos horizontalmente */
-
-    .load-list-escritorio {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      width: 100%;
-    }
-  }
-
-  .game-item-escritorio {
-    flex: 0 1 calc(15.333% - 15px); /* Tres juegos por fila */
-    background-color: transparent;
-    text-align: center;
-    border-radius: 10px;
-    overflow: hidden;
-    position: relative;
-    cursor: pointer;
-    transition: transform 0.2s ease-in-out;
-
-    &:hover {
-      transform: scale(0.9);
-    }
-
-    img {
-      width: 100%;
-      height: auto;
-      object-fit: cover;
-      transition: transform 0.2s ease-in-out;
-    }
-
-    &:hover img {
-      transform: scale(1.1);
-    }
-
-    .favorite-button {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      border: none;
-      background: transparent;
-      cursor: pointer;
-      z-index: 2;
-
-      svg {
-        font-size: 24px;
-        transition: color 0.3s ease;
-        color: red;
-      }
-    }
-  }
-
-.game-group {
-  margin-bottom: 32px;
-}
-
-.game-title {
-  font-size: 24px;
-  font-weight: bold;
-  margin-bottom: 10px;
-}
-
-.games-row {
-  display: flex;
-  flex-wrap: wrap; 
-  gap: 10px;
-  justify-content: space-between; 
-  overflow-x: auto; 
-  padding-bottom: 10px; 
-  scroll-behavior: smooth; 
-
-    &:after {
-    content: ""; 
-    flex: 1 1 auto; 
-  }
-
-  &:only-child,
-  &:only-child:after {
-    justify-content: center;
-  }
-
-    &::-webkit-scrollbar {
-    height: 10px;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background: ${(props) => props.theme.iconcolorHome};
-    border-radius: 10px;
-  }
-
-  &::-webkit-scrollbar-track {
-    background: transparent;
-  }
-}
-.group-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 10px;
-}
-
-.view-all-button {
-  background-color: #997300;;
-  color: white;
-  border: none;
-  padding: 5px 10px;
-  cursor: pointer;
-  border-radius: 5px;
-}
-
-.view-all-button:hover {
-  background-color: #e6ac00;;
-}
-
-
-  .game-list {
-  display: flex;
-  flex-direction: column;
-    gap: 15px;
-    padding: 32px;
-
-    .load-list {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-  }
-
-  .game-item {
-  flex: 0 1 calc(33.333% - 15px);
-    background-color:transparent;
-    text-align: center;
-    border-radius: 10px;
-    overflow: hidden;
-    position: relative;
-    cursor: pointer;
-    transition: transform 0.2s ease-in-out;
-
-    &:hover {
-      transform: scale(0.9);
-    }
-
-    img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      transition: transform 0.2s ease-in-out;
-    }
-
-    &:hover img {
-      transform: scale(1.2);
-    }
-
-     &::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.5); 
-      opacity: 0;
-      transition: opacity 0.3s ease;
-      z-index: 1; 
-    }
-
-    &:hover::before {
-      opacity: 1;
-    }
-
-    button {
-      background: transparent;
-    }
-
-    .favorite-button {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      border: none;
-      border-radius: 15px;
-      cursor: pointer;
-      z-index: 2; 
-
-      svg {
-        color: red; 
-        font-size: 24px;
-      }
-    }
-  }
-
-
-
-  @media (max-width: 480px) {
-    padding: 0px;
-    max-width: 1080px;
-    .game-list {
-      grid-template-columns: repeat(3, 1fr);
-    }
-
-    .game-item {
-      width: 250px;
-      text-align: center;
-      border-radius: 10px;
-      overflow: hidden;
-      position: relative;
-      cursor: pointer;
-      transition: transform 0.2s ease-in-out;
-
-      &:hover {
-        transform: scale(0.9);
-      }
-
-      img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        transition: transform 0.2s ease-in-out;
-      }
-
-      &:hover img {
-        transform: scale(1.2);
-      }
-
-      .favorite-button {
-        top: 5px;
-        right: 5px;
-      }
-    }
-
-    .small, .large {
-      grid-column: span 1;
-      grid-row: span 1;
-    }
-  }
-`;
-
-//region DivButton TOP
-
-const DivButtonTop = styled.div`
-  display: flex;
-  flex-direction: row;
-  margin-top: 10px;
-  margin-left: 35px;
-  margin-bottom: 10px;
-  gap: 17px;
-  align-items: center;
-`;
-
-//region div button Center
-
-const DivButtonCenter = styled.div`
-  display: flex;
-  flex-direction: row;
   justify-content: center;
   align-items: center;
-
-`;
-
-//region INPUT
-export const InputSearch = styled.input`
-background: transparent;
-color: ${(props) => props.theme.text};
-border-radius: 15px;
-background-size: 100% 100%;
-padding: 15px;
-border: 2px solid  ${(props) => props.theme.text};
-filter: drop-shadow(2px 8px 2px rgba(0, 0, 0, 0.5));
-
-width: 40%;
-  &:focus {
-    outline: none;
-  }
-`;
-
-//region BOTONES
-const DivButton = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-
-  .pacmanDiv{
-  margin-top: 40px;
-  margin-bottom: 70px;
-  }
-
-  .showMoreDiv{
-  align-self: flex-end;
-  display:flex;
-  justify-content: end;
-  align-items: end;
-  margin-bottom: 10px;
-  margin-right: 30px;
-
-  }
-
-`;
-
-const ButtonShowMore = styled.button`
-  position: absolute;
-  background: #997300; 
-  border: 2px solid ${(props) => props.theme.blackandwhite2};
-  color: ${(props) => props.theme.blackandwhite}; 
-  font-size: 12px;
-  padding: 10px;
-  border-radius: 5px;
-  cursor: pointer;
-  font-weight: bold;
-  overflow: hidden; 
-  transition: color 0.3s ease, box-shadow 0.2s;
-
-  &:hover {
-  color: ${(props) => props.theme.blackandwhite2}; 
-    box-shadow: 0 0 20px ${(props) => props.theme.navcolorhoverHome};
-  }
-`;
-// Estilo para el contenedor del iframe
-const IframeContainer = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
+  gap: 1rem;
+  flex-wrap: wrap;
   width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.7);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000; 
 `;
-
-// Estilo para el iframe
-const StyledIframe = styled.iframe`
-  width: 100%;
-  height: 100%;
-  border: none;
-  background: white;
-`;
-
-const CloseButton = styled.button`
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  font-size: 60px; /* Tamaño del ícono */
-  color: white;
-  z-index: 10000 !important;
-  transition: color 0.3s;
-
-  &:hover {
-    color: red; /* Color al pasar el ratón sobre el ícono */
-  }
-`;
-
-
-//region RESPONSIVE
-
-const SafariHelperContainer = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  width: 100%;
-  height: var(--window-inner-height, 100vh); /* Altura dinámica */
-  background-color: rgba(0, 0, 0, 0.5);
-  z-index: 9999;
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.5s linear, visibility 0.5s linear;
-
-  &.active {
-    opacity: 1;
-    visibility: visible;
-  }
-
-  #safarihelper {
-    position: fixed;
-    top: 10px;
-    right: 40px;
-    height: 304px;
-    width: 90px;
-    background-repeat: no-repeat;
-    background-position: 0 -310px;
-    z-index: 7777;
-  }
-
-  &.disable-scroll {
-    overflow: hidden;
-  }
-`;
-
-const ContainerR = styled.div`
-  flex-direction: column;
-  background-image: url(${(props) => props.bgHome});
-  background-size: cover;
-  background-attachment: fixed;
-  height: auto;
-  max-width: 100%;
-  overflow-x: hidden;
-
-  .game-group {
-  margin-bottom: 32px;
-}
-
-.game-title {
-  font-size: 24px;
-  font-weight: bold;
-  margin-bottom: 10px;
-}
-
-.games-row {
-  display: flex; /* Juegos en línea horizontal */
-  gap: 15px; /* Espacio entre los juegos */
-  overflow-x: auto; /* Barra de desplazamiento horizontal */
-  padding-bottom: 10px; /* Espacio para evitar que la barra de scroll toque los juegos */
-  scroll-behavior: smooth; /* Desplazamiento suave */
-    &::-webkit-scrollbar {
-    height: 10px;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background: ${(props) => props.theme.iconcolorHome};
-    border-radius: 10px;
-  }
-
-  &::-webkit-scrollbar-track {
-    background: transparent;
-  }
-}
-.group-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 10px;
-}
-
-.view-all-button {
-  background-color: #997300;;
-  color: white;
-  border: none;
-  padding: 5px 10px;
-  cursor: pointer;
-  border-radius: 5px;
-}
-
-.view-all-button:hover {
-  background-color: #e6ac00;;
-}
-
-
-  .game-list {
-  display: flex;
-  flex-direction: column;
-    gap: 15px;
-    padding: 32px;
-
-    .load-list {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-  }
-
-  .game-item {
-    flex: 0 0 auto; /* Evita que los juegos se reduzcan o expandan */
-    background-color:transparent;
-    text-align: center;
-    border-radius: 10px;
-    overflow: hidden;
-    position: relative;
-    cursor: pointer;
-    transition: transform 0.2s ease-in-out;
-
-    &:hover {
-      transform: scale(0.9);
-    }
-
-    img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      transition: transform 0.2s ease-in-out;
-    }
-
-    &:hover img {
-      transform: scale(1.2);
-    }
-
-     &::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.5); 
-      opacity: 0;
-      transition: opacity 0.3s ease;
-      z-index: 1; 
-    }
-
-    &:hover::before {
-      opacity: 1;
-    }
-
-    button {
-      background: transparent;
-    }
-
-    .favorite-button {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      border: none;
-      border-radius: 15px;
-      cursor: pointer;
-      z-index: 2; 
-
-      svg {
-        color: red; 
-        font-size: 24px;
-      }
-    }
-  }
-
-  .small {
-    grid-column: span 1;
-    grid-row: span 1;
-  }
-
-`;
-
-
-
-const NoGamesR = styled.div`
-  color: white;
-  font-size: 20px;
-  margin-top: 20px;
-`;
-
-const LoaderWrapperR = styled.div`
-  display: flex;
-  justify-content: center
-  align-items: center;
-  margin-top: 20px;
-  margin-bottom: 40%;
-  margin-left: 25%;
-`;
-
-const LoadMoreButtonR = styled.button`
-  background: transparent;
-  border: 2px solid ${(props) => props.theme.blackandwhite2};
-  color: ${(props) => props.theme.blackandwhite2}; 
-  font-size: 12px;
-  width: 120px;
-  margin: 20px 25% 5%;
-  padding: 10px 20px;
-  border-radius: 5px;
-  cursor: pointer;
-  font-weight: bold;
-  transition: color 0.3s ease, box-shadow 0.2s;
-
-  &:hover {
-    background-color: #997300; 
-    color: ${(props) => props.theme.navcolorhoverHome}; 
-    box-shadow: 0 0 20px ${(props) => props.theme.navcolorhoverHome};
-  }
-
-@media (max-width: 926px) {
-  margin: 20px 43% 5%;
-}
-
-  @media (max-width: 431px) {
-  margin: 20px 34% 5%;
-  
-}
-
-  @media (max-width: 428px) {
-  margin: 20px 34% 5%;
-  
-}
-
-`;
-
-
-//region DIV TOP
-
-const DivButtonTopR = styled.div`
-  display: flex;
-  flex-direction: column;
-  Width: 100%;
-  margin-top: 10px;
-  margin-bottom: 10px;
-  padding: 5px;
-  gap: 10px;
-
-
-`;
-//region INPUT
-export const InputSearchR = styled.input`
-margin-left: 5px;
-margin-bottom: 7%;
-background: transparent;
-width: 100%;
-color: ${(props) => props.theme.text};
-border-radius: 15px;
-font-size: 16px;
-padding: 15px;
-border: 2px solid  ${(props) => props.theme.text};
-  &:focus {
-    outline: none;
-  }
-@media (max-width: 926px) {
-  width: 50%;
-}
-  @media (max-width: 431px) {
-  width: 98%;
-}
-@media (max-width: 420px) {
-  width: 98%;
-}
- @media (max-width: 391px) {
-  width: 98%;
-}
-
- @media (max-width: 375px) {
-  width: 98%;
-}
-
-@media (max-width: 361px) {
-  width: 98%;
-}
-`;
-
-
-//region DIV  CENTER
-
-const DivButtonCenterR = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-
-  @media (max-width: 391px) {
-    width: 99%;
-}
-
-@media (max-width: 361px) {
-    width: 99%;
-}
-
-`;
-
-
-export const backgroundAnimationR = keyframes`
-0% {
-  background-position: 0% 0%;
-}
-50% {
-  background-position: 100% 0%;
-}
-100% {
-  background-position: 0% 100%;
-}
-`;
-
 
 const CarouselContainer = styled.div`
   display: flex;
@@ -2573,6 +1799,95 @@ const CarouselContainerEscritorio = styled.div`
   }
 `;
 
+//region Vista juegos responsivo
+const GameListResponsivo = styled.div`
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* Tres columnas iguales */
+  gap: 15px; /* Espaciado entre juegos */
+  padding: 20px;
+  width: 100%;
+  box-sizing: border-box; /* Incluye padding en el cálculo del ancho */
+  justify-items: center; /* Centra los elementos en las columnas */
+`;
+
+const GameItem = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%; /* El ancho es gestionado por la cuadrícula */
+  max-width: 200px; /* Tamaño máximo para pantallas grandes */
+  border-radius: 10px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  position: relative;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+
+  img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    border-radius: 5px;
+  }
+
+  p {
+    margin: 10px 0 0;
+    color: #fff;
+    font-size: 0.9em;
+    text-align: center;
+  }
+
+  &:hover {
+    transform: scale(1.05); 
+  }
+
+  .favorite-button {
+      position: absolute;
+      top: 1px;
+      right: 2px;
+      border: none;
+      border-radius: 15px;
+      cursor: pointer;
+      z-index: 2; 
+      background: none;
+
+     svg {
+      color: red; 
+      font-size: 24px;
+    }
+  }
+`;
+
+const ButtonContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin: 20px auto;
+`;
+
+const LoadMoreButton = styled.button`
+  padding: 10px 20px;
+  font-size: 16px;
+  color: #fff;
+  background-color: #000;
+  border: solid 1px #997300;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+
+  &:hover {
+    background-color: #0056b3;
+  }
+`;
+
+const LoadLessButton = styled(LoadMoreButton)`
+  background-color: #000;
+  border: solid 1px #997300;
+  &:hover {
+    background-color: #a71d2a;
+  }
+`;
 
 const CarouselItem = styled.div`
   flex-shrink: 0;
@@ -2593,40 +1908,86 @@ const CarouselItem = styled.div`
   `}
 `;
 
+export const DivButtonCenterR = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.5rem;
+  padding: 1rem;
+`;
 
+export const GameList = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+`;
+
+
+export const InputSearchR = styled.input`
+  width: 90%;
+  max-width: 500px;
+  padding: 0.75rem;
+  font-size: 1rem;
+  margin-left: 5px;
+margin-bottom: 7%;
+background: transparent;
+color: ${(props) => props.theme.text};
+border-radius: 15px;
+font-size: 16px;
+border: 2px solid  ${(props) => props.theme.text};
+`;
+
+export const NoGamesR = styled.div`
+  font-size: 1.2rem;
+  color: #999;
+  text-align: center;
+`;
+
+export const LoaderWrapperR = styled.div`
+  display: flex;
+  justify-content: center;
+  padding: 1rem;
+`;
+
+export const LoadMoreButtonR = styled.button`
+  padding: 0.75rem 1.5rem;
+  background-color: #007BFF;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background-color: #0056b3;
+  }
+`;
 
 const CarouselContainer0 = styled.div`
   display: flex;
-  justify-content: flex-start;
+  justify-content: space-around; /* Distribuye los elementos uniformemente */
   align-items: center; 
-  padding: 15px;
+  padding: 2px;
   background-color: transparent;
-  width: 100%;
-  height: auto; 
-  overflow-x: auto; 
-  scroll-behavior: smooth;
-
-  &::-webkit-scrollbar {
-    height: 5px; /* Barra de desplazamiento horizontal */
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background: ${(props) => props.theme.iconcolorHome || "#ff9900"};
-    border-radius: 10px;
-  }
-
-  &::-webkit-scrollbar-track {
-    background: transparent;
-  }
+  width: 100%; /* Asegura que ocupe todo el ancho */
+  height: auto;
 
   .carousel-img {
-    width: 120px;
-    height: 220px;
+    flex: 1; /* Cada imagen ocupa una parte igual del espacio disponible */
+    max-width: 120px; /* Ancho máximo para evitar estiramiento excesivo */
+    height: auto; /* Mantiene la proporción */
     border-radius: 10px;
-    margin-right: 15px; /* Espaciado entre las imágenes */
+    margin-right: 15px; /* Espaciado entre imágenes */
     transition: transform 0.3s ease;
   }
+
+  .carousel-img:last-child {
+    margin-right: 0; /* Elimina margen del último elemento */
+  }
 `;
+
 
 const CarouselItem0 = styled.div`
   flex-shrink: 0;
@@ -2638,10 +1999,33 @@ const CarouselItem0 = styled.div`
   border-radius: 15px;
   color: #997300;
   font-size: 20px;
-  padding: 10px;
   cursor: pointer;
 `;
 
+//region button subnavbarbutton
+const DivToggleButton = styled.div`
+  display: flex;
+  justify-content: center ; 
+  align-items: center;
+  margin: 2%;
+`;
+
+const ToggleButton = styled.button`
+  background-image: url(${bgsuerte});
+  background-size: cover;
+  background-position: center;
+  padding: 10px 20px;
+  color: #000;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-bottom: 10px;
+  font-size: 16px;
+
+  &:hover {
+    background-color: #555;
+  }
+`;
 
 //region Linea gradiante
 const TitleContainer = styled.div`
@@ -2670,7 +2054,6 @@ const TitleText = styled.span`
   font-weight: bold;
   white-space: nowrap;
 `;
-
 
 const CarouselContainer1 = styled.div`
   display: flex;
@@ -2703,55 +2086,3 @@ const CarouselItem1 = styled.div`
 `;
 
 
-const CarouselContainerH = styled.div`
-  display: flex;
-  flex-wrap: nowrap;
-  overflow-x: auto;
-  padding: 20px;
-  gap: 20px; /* Espaciado entre los elementos */
-    overflow-x: auto; 
-  scroll-behavior: smooth;
-
-  &::-webkit-scrollbar {
-    height: 5px; /* Barra de desplazamiento horizontal */
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background: ${(props) => props.theme.iconcolorHome || "#ff9900"};
-    border-radius: 10px;
-  }
-
-  &::-webkit-scrollbar-track {
-    background: transparent;
-  }
-
-  .carousel-img {
-    width: 250px;
-    height: 500px;
-    border-radius: 10px;
-    margin-right: 15px; /* Espaciado entre las imágenes */
-    transition: transform 0.3s ease;
-  }
-  
-  @media (min-width: 768px) {
-    justify-content: center;
-    padding: 40px;
-  }
-`;
-
-const CarouselItemH = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-  transition: transform 0.3s ease;
-  padding: 10px;
-  border-radius: 8px;
-  color: #997300;
-
-
-  &:hover {
-    transform: scale(1.05); /* Efecto de hover */
-  }
-
-`;

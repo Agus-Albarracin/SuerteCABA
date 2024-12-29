@@ -1,7 +1,6 @@
 import styled, { keyframes } from "styled-components";
 import React, { useState, useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { NavBarAgentAdminResposive } from '../../components/HomeComponents/NavbarAgentAdminResponsive';
 import axiosD from "../../axiosDefault";
 import toast, { Toaster } from 'react-hot-toast';
 import bar from "../../assets/1.jpg";
@@ -119,7 +118,6 @@ export function CrearUsuarioModal({ isOpen, onClose }) {
   return (
     <ModalContainer isOpen={isOpen}>
       <ModalContent>
-{isResponsive ? <NavBarAgentAdminResposive /> : null}
 
       <div><Toaster/></div>
       <h2 className="usuarios-title">Crear Usuarios.</h2>
