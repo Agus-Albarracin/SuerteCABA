@@ -1051,7 +1051,7 @@ return (
 
       <TitleContainer>
       <GradientLine className="gradient-left" />
-      <TitleText>Mejores juegos</TitleText>
+      <TitleText>Tragamonedas</TitleText>
       <GradientLine className="gradient-right" />
       </TitleContainer>
 
@@ -1238,7 +1238,7 @@ return (
 
 <TitleContainer>
       <GradientLine className="gradient-left" />
-      <TitleText>Mejores juegos</TitleText>
+      <TitleText>Tragamonedas</TitleText>
       <GradientLine className="gradient-right" />
 </TitleContainer>
 <DivButtonTopR>
