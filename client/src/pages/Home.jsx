@@ -2066,7 +2066,7 @@ const CarouselContainer1 = styled.div`
   background-color: transparent;
   width: 100%;
   margin-top: 10%;
-  margin-bottom: 55%;
+  margin-bottom: 62%;
 `;
 
 const CarouselItem1 = styled.div`
