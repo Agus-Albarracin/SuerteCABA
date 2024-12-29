@@ -1983,19 +1983,6 @@ const CarouselContainer0 = styled.div`
   background-color: transparent;
   width: 100%; /* Asegura que ocupe todo el ancho */
   height: auto;
-
-  .carousel-img {
-    flex: 1; /* Cada imagen ocupa una parte igual del espacio disponible */
-    max-width: 120px; /* Ancho máximo para evitar estiramiento excesivo */
-    height: auto; /* Mantiene la proporción */
-    border-radius: 10px;
-    margin-right: 15px; /* Espaciado entre imágenes */
-    transition: transform 0.3s ease;
-  }
-
-  .carousel-img:last-child {
-    margin-right: 0; /* Elimina margen del último elemento */
-  }
 `;
 
 
@@ -2011,9 +1998,10 @@ const CarouselItem0 = styled.div`
   font-size: 20px;
   cursor: pointer;
   /* Agregar estilos para la imagen */
+
   .carousel-img {
+    max-width: 120px;
     height: auto;  
-    object-fit: cover; 
     border-radius: 10px;
   }
 `;
