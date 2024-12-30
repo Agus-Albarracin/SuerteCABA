@@ -11,6 +11,7 @@ export function ModalsNotificacionR({ notifications, onClose }) {
   return (
     <ModalOverlay>
       <ModalContainer>
+      <Span>Notificaciones</Span>
         <CloseButton onClick={onClose}>×</CloseButton>
         <NotificationList>
           {notifications.map((notif, index) => (
@@ -31,6 +32,7 @@ export function ModalsGiftsR({ notificationsGift, onClose }) {
   return (
     <ModalOverlayg>
       <ModalContainerg>
+      <Span>Notificaciones</Span>
         <CloseButtong onClick={onClose}>×</CloseButtong>
         <NotificationListg>
           {notificationsGift.map((notif, index) => (
@@ -52,6 +54,7 @@ const ModalOverlay = styled.div`
   width: 100%;
   height: 100%;
   display: flex;
+  border: 1px solid #997300;
   justify-content: center;
   align-items: center;
   z-index: 9999;
@@ -61,6 +64,7 @@ const ModalContainer = styled.div`
   background: #333;
   padding: 20px;
   border-radius: 10px;
+  border: 2px solid  #997300;
   width: 90%;
   max-width: 500px; 
   color: white; 
@@ -90,7 +94,7 @@ const CloseButton = styled.button`
   border: none;
   font-size: 40px;
   cursor: pointer;
-  color: #997300;
+  color: red;
 `;
 
 const NotificationList = styled.div`
@@ -110,6 +114,19 @@ const NotificationItem = styled.div`
   }
 `;
 
+const Span = styled.span`
+  font-weight: bold; /* Negrita */
+  font-size: 18px; /* Tamaño del texto */
+  color: #fff; /* Color dorado principal */
+  text-shadow: 
+    0 0 5px #997300, 
+    0 0 10px #cca300, 
+    0 0 20px #ffcc00, 
+    0 0 30px #ffcc00; /* Efecto brillante */
+  display: inline-block; /* Para ajustes de posición */
+  transition: all 0.3s ease-in-out; /* Transición suave para el hover */
+`;
+
 //region GIFT
 
 const ModalOverlayg = styled.div`
@@ -127,7 +144,8 @@ const ModalContainerg = styled.div`
   padding: 20px;
   border-radius: 10px;
   width: 90%;
-  max-width: 500px; 
+  max-width: 500px;
+  border: 2px solid  #997300;
   color: white; 
   position: relative;
   z-index: 9999;
@@ -146,7 +164,7 @@ const CloseButtong = styled.button`
   border: none;
   font-size: 40px;
   cursor: pointer;
-  color: #997300;
+  color: red;
 `;
 
 const NotificationListg = styled.div`

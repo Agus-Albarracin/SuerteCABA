@@ -27,6 +27,7 @@ export function ModalsNotificacion({ notifications, onClose }) {
   return (
     <ModalOverlay>
       <ModalContainer ref={modalRef}>
+      <Span>Notificaciones</Span>
         <CloseButton onClick={onClose}>×</CloseButton>
         <NotificationList>
           {notifications.map((notif, index) => (
@@ -63,6 +64,7 @@ export function ModalsGifts({ notificationsGift, onClose }) {
   return (
     <ModalOverlayg>
       <ModalContainerg ref={modalRef}>
+        <Span>Notificaciones</Span>
         <CloseButtong onClick={onClose}>×</CloseButtong>
         <NotificationListg>
           {notificationsGift.map((notif, index) => (
@@ -88,16 +90,15 @@ const ModalOverlay = styled.div`
 `;
 
 const ModalContainer = styled.div`
-  background: #333;
+  background: #000;
   padding: 20px;
   border-radius: 10px;
-  border: 1px solid red;
+  border: 2px solid  #997300;
   width: 400px;
   position: absolute;
   z-index: 9999;
   right: 290px;
   top: 20px;
-  color: Red;
   max-height: 80vh;
   overflow-y: auto; 
   `;
@@ -122,6 +123,19 @@ margin-bottom: 25px;
   color: white;
 `;
 
+const Span = styled.span`
+  font-weight: bold; /* Negrita */
+  font-size: 18px; /* Tamaño del texto */
+  color: #fff; /* Color dorado principal */
+  text-shadow: 
+    0 0 5px #997300, 
+    0 0 10px #cca300, 
+    0 0 20px #ffcc00, 
+    0 0 30px #ffcc00; /* Efecto brillante */
+  display: inline-block; /* Para ajustes de posición */
+  transition: all 0.3s ease-in-out; /* Transición suave para el hover */
+`;
+
 
 //region GIFT
 
@@ -133,10 +147,11 @@ const ModalOverlayg = styled.div`
 `;
 
 const ModalContainerg = styled.div`
-  background: #333;
+  background: #000;
   padding: 20px;
   border-radius: 10px;
   width: 400px;
+  border: 2px solid  #997300;
   position: absolute;
   z-index: 9999;
   right: 210px;
