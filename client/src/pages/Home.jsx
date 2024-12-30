@@ -1061,7 +1061,7 @@ return (
 
       <TitleContainer>
       <GradientLine className="gradient-left" />
-      <TitleText>Tragamonedas</TitleText>
+      <TitleText>{selectedTitle || "Pragmatic "}</TitleText>
       <GradientLine className="gradient-right" />
       </TitleContainer>
 
@@ -1248,7 +1248,7 @@ return (
 
 <TitleContainer>
       <GradientLine className="gradient-left" />
-      <TitleText>{selectedTitle || "Pragmatic"}</TitleText>
+      <TitleText>{selectedTitle || "Pragmatic "}</TitleText>
       <GradientLine className="gradient-right" />
 </TitleContainer>
 <DivButtonTopR>
