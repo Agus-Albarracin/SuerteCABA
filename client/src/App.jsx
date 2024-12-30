@@ -91,7 +91,7 @@ function App() {
   user.rol === "Jugador" ? (
     <Route path="/home" element={<Home />} /> // Si el usuario tiene el rol "Jugador", muestra la ruta de /home
   ) : (
-    <Route path="*" element={<LoginHome />} /> // Si el usuario no es "Jugador", redirige
+    null // Si el usuario no es "Jugador", redirige
   )
 ) : (
   <Route path="*" element={<LoginHome />} /> // Si no hay usuario (no está autenticado), muestra el componente HomeLogin
