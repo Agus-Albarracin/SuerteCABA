@@ -972,7 +972,7 @@ return (
 
       <SubNavbar categories={titles} onCategoryClick={handleTitlesClick} />
 {showSubNavbar && (
-    <SubNavbarButton categories={titles} onCategoryClick={handleTitlesClick} />
+    <SubNavbarButton categories={titles} onCategoryClick={handleTitlesClick} toggleSubNavbar={toggleSubNavbar} />
   )}
 
 <DivToggleButton> 
@@ -1233,7 +1233,7 @@ return (
     <SubNavbar categories={titles} onCategoryClick={handleTitlesClick} />
 
     {showSubNavbar && (
-        <SubNavbarButton categories={titles} onCategoryClick={handleTitlesClick} />
+        <SubNavbarButton categories={titles} onCategoryClick={handleTitlesClick} toggleSubNavbar={toggleSubNavbar}/>
       )}
     
     <DivToggleButton> 
@@ -1248,7 +1248,7 @@ return (
 
 <TitleContainer>
       <GradientLine className="gradient-left" />
-      <TitleText>Tragamonedas</TitleText>
+      <TitleText>{selectedTitle || "Pragmatic"}</TitleText>
       <GradientLine className="gradient-right" />
 </TitleContainer>
 <DivButtonTopR>

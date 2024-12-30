@@ -95,13 +95,14 @@ const imageMap = {
   "pragmatic_play_live": pragmaticlive
 };
 
-export function SubNavbarButton({ categories, onCategoryClick }) {
+export function SubNavbarButton({ categories, onCategoryClick, toggleSubNavbar }) {
   const { theme } = useContext(ThemeContext);
   const [visibleCategory, setVisibleCategory] = useState(null);
 
   const handleCategoryClick = (category) => {
     setVisibleCategory(visibleCategory === category ? null : category);
     onCategoryClick(category);
+    toggleSubNavbar();
   };
 
   const logoToUse = theme === "light" ? "negro.png" : "blanco.png"; // Ajusta el logo según el tema
