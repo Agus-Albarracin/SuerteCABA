@@ -11,6 +11,8 @@ import ToggleTheme from '../buttontheme';
 import { ThemeContext } from "../../App";
 
 import { useNavigate } from 'react-router-dom';
+import iconomayores from '../../assets/icon18.png';
+
 
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -135,6 +137,7 @@ export function LoginHome() {
         )}
       </div>
       <MyDiv>
+        <LogoMayores><img src={iconomayores}  alt="logo"/></LogoMayores>
         <span><strong>Sitio exclusivo</strong> para personas mayores de 18 años
         <br />
         Juga responsablemente</span>
@@ -269,15 +272,7 @@ const NavContainer = styled.nav`
   }
 `;
 
-const MyDiv = styled.div`
-  display: flex;  
-  justify-content: center;  
-  align-items: center;  
-  text-align: center;  
-  margin-left: auto;
-  margin-right: auto;
-  width: 70%; 
-`;
+
 
 const UserInfoButton = styled.div`
   color: ${(props) => props.theme.navcolor};
@@ -312,6 +307,44 @@ padding: 5px;
 margin-top: 5%;
 img{
 width: 250px;
+}
+
+@media (max-width: 768px) {
+margin-top: 10%;
+    display: flex;
+    justify-content: center;
+    align-items: center; 
+}
+
+@media (max-width: 480px) {
+margin-top: 10%;
+
+    display: flex;
+    justify-content: center;
+    align-items: center; 
+}
+
+
+`;
+
+
+const MyDiv = styled.div`
+  display: flex;
+  flex-direction: column;  
+  justify-content: center;  
+  align-items: center;  
+  text-align: center;  
+  margin-left: auto;
+  margin-right: auto;
+  width: 70%; 
+`;
+
+//region Logo
+const LogoMayores = styled.div`
+padding: 5px;
+margin-top: 5%;
+img{
+width: 50px;
 }
 
 @media (max-width: 768px) {

@@ -19,6 +19,8 @@ import PacmanLoader from "react-spinners/PacmanLoader";
 import home1 from "../assets/home1.png"
 import home2 from "../assets/home2.png"
 import bgsuerte from '../assets/bgsuerte.png';
+import iconomayores from '../assets/icon18.png';
+
 
 import { ThemeContext } from "../App";
 
@@ -1121,6 +1123,13 @@ return (
   ))}
 </CarouselContainerH>
 
+      <MyDiv>
+        <LogoMayores><img src={iconomayores}  alt="logo"/></LogoMayores>
+        <span><strong>Sitio exclusivo</strong> para personas mayores de 18 años
+        <br />
+        Juga responsablemente</span>
+      </MyDiv>
+
     </Container>
   ) : (
     <ContainerR bgHome={bgHome}>
@@ -1328,6 +1337,13 @@ return (
   </div>
 </CarouselContainer1>
 
+<MyDiv>
+        <LogoMayores><img src={iconomayores}  alt="logo"/></LogoMayores>
+        <span><strong>Sitio exclusivo</strong> para personas mayores de 18 años
+        <br />
+        Juga responsablemente</span>
+</MyDiv>
+
 </ContainerR>
   )
 )
@@ -1357,7 +1373,7 @@ const IframeContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1000; 
+  z-index: 1000 !important; 
 `;
 const StyledIframe = styled.iframe`
   width: 100%;
@@ -1374,7 +1390,7 @@ const CloseButton = styled.button`
   cursor: pointer;
   font-size: 60px; /* Tamaño del ícono */
   color: white;
-  z-index: 9998 !important;
+  z-index: 9999 !important;
   transition: color 0.3s;
 
   &:hover {
@@ -1720,6 +1736,47 @@ const CarouselItemH = styled.div`
   &:hover {
     transform: scale(1.05); /* Efecto de hover */
   }
+
+`;
+const MyDiv = styled.div`
+  display: flex;
+  flex-direction: column;  
+  justify-content: center;  
+  align-items: center;  
+  text-align: center;  
+  margin-left: auto;
+  margin-right: auto;
+  width: 70%;
+  margin-bottom: 10%;
+
+  @media (max-width: 480px) {
+  margin-bottom: 62%;
+}
+
+`;
+
+//region Logo
+const LogoMayores = styled.div`
+padding: 5px;
+margin-top: 5%;
+img{
+width: 50px;
+}
+
+@media (max-width: 768px) {
+margin-top: 10%;
+    display: flex;
+    justify-content: center;
+    align-items: center; 
+}
+
+@media (max-width: 480px) {
+margin-top: 10%;
+
+    display: flex;
+    justify-content: center;
+    align-items: center; 
+}
 
 `;
 
@@ -2070,7 +2127,6 @@ const CarouselContainer1 = styled.div`
   background-color: transparent;
   width: 100%;
   margin-top: 10%;
-  margin-bottom: 62%;
 `;
 
 const CarouselItem1 = styled.div`

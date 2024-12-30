@@ -90,7 +90,7 @@ const CloseButton = styled.button`
   border: none;
   font-size: 40px;
   cursor: pointer;
-  color: red;
+  color: #997300;
 `;
 
 const NotificationList = styled.div`
@@ -146,7 +146,7 @@ const CloseButtong = styled.button`
   border: none;
   font-size: 40px;
   cursor: pointer;
-  color: red;
+  color: #997300;
 `;
 
 const NotificationListg = styled.div`
