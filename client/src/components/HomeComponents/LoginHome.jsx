@@ -135,8 +135,9 @@ export function LoginHome() {
         )}
       </div>
       <MyDiv>
-        <span><em>Este es un <strong>sitio exclusivo</strong> para mayores de 18 años; al ingresar, confirmas que cumples con este requisito y
-         que utilizarás el contenido de manera responsable.</em></span>
+        <span><strong>Sitio exclusivo</strong> para personas mayores de 18 años
+        <br />
+        Juga responsablemente</span>
       </MyDiv>
     </NavContainer>
   );
@@ -275,7 +276,7 @@ const MyDiv = styled.div`
   text-align: center;  
   margin-left: auto;
   margin-right: auto;
-  width: 50%; 
+  width: 70%; 
 `;
 
 const UserInfoButton = styled.div`

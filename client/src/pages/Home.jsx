@@ -593,6 +593,7 @@ setAllGames(filteredGames);
   // Función para alternar pantalla completa en otros navegadores
   //region renderGames
   const [visibleGames, setVisibleGames] = useState(15); // Inicia mostrando 15 juegos
+
   const renderGames = () => {
     if (gameList.length === 0) {
       return (
@@ -602,13 +603,14 @@ setAllGames(filteredGames);
       );
     }
   
-    // Tomar los juegos visibles basados en el estado
-    const gamesToShow = gameList.slice(0, visibleGames);
+    // Filtrar los juegos que son de "pragmatic" para mostrarlos, pero mantener el resto en gameList
+    const gamesToShow = gameList.slice(0, visibleGames); // Controlar cuántos juegos se muestran
+    const filteredGames = gamesToShow.filter((game) => game.title === "pragmatic");
   
     return (
       <>
         <GameListResponsivo>
-          {gamesToShow.map((game, index) => {
+          {filteredGames.map((game, index) => {
             const isFavorite = favorites.some((fav) => fav.id === game.id);
   
             return (
@@ -655,6 +657,8 @@ setAllGames(filteredGames);
       </>
     );
   };
+  
+
   
   
 
@@ -966,7 +970,7 @@ return (
     {showCategoriesMenu && renderCategoryButtons()}     
     <TitleContainer>
       <GradientLine className="gradient-left" />
-      <TitleText>Selecciona proveedores</TitleText>
+      <TitleText>Selecciona proveedores de Juegos</TitleText>
       <GradientLine className="gradient-right" />
       </TitleContainer>
 
@@ -1226,7 +1230,7 @@ return (
 
       <TitleContainer>
       <GradientLine className="gradient-left" />
-      <TitleText>Selecciona proveedores</TitleText>
+      <TitleText>Selecciona proveedores de Juegos</TitleText>
       <GradientLine className="gradient-right" />
       </TitleContainer>
 
