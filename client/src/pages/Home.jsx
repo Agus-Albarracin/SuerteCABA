@@ -1432,6 +1432,7 @@ const SafariHelperContainer = styled.div`
   }
 `;
 
+
 const DivButtonTop = styled.div`
   display: flex;
   flex-direction: row;
@@ -1794,22 +1795,7 @@ export const ContainerR = styled.div`
   overflow-x: hidden;
 `;
 
-//region Contenedor de ICONS
-const IconGamesDivContainer = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px; 
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
-  flex-direction: row;
-  margin-top: 70px;
-  margin-bottom: 70px;
-  margin-left: 20px;
-  margin-right: 20px;
 
-  justify-content: start;
-  align-items: center;
-
-`;
 
 
 export const DivButtonTopR = styled.div`
@@ -2150,3 +2136,97 @@ const CarouselItem1 = styled.div`
 `;
 
 
+
+//region Contenedor de ICONS
+const IconGamesDivContainer = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px; 
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+  flex-direction: row;
+  margin-bottom: 70px;
+  margin-right: 20px;
+  justify-content: center;
+  align-items: center;
+`;
+
+const RecentGameItem = styled.div`
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 170px; 
+
+    p {
+    text-align: center; 
+  }
+
+  &:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+
+  &:active {
+    transform: scale(0.95); 
+  }
+    @media (max-width: 480px) {
+    width: 80px;
+    margin: 10px;
+    transform: scale(0.85); 
+
+    &:hover {
+      transform: scale(0.9); 
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15); 
+    }
+
+    &:active {
+      transform: scale(0.8);
+    }
+
+    p {
+      font-size: 0.9rem; 
+    }
+  }
+`;
+
+const RecentGameItemR = styled.div`
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 120px; 
+  
+
+  &:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+
+  &:active {
+    transform: scale(0.95); 
+  }
+
+`;
+
+
+const GameImage = styled.img`
+  width: 100px;
+  height: auto;
+  border-radius: 8px; 
+`;
+
+const GameName = styled.p`
+  margin-top: 5px;
+  font-size: 14px;
+  font-weight: 600;
+  color: ${props => props.theme.text}
+  text-align: center;
+`;
