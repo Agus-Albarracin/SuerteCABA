@@ -58,6 +58,7 @@ export function Home() {
   const [showCategoriesMenu, setShowCategoriesMenu] = useState(true);
   const [uniqueCategories, setUniqueCategories] = useState([]);
   const [selectedTitle, setSelectedTitle] = useState("");
+  const [showTitle, setShowTitle] = useState("");
   const [popularGames, setPopularGames] = useState([]);
   const [gamesToShow, setGamesToShow] = useState(18);
   const [recentGames, setRecentGames] = useState([]);
@@ -99,13 +100,15 @@ const [showMoreButton , setShowMoreButton ] = useState(true);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+//region Separador de categorias
 const categorySections = {
-  section1: ['slots', 'otros'],
-  section2: ['arcade', 'fast_games'],
-  section3: ['live_dealers', 'lottery', 'roulette'],
-  section4: ['sport'],
-  section5: ['card', 'video_poker']
+  TRAGAMONEDAS: ['slots', 'otros'],
+  ARCADE: ['arcade', 'fast_games'],
+  CASINOS: ['live_dealers', 'lottery', 'roulette'],
+  DEPORTIVAS: ['sport'],
+  CARTAS: ['card', 'video_poker']
 };
+
 
 useEffect(() => {
   // Comprobamos si la página ya fue recargada usando localStorage
@@ -334,6 +337,7 @@ setAllGames(filteredGames);
     }
   
     setSelectedTitle(transformedTitle);
+    setShowTitle(transformedTitle)
   
     // Filtrar los juegos según la categoría seleccionada
     const filteredGames = transformedTitle
@@ -360,15 +364,7 @@ setAllGames(filteredGames);
   }, [selectedTitle]);
   // Log de actualización de gameList
   
-  useEffect(() => {
-    if (gameList.length > 0) {
-      window.scrollBy({
-        top: 400,
-        left: 0,
-        behavior: 'smooth'
-      });
-    }
-  }, [gameList]);
+
 
   const handleFavoriteClick = (game, index) => {
     if (!user) {
@@ -432,6 +428,8 @@ setAllGames(filteredGames);
     if (!user) {
       return;
     }
+    console.log("Cambio el title", category)
+     
 
     if(category === selectedTitle){setSelectedTitle("")}
     else{if(category !== selectedTitle){setSelectedTitle(category)}}
@@ -442,6 +440,8 @@ setAllGames(filteredGames);
 
     // Obtener las categorías dentro de la sección seleccionada
     const categories = categorySections[section] || [];
+
+    console.log("se muestras la categorias", categories)
     
     // Filtrar los juegos que pertenecen a cualquiera de las categorías en la sección seleccionada
     const filteredGames = allGames.filter(game => {
@@ -461,18 +461,24 @@ setAllGames(filteredGames);
     if(title === "populares"){
       filterPopularGames()
     }
+    if(title === "todos"){
+      setSelectedTitle("")
+      setShowTitle("TODOS")
+      handleTitlesClick("pragmatic")
+      return
+    }
     setSelectedTitle(title);
     handleMenuOptions(title);
   };
 
-  // Renderizar los botones de categorías
+  
   const renderCategoryButtons = () => {
     const sectionTitles = {
-      section1: "TRAGAMONEDAS",
-      section2: "ARCADE",
-      section3: "CASINO EN VIVO",
-      section4: "DEPORTIVAS",
-      section5: "CARTAS",
+      TRAGAMONEDAS: "TRAGAMONEDAS",
+      ARCADE: "ARCADE",
+      CASINOS: "CASINOS",
+      DEPORTIVAS: "DEPORTIVAS",
+      CARTAS: "CARTAS",
     };
   
     const smooth = () => {
@@ -490,10 +496,12 @@ setAllGames(filteredGames);
           <CategoriesButton
             key={section}
             onClick={() => {
+              console.log("Categoría seleccionada:", sectionTitles[section]);
+              setShowTitle(sectionTitles[section])
               handleMenuOptions(section);
               filterGamesByCategory(section);
               smooth();
-              setIsCategorySelected(true); // Establecer que una categoría fue seleccionada
+              setIsCategorySelected(true);
             }}
           >
             <img
@@ -506,6 +514,7 @@ setAllGames(filteredGames);
       </CategoriesMenu>
     );
   };
+  
 
   const renderRecentGames = () =>{
     if (!user) {
@@ -605,14 +614,13 @@ setAllGames(filteredGames);
       );
     }
   
-    // Filtrar los juegos que son de "pragmatic" para mostrarlos, pero mantener el resto en gameList
     const gamesToShow = gameList.slice(0, visibleGames); // Controlar cuántos juegos se muestran
-    const filteredGames = gamesToShow.filter((game) => game.title === "pragmatic");
+   
   
     return (
       <>
         <GameListResponsivo>
-          {filteredGames.map((game, index) => {
+          {gamesToShow.map((game, index) => {
             const isFavorite = favorites.some((fav) => fav.id === game.id);
   
             return (
@@ -829,37 +837,25 @@ setAllGames(filteredGames);
 const [selectedCategory, setSelectedCategory] = useState("");
 
 const sectionIcons = {
-  section1: iconTragamonedas,
-  section2: iconArcade,
-  section3: iconCasino,
-  section4: iconDeportivas,
-  section5: iconCarta,
+  TRAGAMONEDAS: iconTragamonedas,
+  ARCADE: iconArcade,
+  CASINOS: iconCasino,
+  DEPORTIVAS: iconDeportivas,
+  CARTAS: iconCarta,
 };
 
 const sectionTitles = {
-  section2: 'ARCADE',
-  section1: 'TRAGAMONEDAS',
-  section3: 'CASINO EN VIVO',
-  section4: 'DEPORTIVAS',
+  ARCADE: 'ARCADE',
+  TRAGAMONEDAS: 'TRAGAMONEDAS',
+  CASINOS: 'CASINOS',
+  DEPORTIVAS: 'DEPORTIVAS',
 };
 
-const handleCategoryChange = (event) => {
-  const section = event.target.value;
-  if(section === 'section0'){
-    setSelectedCategory(section)
-    filterGamesByCategory(section);
-    return
-  }else{
-    setSelectedCategory(section)
-    handleMenuOptions(section);
-    filterGamesByCategory(section);
-  }
-
-};
 
 const handleSectionChange = (event) => {
   const section = event.target.value;
-
+  console.log("cambio de section", section)
+  
   // Ignorar secciones "ARCADE" y "CARTAS" basado en el título
   if (sectionTitles[section] === "ARCADE" || sectionTitles[section] === "CARTAS") {
     return;
@@ -871,18 +867,20 @@ const handleSectionChange = (event) => {
     return;
   } else {
     setSelectedCategory(section);
+    setShowTitle(section)
     handleMenuOptions(section);
     filterGamesByCategory(section);
 
-    // Renderiza imágenes según la sección
-    if (sectionImages[section]) {
-      renderImage(sectionImages[section]);
-    }
+    // // Renderiza imágenes según la sección
+    // if (sectionImages[section]) {
+    //   renderImage(sectionImages[section]);
+    // }
   }
 };
 
 const handleSectionChangeTitle = (event) => {
   const section = event.target.value;
+  console.log("cambio de section", section)
 
   // Ignorar secciones "ARCADE" y "CARTAS" basado en el título
   if (sectionTitles[section] === "CARTAS") {
@@ -891,26 +889,23 @@ const handleSectionChangeTitle = (event) => {
 
   if (section === "section0") {
     setSelectedCategory(section);
+    setShowTitle(section)
     filterGamesByCategory(section);
     return;
   } else {
     setSelectedCategory(section);
+    setShowTitle(section)
     handleMenuOptions(section);
     filterGamesByCategory(section);
-
-    // Renderiza imágenes según la sección
-    if (sectionImages[section]) {
-      renderImage(sectionImages[section]);
-    }
   }
 };
 
 
 const sectionImages = {
-  section1: imgTragamonedas,
-  section5: imgCarta,
-  section3: imgCasinoEnVivo,
-  section4: imgDeportivas,
+  TRAGAMONEDAS: imgTragamonedas,
+  CARTAS: imgCarta,
+  CASINOS: imgCasinoEnVivo,
+  DEPORTIVAS: imgDeportivas,
 };
 
 // Define los íconos para cada tema
@@ -970,6 +965,7 @@ return (
 
 
     {showCategoriesMenu && renderCategoryButtons()}     
+
     <TitleContainer>
       <GradientLine className="gradient-left" />
       <TitleText>Selecciona proveedores de Juegos</TitleText>
@@ -1067,7 +1063,9 @@ return (
 
       <TitleContainer>
       <GradientLine className="gradient-left" />
-      <TitleText>{selectedTitle || "Pragmatic "}</TitleText>
+
+      <TitleText>{showTitle || "Pragmatic"}</TitleText>
+      
       <GradientLine className="gradient-right" />
       </TitleContainer>
 
@@ -1099,7 +1097,14 @@ return (
     .map(([section, title]) => (
       <CarouselItemH
         key={section}
-        onClick={() => handleSectionChange({ target: { value: section } })}
+        onClick={() => {
+          handleSectionChange({ target: { value: section } }); // Manejar el cambio de sección
+          window.scrollTo({
+            top: 900, // Desplazar al inicio de la página
+            left: 0,
+            behavior: "smooth", // Desplazamiento suave
+          });
+        }}
         isSelected={selectedCategory === section}
       >
         <img 
@@ -1111,13 +1116,21 @@ return (
     ))}
 </CarouselContainerH>
 
+
 <CarouselContainerH>
   {Object.keys(sectionTitles).map((section) => (
     <CarouselItemH
-      key={section}
-      onClick={() => handleSectionChangeTitle({ target: { value: section } })}
-      isSelected={selectedCategory === section}
-    >
+    key={section}
+    onClick={() => {
+      handleSectionChangeTitle({ target: { value: section } }); // Manejar el cambio de sección
+      window.scrollTo({
+        top: 900, // Desplazar 10 píxeles desde el inicio
+        left: 0, // Sin desplazamiento horizontal
+        behavior: "smooth", // Desplazamiento animado
+      });
+    }}
+    isSelected={selectedCategory === section}
+  >
       {sectionTitles[section]}
     </CarouselItemH>
   ))}
@@ -1261,7 +1274,7 @@ return (
 
 <TitleContainer>
       <GradientLine className="gradient-left" />
-      <TitleText>{selectedTitle || "Pragmatic "}</TitleText>
+      <TitleText>{showTitle || "Pragmatic"}</TitleText>
       <GradientLine className="gradient-right" />
 </TitleContainer>
 <DivButtonTopR>
@@ -1299,7 +1312,15 @@ return (
     .map(([section, title]) => (
       <CarouselItem0
         key={section}
-        onClick={() => handleSectionChange({ target: { value: section } })}
+        onClick={() => {
+          handleSectionChange({ target: { value: section } }); // Manejar el cambio de sección
+          console.log("se muestra el target", section)
+          window.scrollTo({
+            top: 10, // Desplazar al inicio de la página
+            left: 0,
+            behavior: "smooth", // Desplazamiento suave
+          });
+        }}
         isSelected={selectedCategory === section}
       >
         <img 
@@ -1317,7 +1338,14 @@ return (
     .map((section) => (
       <CarouselItem1
         key={section}
-        onClick={() => handleSectionChangeTitle({ target: { value: section } })}
+        onClick={() => {
+          handleSectionChangeTitle({ target: { value: section } }); 
+          window.scrollTo({
+            top: 10, 
+            left: 0,
+            behavior: "smooth", 
+          });
+        }}
         isSelected={selectedCategory === section}
       >
         {sectionTitles[section]}
@@ -1327,10 +1355,17 @@ return (
   <div className="column">
     {Object.keys(sectionTitles).slice(2).map((section) => (
       <CarouselItem1
-        key={section}
-        onClick={() => handleSectionChangeTitle({ target: { value: section } })}
-        isSelected={selectedCategory === section}
-      >
+      key={section}
+      onClick={() => {
+        handleSectionChangeTitle({ target: { value: section } }); // Manejar el cambio de sección
+        window.scrollTo({
+          top: 10, // Desplazar 10 píxeles desde el inicio
+          left: 0, // Sin desplazamiento horizontal
+          behavior: "smooth", // Desplazamiento animado
+        });
+      }}
+      isSelected={selectedCategory === section}
+    >
         {sectionTitles[section]}
       </CarouselItem1>
     ))}
