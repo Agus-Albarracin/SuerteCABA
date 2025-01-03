@@ -306,6 +306,7 @@ const Container = styled.div`
     flex: 1;
     max-width: 48%;
     background-color: ${(props) => props.theme.primary};
+    text-align: center;
     color: #fff;
     border: none;
     padding: 8px 0px;
