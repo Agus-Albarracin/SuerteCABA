@@ -3,7 +3,7 @@ services:
     image: redis:latest
     container_name: redis_container_suerte24 # Nombre único para este contenedor
     ports:
-      - "6379:6379"
+      - "6380:6379"
     volumes:
       - redis_suerte24:/data
     restart: always
