@@ -4,102 +4,143 @@ const jwt = require('jsonwebtoken');
 const { getIo } = require('../Socket');
 const mongoose = require('mongoose');
 
+//create user antes de hashear para los Agentes.
+// const createUser = async (req, res) => {
+//   const { login, balance, nombre, apellido, password, email, rol, supervisor} = req.body;
+
+//   try {
+//     const existingUser = await User.findOne({ login });
+//     if (existingUser) {
+//       return res.status(400).json({ status: 'fail', error: 'El usuario ya existe' });
+//     }
+
+//     if (!login || !password || !rol) {
+//       return res.status(400).json({ status: 'fail', error: 'Complete los campos, por favor...' });
+//     }
+
+//     if (email !== "" && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+//       return res.status(400).json({ status: 'fail', error: 'Ingrese un E-mail válido.' });
+//     }
+
+//     if (!/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d\S]{6,}$/.test(password)) {
+//       return res.status(400).json({ status: 'fail', error: 'Ingrese una contraseña válida' });
+//     }
+
+//     const hashedPassword = await bcrypt.hash(password, 10);
+
+//     let supervisorId = null;
+
+//     // Si se proporciona un supervisor, buscarlo en la base de datos
+//     if (supervisor) {
+//       const getSupervisor = await User.findOne({ login: supervisor });
+
+//       if (!getSupervisor) {
+//         return res.status(400).json({ status: 'fail', error: 'Supervisor no encontrado' });
+//       }
+
+//       supervisorId = getSupervisor._id; 
+//     }
+
+//     const newUser = new User({
+//       login,
+//       balance: balance || "",
+//       currency: 'ARS', 
+//       nombre: nombre || "",
+//       apellido: apellido || "",
+//       password: hashedPassword,
+//       email: email || "",
+//       rol,
+//       supervisor: supervisorId, 
+//     });
+
+//     await newUser.save();
+
+
+//     res.status(201).json({ status: 'success', message: 'User created successfully', user: newUser });
+//   } catch (error) {
+//     console.error('Error in createUser:', error);
+//     res.status(500).json({ status: 'fail', error: 'internal_error' });
+//   }
+// };
+
 const createUser = async (req, res) => {
-  const { login, balance, nombre, apellido, password, email, rol, supervisor} = req.body;
+  const { login, balance, nombre, apellido, password, confirmPassword, email, rol, supervisor } = req.body;
 
   try {
-    const existingUser = await User.findOne({ login });
-    if (existingUser) {
-      return res.status(400).json({ status: 'fail', error: 'El usuario ya existe' });
-    }
-
-    if (!login || !password || !rol) {
-      return res.status(400).json({ status: 'fail', error: 'Complete los campos, por favor...' });
-    }
-
-    if (email !== "" && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      return res.status(400).json({ status: 'fail', error: 'Ingrese un E-mail válido.' });
-    }
-
-    if (!/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d\S]{6,}$/.test(password)) {
-      return res.status(400).json({ status: 'fail', error: 'Ingrese una contraseña válida' });
-    }
-
-    const hashedPassword = await bcrypt.hash(password, 10);
-
     let supervisorId = null;
+    let hashedPassword = password; // Usamos la contraseña proporcionada, si el supervisor no es "Agente"
+    let userRole = rol || ''; // Usamos el rol proporcionado, si el supervisor no es "Agente"
+    let supervisorRole = '';
 
-    // Si se proporciona un supervisor, buscarlo en la base de datos
+    // Si se proporciona un supervisor, buscarlo en la base de datos solo con los campos 'id' y 'rol'
     if (supervisor) {
-      const getSupervisor = await User.findOne({ login: supervisor });
+      const getSupervisor = await User.findOne(
+        { login: supervisor },
+        { _id: 1, rol: 1 } // Proyección para obtener solo los campos '_id' y 'rol'
+      );
 
       if (!getSupervisor) {
         return res.status(400).json({ status: 'fail', error: 'Supervisor no encontrado' });
       }
 
-      supervisorId = getSupervisor._id; 
+      // Guardamos el rol del supervisor y el id
+      supervisorRole = getSupervisor.rol;
+      supervisorId = getSupervisor._id;
+
+      // Si el supervisor es de rol "Agente", se establece la contraseña y rol por defecto
+      if (supervisorRole === 'Agente') {
+        hashedPassword = await bcrypt.hash("suerte123", 10); // Establecer la contraseña "suerte123"
+        userRole = 'Jugador'; // Establecer el rol "Jugador"
+      }
     }
 
+    // Validaciones solo si el supervisor NO es "Agente"
+    if (supervisorRole !== 'Agente') {
+      // Si el supervisor no es Agente, validamos los campos `login`, `password`, y `rol`
+      if (!login || !password || !rol) {
+        return res.status(400).json({ status: 'fail', error: 'Complete los campos, por favor...' });
+      }
+
+      // Validar formato del email si se proporciona
+      if (email !== "" && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        return res.status(400).json({ status: 'fail', error: 'Ingrese un E-mail válido.' });
+      }
+
+      // Validar la contraseña si el supervisor no es Agente
+      if (!/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d\S]{6,}$/.test(password)) {
+        return res.status(400).json({ status: 'fail', error: 'Ingrese una contraseña válida' });
+      }
+
+      // Verificar que las contraseñas coincidan
+      if (password !== confirmPassword) {
+        return res.status(400).json({ status: 'fail', error: 'Las contraseñas no coinciden.' });
+      }
+    }
+
+    // Crear el nuevo usuario
     const newUser = new User({
       login,
       balance: balance || "",
-      currency: 'ARS', 
+      currency: 'ARS',
       nombre: nombre || "",
       apellido: apellido || "",
-      password: hashedPassword,
+      password: hashedPassword, // Usamos la contraseña procesada según el rol del supervisor
       email: email || "",
-      rol,
-      supervisor: supervisorId, 
+      rol: userRole, // Usamos el rol determinado después de verificar el supervisor
+      supervisor: supervisorId,
     });
 
     await newUser.save();
 
-
-    res.status(201).json({ status: 'success', message: 'User created successfully', user: newUser });
+    res.status(201).json({ status: 'success', message: 'Usuario creado con éxito', user: newUser });
   } catch (error) {
-    console.error('Error in createUser:', error);
+    console.error('Error en createUser:', error);
     res.status(500).json({ status: 'fail', error: 'internal_error' });
   }
 };
 
-// const getUsers = async (req, res) => {
-//   try {
-//     const { page = 1, limit = 10, userId } = req.query;
-    
-//     const user = await User.findById(userId); 
 
 
-//     if (!user) {
-//       return res.status(404).json({ status: 'fail', error: 'User not found' });
-//     }
-
-//     let query = { rol: { $nin: ["Agente", "Admin", "Super"] } };
-//     if (user.rol !== "Super") {
-//       const usuarioIds = user.usuariosCreados.map(u => u.usuarioId);
-//       query = { ...query, _id: { $in: usuarioIds } }; 
-//     }
-
-//     const allUsers = await User.find(query)
-
-//     // datos paginados
-//     const data = await User.find(query)
-//       .skip((page - 1) * limit)
-//       .limit(parseInt(limit));
-
-//     const totalUsers = allUsers.length; 
-
-
-//     res.status(200).json({
-//       totalPages: Math.ceil(totalUsers / limit),
-//       currentPage: page,
-//       data,
-//       allData: allUsers 
-//     });
-//   } catch (error) {
-//     console.error('Error in getUsers:', error);
-//     res.status(500).json({ status: 'fail', error: 'internal_error' });
-//   }
-// };
 
 const getUsers = async (req, res) => {
   try {

@@ -87,6 +87,7 @@ const [isButtonDisabled, setIsButtonDisabled] = useState(false);
       return;
     }
 
+  if (user.rol !== 'Agente') {
     if (!passwordRegex.test(trimmedFormData.password)) {
       toast.error('La contraseña debe tener al menos 6 caracteres, incluyendo letras y números.');
       setIsButtonDisabled(false);
@@ -98,12 +99,13 @@ const [isButtonDisabled, setIsButtonDisabled] = useState(false);
       setIsButtonDisabled(false);
       return;
     }
-    
+
     if (trimmedFormData.rol === '') {
       toast.error('El campo Rol es obligatorio.');
       setIsButtonDisabled(false);
       return;
     }
+  }
 
     try {
       const response = await axiosD.post('/createUser', trimmedFormData);
@@ -159,52 +161,65 @@ const [isButtonDisabled, setIsButtonDisabled] = useState(false);
           />
         </div>
 
-<div className="form-group">
-  <label htmlFor="rol">Rol</label>
-  <select
-    id="rol"
-    name="rol"
-    value={formData.rol}
-    onChange={handleChange}
-    className="form-control"
-  >
-    <option value="">Seleccione un rol</option>
-    {user?.rol === 'Agente' ? (
-      <option value="Jugador">Jugador</option>
-    ) : (
-      <>
-        <option value="Admin">Admin</option>
-        <option value="Agente">Agente</option>
+        {user?.rol !== 'Agente' && (
+  <div className="form-group">
+    <label htmlFor="rol">Rol</label>
+    <select
+      id="rol"
+      name="rol"
+      value={formData.rol}
+      onChange={handleChange}
+      className="form-control"
+    >
+      <option value="">Seleccione un rol</option>
+      {user?.rol === 'Agente' ? (
         <option value="Jugador">Jugador</option>
-      </>
-    )}
-  </select>
-</div>
-        <div className="form-group">
-          <label htmlFor="password">Contraseña</label>
-          <input
-            type="password"
-            id="password"
-            name="password"
-            value={formData.password}
-            onChange={handleChange}
-            className="form-control"
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="confirmPassword">Confirmar Contraseña</label>
-          <input
-            type="password"
-            id="confirmPassword"
-            name="confirmPassword"
-            value={formData.confirmPassword}
-            onChange={handleChange}
-            className="form-control"
-          />
-        </div>
+      ) : (
+        <>
+          <option value="Admin">Admin</option>
+          <option value="Agente">Agente</option>
+          <option value="Jugador">Jugador</option>
+        </>
+      )}
+    </select>
+  </div>
+)}
+
+{user?.rol !== 'Agente' && (
+  <>
+    <div className="form-group">
+      <label htmlFor="password">Contraseña</label>
+      <input
+        type="password"
+        id="password"
+        name="password"
+        value={formData.password}
+        onChange={handleChange}
+        className="form-control"
+      />
+    </div>
+
+    <div className="form-group">
+      <label htmlFor="confirmPassword">Confirmar Contraseña</label>
+      <input
+        type="password"
+        id="confirmPassword"
+        name="confirmPassword"
+        value={formData.confirmPassword}
+        onChange={handleChange}
+        className="form-control"
+      />
+    </div>
+  </>
+)}
+
 
         <div className="form-buttons">
-          <button type="button" className="usuarios-cancel" onClick={handleCancel}>Cancelar</button>
+          {user?.rol !== 'Agente' && (
+            <button type="button" className="usuarios-cancel" onClick={handleCancel}>
+              Cancelar
+            </button>
+          )}
           <button type="submit" className="usuarios-submit">Crear usuario</button>
         </div>
 
