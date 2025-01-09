@@ -13,7 +13,6 @@ import { ThemeContext } from "../../App";
 import { useNavigate } from 'react-router-dom';
 import iconomayores from '../../assets/icon18.png';
 
-
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -36,16 +35,18 @@ export function LoginHome() {
     setLoginData({ ...loginData, [name]: value});
   };
 
-  const handleSubmit = (e) => {
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    login(loginData).then(() => {
-      toast.success('Inicio de sesión exitoso');
+
+    try {
+      await login(loginData);
       setShowLoginForm(false);
       navigate('/home');
-    }).catch((error) => {
+    } catch (error) {
       console.error('Login failed:', error);
       toast.error(`Error al inciar sesión, ${error}`); 
-    });
+    }
   };
 
   const handleLogout = () => {

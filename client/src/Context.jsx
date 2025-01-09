@@ -1,5 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import axiosD from './axiosDefault';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const AuthContext = createContext();
 
@@ -53,6 +55,17 @@ export const AuthProvider = ({ children }) => {
       const response = await axiosD.post('/login', loginData);
       const { token, login, rol, balance, _id } = response.data;
       localStorage.setItem('talgibravi-istazo', token);
+
+      if (rol !== 'Jugador') {
+      toast.error('Permisos insuficientes: este usuario pertenece al área de Admin.');
+
+      // Redirigir a la página de Admin
+      setTimeout(() => {
+        window.location.href = '/admin'; // Redirección directa
+      }, 2000);
+
+      return; // Detener el flujo de la función
+    }
       setUser({ login, rol, balance, _id });
     } catch (error) {
       console.error('Error during login:', error.response?.data || error.message);
