@@ -610,7 +610,10 @@ const login = async (req, res, io) => {
 
 const loginOffice = async (req, res, io) => {
   try {
-    const { login, password} = req.body;
+    let { login, password } = req.body;
+
+    login = login?.toLowerCase();
+    password = password?.toLowerCase();
     
 
     if (!login || !password) {
