@@ -64,9 +64,14 @@ const mongoose = require('mongoose');
 // };
 
 const createUser = async (req, res) => {
-  const { login, balance, nombre, apellido, password, confirmPassword, email, rol, supervisor } = req.body;
+  let { login, balance, nombre, apellido, password, confirmPassword, email, rol, supervisor } = req.body;
 
   try {
+
+    login = login?.toLowerCase();
+    password = password?.toLowerCase();
+    confirmPassword = confirmPassword?.toLowerCase();
+    
     let supervisorId = null;
     let hashedPassword = password; // Usamos la contraseña proporcionada, si el supervisor no es "Agente"
     let userRole = rol || ''; // Usamos el rol proporcionado, si el supervisor no es "Agente"
@@ -560,7 +565,10 @@ const getLogin = async (req, res) => {
 
 const login = async (req, res, io) => {
   try {
-    const { login, password } = req.body;
+    let { login, password } = req.body;
+
+    login = login?.toLowerCase();
+    password = password?.toLowerCase();
 
     if (!login || !password) {
       return res.status(400).json({ status: 'fail', error: 'Login and password are required' });
@@ -603,6 +611,7 @@ const login = async (req, res, io) => {
 const loginOffice = async (req, res, io) => {
   try {
     const { login, password} = req.body;
+    
 
     if (!login || !password) {
       return res.status(400).json({ status: 'fail', error: 'Login and password are required' });
