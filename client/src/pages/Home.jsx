@@ -138,7 +138,6 @@ useEffect(() => {
         const response = await axiosD.post('/getGamesList', {});
         if (response.data && response.data.gamesList && response.data.gamesList.content && response.data.gamesList.content.gameList) {
           const getAllgames = response.data.gamesList.content.gameList;
-          console.log("se muestra la lista",  getAllgames)
           const shuffledTitles = shuffleArray(response.data.gamesList.content.gameTitles);
 
 // IDs que se deben filtrar
@@ -284,7 +283,6 @@ setAllGames(filteredGames);
   
     try {
       await axiosD.post('/increment-clicks', { name: game.name });
-     console.log("se muestra juego", gameId)
       const response = await axiosD.post('/openGame', {
         login: user.login,
         gameId: gameId,
