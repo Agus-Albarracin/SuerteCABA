@@ -10,8 +10,6 @@ import { SubNavbarButton } from '../components/HomeComponents/SubNavbarButton'
 import { FullScreenCarousel } from "../components/HomeComponents/Carousel";
 import { NavBarResponsive } from '../components/HomeComponents/NavbarResponsive';
 
-
-
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -140,6 +138,7 @@ useEffect(() => {
         const response = await axiosD.post('/getGamesList', {});
         if (response.data && response.data.gamesList && response.data.gamesList.content && response.data.gamesList.content.gameList) {
           const getAllgames = response.data.gamesList.content.gameList;
+          console.log("se muestra la lista",  getAllgames)
           const shuffledTitles = shuffleArray(response.data.gamesList.content.gameTitles);
 
 // IDs que se deben filtrar
@@ -148,7 +147,6 @@ const excludedIds = [11675, 12559];
 // Filtrar juegos con nombres duplicados, excluir ciertos IDs y mostrar juegos con "novomatic" en el título
 const filteredGames = getAllgames.reduce((acc, game) => {
   if (
-    !acc.some(g => g.name === game.name) && // Filtrar nombres duplicados
     !excludedIds.includes(parseInt(game.id)) // Excluir juegos con IDs específicos
   ) {
     acc.push(game);
@@ -262,8 +260,9 @@ setAllGames(filteredGames);
     // Filtrar juegos por nombre y por la propiedad 'label' igual a "pragmatic"
     const filteredGames = allGames
       .filter((game) => game.name.toLowerCase().includes(value)) // Filtrado por nombre
-      .filter((game) => game.label === "pragmatic"); // Filtrar juegos con label: "pragmatic"
-  
+      // .filter((game) => game.label === "pragmatic"); // Filtrar juegos con label: "pragmatic"
+
+    setShowTitle("Todos")
     setGameList(filteredGames); // Mostrar juegos filtrados
     setGameListEscritorio(filteredGames); // Mostrar juegos filtrados
   };
@@ -285,7 +284,7 @@ setAllGames(filteredGames);
   
     try {
       await axiosD.post('/increment-clicks', { name: game.name });
-  
+     console.log("se muestra juego", gameId)
       const response = await axiosD.post('/openGame', {
         login: user.login,
         gameId: gameId,
@@ -939,7 +938,6 @@ return (
 
     !isResponsive ? (
       <Container bgImage={bgHome}>
-      
       <NavBar />
       <FullScreenCarousel />
       <div>

@@ -6,7 +6,10 @@
   font-family: "Poppins",sans-serif;
 }
 
-
+body {
+  margin: 0;
+  background: transparent;
+}
 ::-webkit-scrollbar-thumb {
   background-color: #555; /* Color del "thumb" (parte que se arrastra) */
   border-radius: 10px; /* Bordes redondeados */
