@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Modal from 'react-modal';
 import styled, { useTheme, keyframes } from "styled-components";
 import { v } from "../styles/Variables";
@@ -17,6 +17,27 @@ export function DepositModal({ isOpen, onClose, user, adminData, onSuccess }) {
   const [isBonus, setIsBonus] = useState(false);
   const [isButtonDisabled, setButtonDisabled] = useState(false);
 
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === "Enter") {
+        e.preventDefault(); // Evita el envío automático del formulario
+        handleDeposit();
+      }
+    };
+
+    if (isOpen) {
+      window.addEventListener("keydown", handleKeyDown);
+    }
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [isOpen, amount]);
+
+  
+
+
+
   const setAmountAction = (newAmount) => {
     setAmount(prevAmount => prevAmount + newAmount); // Suma el nuevo monto
   };
@@ -26,6 +47,8 @@ export function DepositModal({ isOpen, onClose, user, adminData, onSuccess }) {
     // Asegúrate de que el valor ingresado sea un número
     setAmount(value === '' ? '' : parseFloat(value));
   };
+
+
 
   const handleDeposit = async () => {
     const parsedAmount = parseFloat(amount);
@@ -193,6 +216,23 @@ export function WithdrawModal({ isOpen, onClose, user, adminData, onSuccess }) {
   const [amount, setAmount] = useState(0);
   const [isButtonDisabled, setButtonDisabled] = useState(false);
 
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === "Enter") {
+        e.preventDefault(); // Evita el envío automático del formulario
+        handleWithdraw();
+      }
+    };
+
+    if (isOpen) {
+      window.addEventListener("keydown", handleKeyDown);
+    }
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [isOpen, amount]);
+
   const setAmountAction = (newAmount) => {
     setAmount(prevAmount => prevAmount + newAmount); // Suma el nuevo monto
   };
@@ -348,7 +388,7 @@ export function WithdrawModal({ isOpen, onClose, user, adminData, onSuccess }) {
       width: 550px;
       max-width: 90%;
       border-radius: 8px;
-      box-shadow: 0 0 15px rgba(255, 0, 0, 0.7);
+      box-shadow: 0 0 15px #b38600;
       
       h3{
       text-shadow: 12px 12px 12px rgba(0, 0, 0);
@@ -407,7 +447,7 @@ export function WithdrawModal({ isOpen, onClose, user, adminData, onSuccess }) {
     }
 
     .button-sino {
-      border: 1px solid red;
+      border: 1px solid #b38600;
       background-color: transparent;
       transition: background-color 0.3s ease, color 0.4s ease, transform 0.2s ease, box-shadow 0.4s ease;
       animation: ${slideDown} 0.5s ease-out;
@@ -466,7 +506,7 @@ export function WithdrawModal({ isOpen, onClose, user, adminData, onSuccess }) {
 
 
       .button-monto{
-      border: 1px solid red;
+      border: 1px solid #b38600;
       background-color: transparent;
       transition: background-color 0.3s ease, color 0.4s ease, transform 0.2s ease, box-shadow 0.4s ease;
       animation: ${slideDown} 0.5s ease-out;
@@ -567,7 +607,7 @@ export function WithdrawModal({ isOpen, onClose, user, adminData, onSuccess }) {
     }
   }
   .plogin{
-  background-color: red;
+  background-color: #b38600;
   color: white;
   }
   
