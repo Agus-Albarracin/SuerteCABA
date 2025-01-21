@@ -516,13 +516,14 @@ export function WithdrawModal({ isOpen, onClose, user, adminData, onSucces, rese
 
       .contbuttons{
       padding: 10px;
-      margin-bottom: 30px;    
+      margin-bottom: 20px;    
       }
 
 
       .button-monto{
       border: 1px solid #b38600;
       background-color: transparent;
+      margin-bottom: 20px;  
       transition: background-color 0.3s ease, color 0.4s ease, transform 0.2s ease, box-shadow 0.4s ease;
       animation: ${slideDown} 0.5s ease-out;
       box-shadow: 4px 8px 12px rgba(0, 0, 0, 0.6);
