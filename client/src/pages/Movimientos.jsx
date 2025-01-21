@@ -483,6 +483,47 @@ const getVisiblePages = (currentPage, totalPages) => {
 //     setCurrentPage(pageNumber);
 //   }
 // };  
+const [filterTrans, setFilterTrans] = useState('');
+const [movsUserCopia, setMovsUserCopia] = useState([]); // Copia de todos los movimientos
+
+// Este useEffect se encarga de guardar la copia de seguridad de los movimientos
+useEffect(() => {
+  // Solo guarda la copia cuando los movimientos originales cambian (si no hay copia guardada)
+  if (movsUser.length > 0 && movsUserCopia.length === 0) {
+    setMovsUserCopia(movsUser); // Guarda una copia de los movimientos completos
+  }
+}, [movsUser]);
+
+// Este useEffect aplica los filtros sobre la copia
+useEffect(() => {
+  if (filterTrans === "todo" || filterTrans === "") {
+    // Si el filtro es "todo" o vacío, restauramos todos los movimientos
+    setMovsUser(movsUserCopia);
+  } else if (filterTrans === "deposito") {
+    // Si el filtro es "deposito", solo mostramos los de tipo "Deposito"
+    setMovsUser(movsUserCopia.filter(mov => mov.type === "Deposito"));
+  } else if (filterTrans === "retiro") {
+    // Si el filtro es "retiro", solo mostramos los de tipo "Retiro"
+    setMovsUser(movsUserCopia.filter(mov => mov.type === "Retiro"));
+  }
+}, [filterTrans, movsUserCopia]); // Dependemos de movsUserCopia para no perder los datos originales
+
+
+const getBackgroundColor = (value) => {
+  switch (value) {
+    case "deposito":
+      return "green";
+    case "retiro":
+      return "red";
+    case "todo":
+      return "#b38600";
+    default:
+      return "white"; // Color por defecto
+  }
+};
+const getTextColor = (value) => {
+  return value === "" ? "black" : "white";
+};
 
 
 const handleClear = () => {
@@ -687,6 +728,24 @@ const handleClear = () => {
     <option value="Directos">Directos</option>
     <option value="Estructura">Estructura</option>
 </select>) : null}
+
+<select
+  value={filterTrans}
+  onChange={(e) => {
+    setFilterTrans(e.target.value);
+    console.log("se muestra mov user", movsUser); // Verifica los movimientos
+  }}
+  style={{
+    padding: "7px",
+    backgroundColor: getBackgroundColor(filterTrans),
+    color: getTextColor(filterTrans),
+  }}
+>
+  <option value="" style={{backgroundColor: "#fff",color: "black",}}>Tipo</option>
+  <option value="todo" style={{backgroundColor: "#b38600",color: "white",}}> Todo </option>
+  <option value="deposito" style={{   backgroundColor: "green",   color: "white", }} > Depósito </option>
+  <option value="retiro" style={{   backgroundColor: "red",   color: "white", }}> Retiro </option>
+</select>
 
 </SearchContainer>
 
