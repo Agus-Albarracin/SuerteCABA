@@ -405,8 +405,9 @@ useEffect(() => {
       
       <Container bgImage={bgsidebar}>
       <div><Toaster/></div>
-
+      <DivNav>
       <NavBarAgentAdmin bg={bgsidebar} />
+      </DivNav>
       <Div>
 
       <ChartWrapper>
@@ -569,12 +570,10 @@ useEffect(() => {
 
 const Container = styled.div`
   background-image: url(${props => props.bgImage});
-  margin-bottom: 10%;
-  height: 100%;
-   display: flex;
+  height: 100vh;
+  display: flex;
   flex-wrap: wrap; 
   justify-content: flex-end;
-  
 `;
 
 const DivMesDiff = styled.div`
@@ -609,6 +608,13 @@ gap: 20px;
   flex-wrap: wrap; 
   gap: 20px;
   justify-content: center
+`;
+
+const DivNav = styled.div`
+display: flex;
+flex-direction: end;
+margin-top: -5%;
+margin-right: 2%;
 `;
 
 const ChartWrapper = styled.div`
