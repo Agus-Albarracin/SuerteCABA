@@ -18,6 +18,13 @@ export function DepositModal({ isOpen, onClose, user, adminData, onSuccess }) {
   const [isButtonDisabled, setButtonDisabled] = useState(false);
 
   useEffect(() => {
+    if (!isOpen) {
+      setAmount(0); // Resetear el monto cuando el modal se cierra
+    }
+  }, [isOpen]);
+
+  useEffect(() => {
+
     const handleKeyDown = (e) => {
       if (e.key === "Enter") {
         e.preventDefault(); // Evita el envío automático del formulario
@@ -215,6 +222,12 @@ export function DepositModal({ isOpen, onClose, user, adminData, onSuccess }) {
 export function WithdrawModal({ isOpen, onClose, user, adminData, onSuccess }) {
   const [amount, setAmount] = useState(0);
   const [isButtonDisabled, setButtonDisabled] = useState(false);
+
+  useEffect(() => {
+    if (!isOpen) {
+      setAmount(0); // Resetear el monto cuando el modal se cierra
+    }
+  }, [isOpen]);
 
   useEffect(() => {
     const handleKeyDown = (e) => {
