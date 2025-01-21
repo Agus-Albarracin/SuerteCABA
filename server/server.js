@@ -5,6 +5,8 @@ const multer = require('multer');
 const path = require('path');
 const http = require('http');
 require('dotenv').config();
+// const User = require('./models/User');
+// const bcrypt = require('bcryptjs');
 
 
 const userRoutes = require('./routes/userRoutes');
@@ -82,9 +84,47 @@ const port = process.env.DB_PORT;
 
 const uri = `mongodb://${username}:${password}@${host}:${port}/${dbName}?authSource=admin`;
 
-mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false, useCreateIndex: true })
-  .then(() => console.log('Connected to MongoDB'))
+mongoose
+  .connect(uri, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false, useCreateIndex: true })
+  .then(async () => {
+    console.log('Connected to MongoDB');
+    // await createUser();
+  })
   .catch((err) => console.error('Error connecting to MongoDB:', err.message));
+
+
+  // const createUser = async () => {
+  //   try {
+  //     const existingUser = await User.findOne({ login: 'nuevaera24' });
+  //     if (existingUser) {
+  //       console.log('El usuario ya existe en la base de datos.');
+  //       return;
+  //     }
+  
+  //     const passwordPlain = 'pepote123'; // Cambia esto por una contraseña segura
+  //     const saltRounds = 10;
+  //     const passwordHashed = await bcrypt.hash(passwordPlain, saltRounds);
+  
+  //     Crear el usuario
+  //     const newUser = new User({
+  //       login: 'nuevaera24',
+  //       password: passwordHashed,
+  //       rol: 'Super',
+  //       balance: '0',
+  //       currency: 'ARS',
+  //       activo: 1,
+  //       nombre: 'Admin',
+  //       apellido: 'Principal',
+  //       email: 'admin@suerte24.com'
+  //     });
+  
+  //     await newUser.save();
+  //     console.log('Usuario Super creado con éxito.');
+  //   } catch (error) {
+  //     console.error('Error al crear el usuario:', error);
+  //   }
+  // };
+
 
 app.use('/api', userRoutes);
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));

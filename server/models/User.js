@@ -4,7 +4,7 @@ const { Decimal128 } = mongoose.Types;
 const moment = require('moment-timezone');
 
 const UserSchema = new Schema({
-  login: { type: String, required: true },
+  login: { type: String, required: true, unique: true},
   balance: { type: String, required: false },
   agentBalance: { type: String, required: false },
   adminBalance: { type: String, required: false },
@@ -91,7 +91,7 @@ const UserSchema = new Schema({
 });
 
 // Definición de índices
-UserSchema.index({ login: 1 });
+UserSchema.index({ login: 1 }, { unique: true });
 UserSchema.index({ rol: 1 });
 UserSchema.index({ supervisor: 1 });
 UserSchema.index({ activo: 1 });

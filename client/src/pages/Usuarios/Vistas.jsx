@@ -2,7 +2,7 @@ import styled, { useTheme, keyframes } from "styled-components";
 import React, { useState, useEffect, useMemo, useContext} from 'react';
 import axiosD from "../../axiosDefault";
 import toast, { Toaster } from 'react-hot-toast';
-import { AiOutlineUser, AiOutlineSearch, AiOutlineUpCircle, AiOutlineDownCircle, AiOutlineMore, AiOutlineConsoleSql } from "react-icons/ai";
+import { AiOutlineUser, AiOutlineSearch, AiOutlinePlusCircle, AiOutlineMinusCircle, AiOutlineMore, AiOutlineConsoleSql } from "react-icons/ai";
 import { DepositModal, WithdrawModal } from '../../components/Modals';
 import { ActionsModal } from '../../components/ModalActions';
 import { useAuth } from '../../Context';
@@ -420,8 +420,8 @@ if (isResponsive || isResponsiveTable) {
             </TableCell>
             <TableCell>
               <div className='cont-div-icon'>
-              <AiOutlineUpCircle className="icon" onClick={() => handleOperation('up', { original: item })} />
-              <AiOutlineDownCircle className="icon" onClick={() => handleOperation('down', { original: item })} />
+              <AiOutlinePlusCircle className="icon" onClick={() => handleOperation('up', { original: item })} />
+              <AiOutlineMinusCircle className="icon" onClick={() => handleOperation('down', { original: item })} />
               </div>
             </TableCell>
             <TableCellAction>

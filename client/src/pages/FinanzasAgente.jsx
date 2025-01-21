@@ -9,7 +9,7 @@ import { NavBarAgentAdminResposive } from '../components/HomeComponents/NavbarAg
 import { CrearUsuarioModal} from './Usuarios/ModalCrearUsuario';
 import { DepositModal, WithdrawModal } from '../components/Modals';
 import toast, { Toaster } from 'react-hot-toast';
-import { AiOutlineUpCircle, AiOutlineDownCircle} from "react-icons/ai";
+import { AiOutlinePlusCircle, AiOutlineMinusCircle} from "react-icons/ai";
 
 
 import * as echarts from 'echarts';
@@ -450,8 +450,7 @@ useEffect(() => {
             />
           )}
         </ChartWrapper>
-
-      <ChartWrapper>
+      {/* <ChartWrapper>
       <p>Ganancias Neta</p>
 
   <DivMesDiff > 
@@ -467,19 +466,19 @@ useEffect(() => {
       </h3>
     </ChangeRectangle>
   </DivMesDiff>
-</ChartWrapper>
+</ChartWrapper> */}
 
 
 
-        <ChartWrapper>
+        {/* <ChartWrapper>
           <p>Netwin Diario</p>
           <div  className="chart" ref={chartRef1} style={{ height: '400px', width: '100%', marginTop: "10%" }}></div>
-        </ChartWrapper>
+        </ChartWrapper> */}
 
-        <ChartWrapper>
+        {/* <ChartWrapper>
           <p>NetWin Mensual</p>
           <div className="chart" ref={chartRef2} style={{ height: '400px', width: '100%', marginTop: "10%"  }}></div>
-        </ChartWrapper>
+        </ChartWrapper> */}
 
 
       </Div>
@@ -534,7 +533,7 @@ useEffect(() => {
         </ChartWrapperR4>
 
 
-    <ChartWrapperR2>
+    {/* <ChartWrapperR2>
     <p>Ganancias Neta</p>
 
   <DivMesDiffR style={{ marginTop: "15%"}}>
@@ -560,7 +559,7 @@ useEffect(() => {
        <ChartWrapperR>
        <p>NetWin Mensual</p>
          <div className="chart" ref={chartRef2} style={{ height: '400px', width: '100%', marginTop: "15%"  }}></div>
-       </ChartWrapperR>
+       </ChartWrapperR> */}
 
     </DivR>
   </ContainerR>
@@ -634,7 +633,7 @@ const ChartWrapper = styled.div`
 
 
   p {
-    background-color: red;
+    background-color:  #997300;;
     color: white;
     padding: 10px;
     position: absolute;
@@ -685,7 +684,7 @@ const ChartWrapperR = styled.div`
 
 
     p {
-    background-color: red;
+    background-color:  #997300;;
     color: white;
     padding: 10px;
     position: absolute;
@@ -743,7 +742,7 @@ const ChartWrapperR2 = styled.div`
   
 
     p {
-    background-color: red;
+    background-color:  #997300;;
     color: white;
     padding: 10px;
     position: absolute;
@@ -805,7 +804,7 @@ const ChartWrapperR4 = styled.div`
 
 
     p {
-    background-color: red;
+    background-color:  #997300;;
     color: white;
     padding: 10px;
     position: absolute;
@@ -917,9 +916,9 @@ const ButtonModalCrear = styled.button`
 
 `;
 
-const StyledUpCircle = styled(AiOutlineUpCircle)`
+const StyledUpCircle = styled(AiOutlinePlusCircle)`
   font-size: 3rem; 
-  color: red; 
+  color:  #997300; 
   cursor: pointer;
 
   &:hover {
@@ -927,9 +926,9 @@ const StyledUpCircle = styled(AiOutlineUpCircle)`
   }
 `;
 
-const StyledDownCircle = styled(AiOutlineDownCircle)`
+const StyledDownCircle = styled(AiOutlineMinusCircle)`
   font-size: 3rem; 
-  color: red; 
+  color: #997300; 
   cursor: pointer;
 
   &:hover {

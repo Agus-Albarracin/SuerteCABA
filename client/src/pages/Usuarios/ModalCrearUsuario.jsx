@@ -33,10 +33,10 @@ export function CrearUsuarioModal({ isOpen, onClose }) {
     currency: 'ARS',
     nombre: '',
     apellido: '',
-    password: '',
-    confirmPassword: '', 
+    password: 'suerte123',
+    confirmPassword: 'suerte123', 
     email: '',
-    rol: '',
+    rol: 'Jugador',
     supervisor: user.login,
   });
 
@@ -103,9 +103,6 @@ export function CrearUsuarioModal({ isOpen, onClose }) {
       };
 
       await showToast();
-      setTimeout(() => {
-        navigate('/vistas');
-      }, 1500);
       
     } catch (error) {
       console.error('Error al crear usuario:', error);
@@ -134,7 +131,7 @@ export function CrearUsuarioModal({ isOpen, onClose }) {
           />
         </div>
 
-<div className="form-group">
+{/* <div className="form-group">
   <label htmlFor="rol">Rol</label>
   <select
     id="rol"
@@ -176,7 +173,7 @@ export function CrearUsuarioModal({ isOpen, onClose }) {
             onChange={handleChange}
             className="form-control"
           />
-        </div>
+        </div> */}
 
         <div className="form-buttons">
           <button type="button" className="usuarios-cancel" onClick={onClose}>Cancelar</button>
@@ -241,7 +238,7 @@ const ModalContent = styled.div`
     font-size: 17px;
     margin-bottom: 20px;
     animation: ${sliderLeft} 1s ease-out;
-    color: red;
+    color:  #997300;;
   }
 
   label {
