@@ -571,8 +571,6 @@ const Container = styled.div`
   background-image: url(${props => props.bgImage});
   margin-bottom: 10%;
   height: 100%;
-  margin-left: 1%;
-  margin-right: 1%;
    display: flex;
   flex-wrap: wrap; 
   justify-content: flex-end;
@@ -600,7 +598,7 @@ const ChangeRectangle = styled.div`
 `;
 
 const Div = styled.div`
-background-color: white;
+background-color: transparent;
 border-radius: 10px;
 box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 width: 100%;
@@ -620,7 +618,8 @@ const ChartWrapper = styled.div`
   align-items: flex-start; 
   width: 100%; 
   margin-top: 20px;
-  margin-bottom: 20px; 
+  margin-bottom: 20px;
+  border-radius: 10px;
   width: 500px; 
   height: 400px; 
   background-color: #f0f0f0; /
@@ -650,6 +649,7 @@ const ContainerR = styled.div`
   margin-bottom: 10%;
   height: 100vh; 
   margin-left: 1%;
+  margin-top: 5%;
   overflow-y: auto;
   overflow-x: hidden; /* Evitar el scroll horizontal */
   -webkit-overflow-scrolling: touch;
@@ -657,7 +657,7 @@ const ContainerR = styled.div`
 
 
 const DivR = styled.div`
-  background-color: white;
+  background-color: transparent;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   width: 100%;
@@ -792,7 +792,8 @@ const ChartWrapperR4 = styled.div`
   margin-right: 5%;
   margin-left: 5%;
   margin-top: 15%;
-  min-height: 300px; 
+  min-height: 300px;
+  border-radius: 10px;
   background-color: #f1f1f1; 
   box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3);
   position: relative;
