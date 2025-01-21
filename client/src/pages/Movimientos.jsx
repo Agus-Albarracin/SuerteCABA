@@ -990,6 +990,24 @@ const handleClear = () => {
 </> 
 ) : null}
 
+<select
+  value={filterTrans}
+  onChange={(e) => {
+    setFilterTrans(e.target.value);
+    console.log("se muestra mov user", movsUser); // Verifica los movimientos
+  }}
+  style={{
+    padding: "7px",
+    backgroundColor: getBackgroundColor(filterTrans),
+    color: getTextColor(filterTrans),
+  }}
+>
+  <option value="" style={{backgroundColor: "#fff",color: "black",}}>Tipo</option>
+  <option value="todo" style={{backgroundColor: "#b38600",color: "white",}}> Todo </option>
+  <option value="deposito" style={{   backgroundColor: "green",   color: "white", }} > Depósito </option>
+  <option value="retiro" style={{   backgroundColor: "red",   color: "white", }}> Retiro </option>
+</select>
+
 </SearchContainerR>
 
 
