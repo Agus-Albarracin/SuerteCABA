@@ -96,7 +96,7 @@ const linksArray = user?.rol === 'Agente' ? [
     to: "/movs",
   },
   {
-    label: "Finanzas",
+    label: "Home",
     icon: <AiOutlineHome />,
     to: "/Finanzas",
   },

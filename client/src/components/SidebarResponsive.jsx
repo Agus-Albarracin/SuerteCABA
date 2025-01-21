@@ -8,6 +8,8 @@ import {
   AiOutlineUser,
   AiOutlineUserAdd,
   AiOutlineTeam ,
+  AiOutlineHome
+
 } from "react-icons/ai";
 import { MdOutlineAnalytics,MdMenu, MdLogout,
          MdOutlineRequestQuote, MdReportGmailerrorred ,MdOutlineCurrencyExchange   } from "react-icons/md";
@@ -96,8 +98,8 @@ const linksArray = user?.rol === 'Agente' ? [
     to: "/movs",
   },
   {
-    label: "Finanzas",
-    icon: <MdOutlineAnalytics />,
+    label: "Home",
+    icon: <AiOutlineHome />,
     to: "/Finanzas",
   }
 ] : [
