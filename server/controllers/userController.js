@@ -120,6 +120,8 @@ const createUser = async (req, res) => {
       if (password !== confirmPassword) {
         return res.status(400).json({ status: 'fail', error: 'Las contraseñas no coinciden.' });
       }
+
+      hashedPassword = await bcrypt.hash(password, 10);
     }
 
     // Crear el nuevo usuario

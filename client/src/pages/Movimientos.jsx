@@ -349,6 +349,7 @@ export function Movimientos() {
 
 
 
+  const [filterTrans, setFilterTrans] = useState('');
 
 const handleSearch = async (selectedUserLogin) => {
   const userId = user._id;
@@ -387,6 +388,12 @@ const handleSearch = async (selectedUserLogin) => {
       filters.directos = filterDirectos;
     } else if (filterDirectos === ""){
       filters.directos = ""
+    }
+
+    if (filterTrans) {
+      filters.typetrans = filterTrans;
+    } else if (filterTrans === ""){
+      filters.typetrans = ""
     }
 
     if (currentUser || selectedUserLogin) {
@@ -483,30 +490,6 @@ const getVisiblePages = (currentPage, totalPages) => {
 //     setCurrentPage(pageNumber);
 //   }
 // };  
-const [filterTrans, setFilterTrans] = useState('');
-const [movsUserCopia, setMovsUserCopia] = useState([]); // Copia de todos los movimientos
-
-// Este useEffect se encarga de guardar la copia de seguridad de los movimientos
-useEffect(() => {
-  // Solo guarda la copia cuando los movimientos originales cambian (si no hay copia guardada)
-  if (movsUser.length > 0 && movsUserCopia.length === 0) {
-    setMovsUserCopia(movsUser); // Guarda una copia de los movimientos completos
-  }
-}, [movsUser]);
-
-// Este useEffect aplica los filtros sobre la copia
-useEffect(() => {
-  if (filterTrans === "todo" || filterTrans === "") {
-    // Si el filtro es "todo" o vacío, restauramos todos los movimientos
-    setMovsUser(movsUserCopia);
-  } else if (filterTrans === "deposito") {
-    // Si el filtro es "deposito", solo mostramos los de tipo "Deposito"
-    setMovsUser(movsUserCopia.filter(mov => mov.type === "Deposito"));
-  } else if (filterTrans === "retiro") {
-    // Si el filtro es "retiro", solo mostramos los de tipo "Retiro"
-    setMovsUser(movsUserCopia.filter(mov => mov.type === "Retiro"));
-  }
-}, [filterTrans, movsUserCopia]); // Dependemos de movsUserCopia para no perder los datos originales
 
 
 const getBackgroundColor = (value) => {

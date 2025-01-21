@@ -19,6 +19,7 @@ redisClient.on('error', (err) => {
       await redisClient.connect(); 
       console.log("Conectado a redis")
       await redisClient.flushAll();
+      console.log("Elimina redis")
   } catch (error) {
       console.error('Error al conectar a Redis:', error);
   }
@@ -98,7 +99,7 @@ redisClient.on('error', (err) => {
 
 
   const getTheMovements = async (req, res) => {
-    const { userId, login, startDate, endDate, rol, estructura, directos} = req.body;
+    const { userId, login, startDate, endDate, rol, estructura, directos, typetrans} = req.body;
     console.log(req.body)
     // console.log(startDate, endDate)
 
@@ -177,7 +178,7 @@ redisClient.on('error', (err) => {
 
           let filteredMovimientos;
             if(directos === 'Estructura'){
-
+            console.log("entro en Estructura")
             filteredMovimientos = movimientos.filter(mov => {
                 const responsableId = mov.usuarioResponsable?.toString();
                 const receptorId = mov.usuarioReceptor?.toString();
@@ -187,15 +188,18 @@ redisClient.on('error', (err) => {
                 }
 
                 if (rol === 'Admin') {
-                    return (
-                        (usuarioActual.rol !== 'Super' && 
-                        (receptorId === userId.toString() || 
-                        (mov.rolReceptor === 'Agente' && responsableId !== userId.toString()))) ||
-                        (usuarioActual.rol === 'Super' && 
-                        (mov.rolReceptor === 'Agente' && 
-                        (responsableId === userId.toString() || responsableId !== userId.toString())))
-                    );
-                }
+                  return (
+                      // Si el usuario actual no es 'Super', solo mostrar los movimientos donde el receptor sea el mismo 'Admin' (userId)
+                      (usuarioActual.rol !== 'Super' && receptorId === userId.toString() && mov.rolReceptor === 'Admin') ||
+              
+                      // Si el usuario actual es 'Super', solo mostrar los movimientos donde el receptor sea 'Admin'
+                      (usuarioActual.rol === 'Super' && mov.rolReceptor === 'Admin' && responsableId === userId.toString()) ||
+              
+                      // Mostrar movimientos entre administradores, es decir, cuando el receptor y el responsable son 'Admin'
+                      (mov.rolReceptor === 'Admin' && mov.rolResponsable === 'Admin')
+                  );
+              }
+
                 if (rol === 'Agente') {
                     return mov.rolReceptor === 'Agente';
                 }
@@ -203,6 +207,7 @@ redisClient.on('error', (err) => {
             });
 
           } else if (directos === "Directos"){
+            console.log("entro en directos")
             
             filteredMovimientos = movimientos.filter(mov => {
               const responsableId = directoResponsable._id.toString();
@@ -213,16 +218,16 @@ redisClient.on('error', (err) => {
                     return false; // No incluir si el usuario responsable no coincide
                 }
               
-              if (rol === 'Admin') {
+                if (rol === 'Admin') {
                   return (
-                      (usuarioActual.rol !== 'Super' && 
-                      (receptorId === userId.toString() || 
-                      (mov.rolReceptor === 'Agente' && responsableId !== userId.toString()))) ||
-                      (usuarioActual.rol === 'Super' && 
-                      (mov.rolReceptor === 'Agente' && 
-                      (responsableId === userId.toString() || responsableId !== userId.toString())))
+                      // Si el usuario actual no es 'Super', solo mostrar los movimientos donde el receptor es el mismo 'Admin' (userId)
+                      (usuarioActual.rol !== 'Super' && receptorId === userId.toString() && mov.rolReceptor === 'Admin') ||
+                      
+                      // Si el usuario actual es 'Super', solo mostrar los movimientos donde el receptor sea 'Admin'
+                      (usuarioActual.rol === 'Super' && mov.rolReceptor === 'Admin' && responsableId === userId.toString())
                   );
               }
+
               if (rol === 'Agente') {
                   return mov.rolReceptor === 'Agente';
               }
@@ -230,26 +235,43 @@ redisClient.on('error', (err) => {
             });
 
           }else if (directos === ""){
+
             filteredMovimientos = movimientos.filter(mov => {
 
               const responsableId = mov.usuarioResponsable?.toString();
               const receptorId = mov.usuarioReceptor?.toString();
-              
 
               if (rol === "Super"){
                 return mov.rolResponsable === 'Super';
               }
-        
-              if (rol === 'Admin') {
-                  return (
-                      (usuarioActual.rol !== 'Super' && 
+              //este dejo de funcionar
+            //   if (rol === 'Admin') {
+            //     return (
+            //         (usuarioActual.rol !== 'Super' && 
+            //         (receptorId === userId.toString() || 
+            //         (mov.rolReceptor === 'Agente' && responsableId !== userId.toString()))) ||
+            //         (usuarioActual.rol === 'Super' && 
+            //         (mov.rolReceptor === 'Agente' && 
+            //         (responsableId === userId.toString() || responsableId !== userId.toString())))
+            //     );
+            // }
+            if (rol === 'Admin') {
+              return (
+                  // Si el usuario actual no es 'Super', el Admin puede ver los movimientos donde
+                  // - El receptor es el mismo que el usuario actual
+                  // - O el movimiento es de un Admin hacia otro Admin
+                  (usuarioActual.rol !== 'Super' && 
                       (receptorId === userId.toString() || 
+                      (mov.rolReceptor === 'Admin' && responsableId === userId.toString()) ||  // Ver movimientos donde Admin es responsable
                       (mov.rolReceptor === 'Agente' && responsableId !== userId.toString()))) ||
-                      (usuarioActual.rol === 'Super' && 
-                      (mov.rolReceptor === 'Agente' && 
-                      (responsableId === userId.toString() || responsableId !== userId.toString())))
-                  );
-              }
+          
+                  // Si el usuario actual es 'Super', puede ver cualquier movimiento donde el rolReceptor sea 'Admin'
+                  (usuarioActual.rol === 'Super' && 
+                      (mov.rolReceptor === 'Admin'))
+              );
+          }
+
+              
               if (rol === 'Agente') {
                   return mov.rolReceptor === 'Agente';
               }
@@ -257,8 +279,13 @@ redisClient.on('error', (err) => {
           });
           }   
 
-
           const totalMovimientos = filteredMovimientos.length; 
+
+          console.log(filteredMovimientos)
+
+          if (typetrans && typetrans === "retiro" || typetrans && typetrans === "deposito") {
+            filteredMovimientos = filteredMovimientos.filter(mov => mov.type === typetrans);
+        }
 
           const formattedMovimientos = filteredMovimientos.map(mov => ({
               type: mov.type === 'deposito' ? 'Deposito' : 'Retiro',
