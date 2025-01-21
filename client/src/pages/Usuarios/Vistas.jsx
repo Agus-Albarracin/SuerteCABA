@@ -484,10 +484,9 @@ if (isResponsive || isResponsiveTable) {
         <>
           <DepositModal
             isOpen={depositModalOpen}
-            // onClose={() => setDepositModalOpen(false)}
-            onClose={() => {
+            onClose={() => setDepositModalOpen(false)}
+            resetA={() => {
               setDepositModalOpen(false);
-              setAmount(0);
             }}
             user={selectedUser}
             adminData={loginData}
@@ -496,9 +495,9 @@ if (isResponsive || isResponsiveTable) {
           />
           <WithdrawModal
             isOpen={withdrawModalOpen}
-            onClose={() => {
+            onClose={() => setWithdrawModalOpen(false)}
+            resetA={() => {
               setWithdrawModalOpen(false);
-              setAmount(0);  
             }}
             user={selectedUser}
             adminData={loginData}

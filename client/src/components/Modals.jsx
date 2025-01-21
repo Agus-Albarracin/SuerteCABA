@@ -10,7 +10,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 Modal.setAppElement('#root');
 
-export function DepositModal({ isOpen, onClose, user, adminData, onSuccess }) {
+export function DepositModal({ isOpen, onClose, user, adminData, onSuccess, resetA}) {
 
   const [amount, setAmount] = useState(0);
   const [bonus, setBonus] = useState('');
@@ -138,7 +138,7 @@ export function DepositModal({ isOpen, onClose, user, adminData, onSuccess }) {
     >
       <div className='conth3yX'>
         <h3>Deposita Saldo</h3>
-        <AiOutlineClose className='buttonX' onClick={onClose} />
+        <AiOutlineClose className='buttonX' onClick={resetA} />
       </div>
       <Divider />
       <InfoContainer>
@@ -211,7 +211,7 @@ export function DepositModal({ isOpen, onClose, user, adminData, onSuccess }) {
       )}
       <div className="actionbutton">
       <button className="deposit-button" onClick={handleDeposit} disabled={isButtonDisabled}>Depositar</button>
-      <button className="cancel-button" onClick={onClose}>Cancelar</button>
+      <button className="cancel-button" onClick={resetA}>Cancelar</button>
       </div>
     </StyledModal>
   );
@@ -219,7 +219,7 @@ export function DepositModal({ isOpen, onClose, user, adminData, onSuccess }) {
 
 
 //region WITHDRAWMODAL
-export function WithdrawModal({ isOpen, onClose, user, adminData, onSuccess }) {
+export function WithdrawModal({ isOpen, onClose, user, adminData, onSucces, resetA }) {
   const [amount, setAmount] = useState(0);
   const [isButtonDisabled, setButtonDisabled] = useState(false);
 
@@ -326,7 +326,7 @@ export function WithdrawModal({ isOpen, onClose, user, adminData, onSuccess }) {
     >
       <div className='conth3yX'>
         <h3>Extraer Saldo</h3>
-        <AiOutlineClose className='buttonX' onClick={onClose} />
+        <AiOutlineClose className='buttonX' onClick={resetA} />
       </div>
       <Divider />
       <InfoContainer>
@@ -368,7 +368,7 @@ export function WithdrawModal({ isOpen, onClose, user, adminData, onSuccess }) {
       <div className="actionbutton">
 
       <button className="deposit-button" onClick={handleWithdraw} disabled={isButtonDisabled}>Extraer</button>
-      <button className="cancel-button" onClick={onClose}>Cancelar</button>
+      <button className="cancel-button" onClick={resetA}>Cancelar</button>
       </div>
     </StyledModal>
   );
