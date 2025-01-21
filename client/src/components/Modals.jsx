@@ -170,7 +170,8 @@ export function DepositModal({ isOpen, onClose, user, adminData, onSuccess, rese
       </div>
 
       <div className='contbuttons'>
-      <button className="button-monto" onClick={() => setAmountAction(1000)}>$1.000</button>
+        <button className="button-monto" onClick={() => setAmountAction(100)}>$100</button>
+        <button className="button-monto" onClick={() => setAmountAction(1000)}>$1.000</button>
         <button className="button-monto" onClick={() => setAmountAction(5000)}>$5.000</button>
         <button className="button-monto" onClick={() => setAmountAction(10000)}>$10.000</button>
         <button className="button-monto" onClick={() => setAmountAction(50000)}>$50.000</button>
@@ -358,7 +359,8 @@ export function WithdrawModal({ isOpen, onClose, user, adminData, onSucces, rese
         />
       </div>
       <div className='contbuttons'>
-      <button className="button-monto" onClick={() => setAmountAction(1000)}>$1.000</button>
+        <button className="button-monto" onClick={() => setAmountAction(100)}>$100</button>
+        <button className="button-monto" onClick={() => setAmountAction(1000)}>$1.000</button>
         <button className="button-monto" onClick={() => setAmountAction(5000)}>$5.000</button>
         <button className="button-monto" onClick={() => setAmountAction(10000)}>$10.000</button>
         <button className="button-monto" onClick={() => setAmountAction(50000)}>$50.000</button>
