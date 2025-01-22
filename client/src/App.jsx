@@ -148,7 +148,7 @@ const Container = styled.div`
   color: ${({ theme }) => theme.text};
   min-height: 100vh;  
   overflow-x: hidden;
-  width: 100%;      
+  width: 100%;
 
   &.active {
   grid-template-columns: ${({ gridLayoutActive }) => gridLayoutActive};

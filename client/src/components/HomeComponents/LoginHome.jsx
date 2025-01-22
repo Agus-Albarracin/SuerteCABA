@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import styled from 'styled-components';
 import { v } from "../../styles/Variables";
 import blanco from '../../assets/logo-suerte-whitedorado.png';
@@ -12,6 +12,7 @@ import { ThemeContext } from "../../App";
 
 import { useNavigate } from 'react-router-dom';
 import iconomayores from '../../assets/icon18.png';
+import ParticlesBg from 'particles-bg'
 
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -56,8 +57,25 @@ export function LoginHome() {
     toast.info('Sesión cerrada exitosamente'); 
   };
 
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+  const particleNum = windowWidth < 560 ? 30 : 120;
+
   return (
     <NavContainer>
+
+
 
       <div className="nav-left">
         <div>
@@ -143,6 +161,18 @@ export function LoginHome() {
         <br />
         Juga responsablemente</span>
       </MyDiv>
+      <ParticlesBg
+          num={particleNum}
+          type="cobweb"
+          color="#fbe903"
+          bg={{
+            position:"absolute",
+            zIndex: 1,
+            width: "99%",  // O ajusta el ancho según sea necesario
+            height: "100%", // O ajusta la altura según sea necesario
+            backgroundColor: "transparent", // Asegura que el fondo sea transparente
+          }}
+        />
     </NavContainer>
   );
 };
@@ -164,6 +194,8 @@ const NavContainer = styled.nav`
     align-items: center;
 
     div{
+           position: relative;
+        z-index: 9999;
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -200,8 +232,7 @@ const NavContainer = styled.nav`
     padding: 0px 10px;
     gap:15px;
     border-radius: 5px;
-
-
+    z-index: 9999;
   }
 
   .nav-center {
@@ -211,7 +242,6 @@ const NavContainer = styled.nav`
 }
 
   .nav-right {
-    display: flex;
     align-items: center;
     justify-content: center;
     gap: 20px;
@@ -243,6 +273,8 @@ const NavContainer = styled.nav`
       gap: 10px;
 
       input {
+       position: relative;
+        z-index: 9999;
         width: 250px;
         padding: 5px;
         font-size: 16px;
@@ -250,6 +282,8 @@ const NavContainer = styled.nav`
         border-radius: 5px;
       }
       button {
+             position: relative;
+        z-index: 9999;
       margin: 30px;
         font-size: ${(props) => props.theme.fontxs};
       }
@@ -306,6 +340,8 @@ const UserInfoButton = styled.div`
 const Logo = styled.div`
 padding: 5px;
 margin-top: 5%;
+       position: relative;
+        z-index: 9999;
 img{
 width: 250px;
 }
