@@ -79,7 +79,7 @@ export function LoginHome() {
   const particleNum = windowWidth < 560 ? 30 : 120;
 
   return (
-    <NavContainer>
+    <LoginHome>
 
 
 
@@ -179,12 +179,11 @@ export function LoginHome() {
             backgroundColor: "transparent", // Asegura que el fondo sea transparente
           }}
         />
-        <script src="https://chat.suertecaba.com/widget-loader.js"></script>
-    </NavContainer>
+    </LoginHome>
   );
 };
 
-const NavContainer = styled.nav`
+const LoginHome = styled.nav`
   display: flex;
   flex-direction: column;
   padding: 10px 10px;
