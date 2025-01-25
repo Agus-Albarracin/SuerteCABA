@@ -1138,7 +1138,7 @@ return (
         <br />
         Juga responsablemente</span>
       </MyDiv>
-
+      <script src="https://chat.suertecaba.com/widget-loader.js"></script>
     </Container>
   ) : (
     <ContainerR bgHome={bgHome}>
@@ -1374,7 +1374,7 @@ return (
         <br />
         Juga responsablemente</span>
 </MyDiv>
-
+<script src="https://chat.suertecaba.com/widget-loader.js"></script>
 </ContainerR>
   )
 )

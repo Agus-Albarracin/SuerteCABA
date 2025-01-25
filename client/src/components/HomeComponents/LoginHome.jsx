@@ -179,6 +179,7 @@ export function LoginHome() {
             backgroundColor: "transparent", // Asegura que el fondo sea transparente
           }}
         />
+        <script src="https://chat.suertecaba.com/widget-loader.js"></script>
     </NavContainer>
   );
 };
