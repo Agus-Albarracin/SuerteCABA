@@ -31,6 +31,12 @@ export function LoginHome() {
   const [showLoginForm, setShowLoginForm] = useState(true);
   const [loginData, setLoginData] = useState({ login: '', password: ''});
 
+  useEffect(() => {
+    if(!user){
+      localStorage.removeItem('talgibravi-istazo');
+    }
+  }, []);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setLoginData({ ...loginData, [name]: value});

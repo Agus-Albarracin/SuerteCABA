@@ -83,13 +83,13 @@ export const AuthProvider = ({ children }) => {
         logout();
       }
 
-      localStorage.setItem('talgibravi-istazo', token);
+      localStorage.setItem('talgibravi-istazo-ceofis', token);
       setUser({ login, rol, balance, _id, usuariosCreados, activo});
 
               // Función para manejar los cambios en el localStorage
               const handleStorageChange = (event) => {
                 // Verificar si el cambio es en el token
-                if (event.key === 'talgibravi-istazo') {
+                if (event.key === 'talgibravi-istazo-ceofis') {
                   console.log("cambio el token", event.key)
                   logout();
                 }
@@ -110,12 +110,14 @@ export const AuthProvider = ({ children }) => {
 
   const logout = () => {
     localStorage.removeItem('talgibravi-istazo');
+    localStorage.removeItem('talgibravi-istazo-ceofis');
     setUser(null);
     window.location.href = '/admin';
   };
 
   const logoutUsers = () => {
     localStorage.removeItem('talgibravi-istazo');
+    localStorage.removeItem('talgibravi-istazo-ceofis');
     localStorage.removeItem('hasReloaded');
     setUser(null);
     window.location.href = '/';

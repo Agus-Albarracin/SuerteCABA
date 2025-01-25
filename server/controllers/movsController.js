@@ -18,8 +18,8 @@ redisClient.on('error', (err) => {
   try {
       await redisClient.connect(); 
       console.log("Conectado a redis")
-      await redisClient.flushAll();
-      console.log("Elimina redis")
+      // await redisClient.flushAll();
+      // console.log("Elimina redis")
   } catch (error) {
       console.error('Error al conectar a Redis:', error);
   }
