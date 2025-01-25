@@ -79,7 +79,7 @@ export function LoginHome() {
   const particleNum = windowWidth < 560 ? 30 : 120;
 
   return (
-    <LoginHome>
+    <NavContainer>
 
 
 
@@ -179,11 +179,11 @@ export function LoginHome() {
             backgroundColor: "transparent", // Asegura que el fondo sea transparente
           }}
         />
-    </LoginHome>
+    </NavContainer>
   );
 };
 
-const LoginHome = styled.nav`
+const NavContainer = styled.nav`
   display: flex;
   flex-direction: column;
   padding: 10px 10px;
