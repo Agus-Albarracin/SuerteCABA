@@ -97,7 +97,7 @@ const openGame = async (req, res) => {
     }
     const data = {
       cmd:"openGame",hall:"3206118",domain:"https://suerte24.bet",exitUrl:"https://suerte24.bet",
-      language:"en",continent:"eur",key:"0012025",login:login,gameId:gameId,
+      language:"es",continent:"eur",key:"0012025",login:login,gameId:gameId,
       cdnUrl:"",
       demo:"0"
     };
