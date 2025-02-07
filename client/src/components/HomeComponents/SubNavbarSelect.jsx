@@ -6,8 +6,6 @@ import 'primereact/resources/themes/saga-blue/theme.css';
 import 'primereact/resources/primereact.min.css';           
 import 'primeicons/primeicons.css';                         
 import 'primeflex/primeflex.css';                           
-import blanco from '../../assets/skarybet-blanco.png';
-import negro from '../../assets/skarybet-negro.png';
 import { ThemeContext } from "../../App";
 
 // Imágenes 

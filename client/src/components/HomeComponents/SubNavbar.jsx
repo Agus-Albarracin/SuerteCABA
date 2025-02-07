@@ -5,8 +5,6 @@ import 'primereact/resources/themes/saga-blue/theme.css';
 import 'primereact/resources/primereact.min.css';           
 import 'primeicons/primeicons.css';                         
 import 'primeflex/primeflex.css';                          
-import blanco from '../../assets/skarybet-blanco.png';
-import negro from '../../assets/skarybet-negro.png';
 import { ThemeContext } from "../../App";
 
 // Imagenes
@@ -107,7 +105,6 @@ export function SubNavbar({ categories, onCategoryClick }) {
     const CambiarTheme = () => {
       setTheme((theme) => (theme === "dark" ? "light" : "dark"));
     };
-    const logoToUse = theme === "light" ? negro : blanco;
 
     const excludedCategories = ["pragmatic_live", "netent", "bingo", "roulette", "keno", "table_games"];
 
